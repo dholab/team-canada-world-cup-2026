@@ -58,9 +58,9 @@ jobs:
       - name: Render submission PDF
         run: |
           quarto render index.qmd --to pdf
-          # Place the PDF inside the site so the in-page download link resolves.
-          cp index.pdf _site/team-canada-air-sampling.pdf || \
-            cp *.pdf _site/team-canada-air-sampling.pdf
+          # Quarto writes to the project output-dir (_site). Give the PDF the
+          # public download name the in-page link expects.
+          cp _site/index.pdf _site/team-canada-air-sampling.pdf
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
