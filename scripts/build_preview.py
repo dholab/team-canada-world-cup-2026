@@ -77,6 +77,23 @@ indicating no host city was experiencing unusually high community
 respiratory-virus circulation while the team was present.
 """
 
+CENTRAL_FIGURE = """
+## Central figure
+
+![Central figure: study workflow, detection timeline across the five host cities, and possible response actions](analysis/central_figure/central_figure.png)
+
+**Central figure. Air sampling for early detection of respiratory-virus threats
+in an elite team during competition.** Continuous bioaerosol sampling ran in up
+to four team congregate spaces per hotel (meal, equipment, physiotherapy, and
+coaches' rooms); each cartridge's filter was eluted on-site and tested on a
+Cepheid GeneXpert SARS-CoV-2/Flu/RSV cartridge (top). Across the five host
+cities, viral genetic material was detected in team-hotel air in every city; the
+timeline shows sampling coverage (band) and each detection (tick) over the
+tournament (middle). A positive air signal can trigger low-regret responses —
+masking, portable air purifiers, distancing and reduced occupancy, far-UVC,
+reinforced ventilation, and excluding visibly ill personnel (bottom).
+"""
+
 BANNER = (
     "> **Private preview.** This is a static rendering of the manuscript for "
     "in-repo review while the interactive site is held back. Figures are the "
@@ -136,6 +153,7 @@ def main() -> None:
         f"{AUTHORS}\n\n"
         f"† equal contribution\n\n"
         f"{BANNER}\n\n"
+        f"{CENTRAL_FIGURE}\n"
         "---\n\n"
         f"{prose}\n"
     )

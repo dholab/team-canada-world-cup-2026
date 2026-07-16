@@ -1,9 +1,31 @@
-# Central Figure assets
+# Central Figure
 
-Standalone graphics to be assembled into the study's **Central Figure** in Adobe
-Illustrator. These are *not* manuscript figures — they are not embedded in the
-interactive site or in `PREVIEW.md`, and are not part of the automated figure
-build. They are editable source elements for hand-composition.
+The study's **Central figure** and the source graphics assembled into it in
+Adobe Illustrator.
+
+## `central_figure.ai` / `central_figure.png`
+
+`central_figure.ai` is the editable Illustrator master (the layout that combines
+the sampling workflow, the detection timeline, and the response-action icons).
+`central_figure.png` is a trimmed raster export of it, embedded at the top of
+the manuscript in both `index.qmd` (interactive site) and `PREVIEW.md`.
+
+After editing the `.ai`, re-export the PNG. If Illustrator is available, export
+directly (best quality). Otherwise a quick trimmed raster can be made with:
+
+```bash
+qlmanage -t -s 3000 -o /tmp "analysis/central_figure/central_figure.ai"
+magick "/tmp/central_figure.ai.png" -background white -flatten -fuzz 2% \
+  -trim +repage analysis/central_figure/central_figure.png
+```
+
+For final journal submission, export a high-resolution PNG or a vector PDF
+straight from Illustrator rather than using the quick raster above.
+
+## Source graphics
+
+The remaining files are the individual elements composed into the `.ai`. They
+are editable source assets, not manuscript figures on their own.
 
 ## `timeline.svg`
 

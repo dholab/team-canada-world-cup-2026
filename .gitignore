@@ -22,3 +22,5 @@ analysis/figure3_wastewater_interactive.html
 
 # macOS
 .DS_Store
+
+/.quarto/

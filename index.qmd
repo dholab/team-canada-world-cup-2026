@@ -33,6 +33,21 @@ on every build. A [submission PDF](team-canada-air-sampling.pdf) with static
 figures is produced from the same source.
 :::
 
+## Central figure
+
+![Central figure: study workflow, detection timeline across the five host cities, and possible response actions.](analysis/central_figure/central_figure.png)
+
+**Central figure. Air sampling for early detection of respiratory-virus threats
+in an elite team during competition.** Continuous bioaerosol sampling ran in up
+to four team congregate spaces per hotel (meal, equipment, physiotherapy, and
+coaches' rooms); each cartridge's filter was eluted on-site and tested on a
+Cepheid GeneXpert SARS-CoV-2/Flu/RSV cartridge (top). Across the five host
+cities, viral genetic material was detected in team-hotel air in every city; the
+timeline shows sampling coverage and each detection over the tournament
+(middle). A positive air signal can trigger low-regret responses — masking,
+portable air purifiers, distancing and reduced occupancy, far-UVC, reinforced
+ventilation, and excluding visibly ill personnel (bottom).
+
 {{< include _prose.md >}}
 
 ## Figures
