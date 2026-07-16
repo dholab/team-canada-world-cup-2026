@@ -118,6 +118,13 @@ Over 32 days (June 3 to July 4, 2026), we collected and tested 182 air-sample ca
 
 Most samples were negative for all four targets. Across the study, 15 cartridges yielded a detection of at least one respiratory virus: SARS-CoV-2 in 11, IAV in 3, and IBV in 1; no RSV was detected. Detections and their cycle-threshold (Ct) values are summarised in Table 1 and displayed over time in Figure 1 and Figure 2. Consistent with the low summer circulation of these viruses in the Northern hemisphere, detections were sporadic early in the tournament and clustered in the final host cities.
 
+![Detection timeline: ticks mark every sampling window in which any of the four viruses was detected, across the tournament](analysis/figure_timeline.svg)
+
+*Simplified detection timeline. One line spanning the tournament (3 June to 4
+July 2026); each tick marks a sampling window in which any of the four
+respiratory viruses was detected. Detections were sparse early and clustered in
+the final week. The full breakdown by virus, room, and city is in Figure 1.*
+
 ![Figure 1: respiratory-virus detections across the World Cup](analysis/figure1_static.png)
 
 **Figure 1. Respiratory-virus detections in team-space air samples across the 2026 FIFA World Cup.**
