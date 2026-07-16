@@ -102,24 +102,6 @@ To place the air-sampling detections in the context of community-level respirato
 
 These four sources report non-interchangeable quantities on different scales, so we make no cross-city comparison of absolute levels. Instead, each city is plotted on its own native metric across the season, with the team's sampling window marked, and the comparison is strictly within-site, asking whether the levels the team sampled were unusually high relative to that same site's own recent history. Non-detect values in the Canadian aggregate (reported at fixed detection-limit substitution values) were treated as non-detections. Two coverage limits are noted where relevant. At plant level the Houston public feed reports SARS-CoV-2 only and ends June 22, 2026, before the team's stay, and influenza B was not reported at JWPCP during this season. The full per-city season is shown in online supplemental figure 1\.
 
-![Online supplemental figure 1: community wastewater context by host city](analysis/figure3_wastewater.png)
-
-**Online supplemental figure 1. Community wastewater surveillance context in each host city over the 2025–2026 respiratory season.**
-Each panel (A to E) is one host city, plotting publicly reported municipal
-wastewater levels for the four study targets (SARS-CoV-2, influenza A, influenza
-B, and RSV) from August 2025 through mid-July 2026. The shaded gold band marks
-Team Canada's air-sampling window in that city. **The four data sources report
-non-interchangeable quantities and are each shown on their own independent
-vertical axis; levels must be read within a panel and never compared between
-panels.** Panels A–C (Montreal, Toronto, Vancouver) use the PHAC wastewater
-aggregate (PMMoV-normalized index); panel D (Los Angeles) uses the California
-CDPH/CDC-NWSS JWPCP dataset, self-normalized to fecal load; panel E (Houston)
-uses the Rice/Houston Health Department 69th Street index (SARS-CoV-2 only,
-ending 22 June 2026, before the team's stay). Across all five cities the visit
-windows fall in the seasonal trough, at or near each site's own lowest values,
-indicating no host city was experiencing unusually high community
-respiratory-virus circulation while the team was present.
-
 ### Outcomes and analysis
 
 The primary output was the presence or absence of nucleic acid from each of the four target viruses in each air sample, indexed by room type, host city, date, and collection session. Where a target amplified, we also recorded the cycle-threshold (Ct) value as a rough proxy for the amount of viral nucleic acid captured, with lower Ct indicating more material. Because air samples represent virus diluted across a large volume of sampled air, their Ct values are characteristically higher, indicating less template, than those of clinical respiratory specimens. Given that the volume of air sampled per session was not precisely known, we treated Ct as a semi-quantitative, within-sample indicator rather than an absolute measure of airborne viral load. We summarised detections descriptively by virus, room, and city over the sampling period, and related the timing of new detections to the team's competition and travel schedule. No formal sample-size calculation was performed, and sampling was determined by the duration of the team's participation and the number of accessible team spaces.
@@ -174,6 +156,28 @@ Detections clustered in the later part of the tournament. 11 of 47 cartridges (2
 **Los Angeles**. All three detections were SARS-CoV-2 and all were in the meal room, on the first sampling day, June 27 (Ct 34.0 and 39.3 in the morning session; Ct 38.0 in the afternoon session). No respiratory virus was detected in the June 28 samples.
 
 **Houston**. Houston accounted for 8 of the 15 detections. On July 1, SARS-CoV-2 was detected across all four sampled spaces: meal room (Ct 40.4, then 42.7 later that day), hallway (Ct 42.1), and physiotherapy room (Ct 43.4). IAV was detected in the equipment/kit room (Ct 42.5). No respiratory virus was detected on July 2\. SARS-CoV-2 signal then returned on July 3, at lower Ct (higher apparent load) than on July 1, with meal room Cts of 34.5 and 35.5, and a hallway Ct of 37.8.
+
+### Community wastewater context
+
+The higher rate of detections in the two US cities raised the question of whether the team had simply arrived in cities experiencing unusually intense respiratory-virus circulation. Community wastewater surveillance argues against that interpretation (online supplemental figure 1). In every host city, the team's sampling window fell in the seasonal trough for all four viruses. The large 2025–2026 winter season, comprising an influenza A wave peaking around December, a prolonged SARS-CoV-2 signal, and an RSV wave, had fully receded by June and July in each site, and the levels during the visit sat at or near each site's lowest values of the whole season rather than at any local maximum. This was true of the two US cities as much as the Canadian ones. In Los Angeles, the self-normalized SARS-CoV-2 signal at JWPCP during the June 27–28 visit was well below its winter and spring values. In Houston, the 69th Street SARS-CoV-2 viral-load index sat near its floor (index values of roughly 11 to 17, against a July 2020 baseline of 100\) in the weeks leading into the team's stay. Because the four sources report non-interchangeable quantities, we make no claim about which city had the most virus in absolute terms. The consistent, source-independent observation is that no host city was experiencing an unusual community surge when the team was present. The clustering of air-sampling detections in the final cities therefore cannot be explained by unusually high background circulation there, and is more consistent with the accumulating within-team and entourage exposures and the specific hotel-staff exposures described below.
+
+![Online supplemental figure 1: community wastewater context by host city](analysis/figure3_wastewater.png)
+
+**Online supplemental figure 1. Community wastewater surveillance context in each host city over the 2025–2026 respiratory season.**
+Each panel (A to E) is one host city, plotting publicly reported municipal
+wastewater levels for the four study targets (SARS-CoV-2, influenza A, influenza
+B, and RSV) from August 2025 through mid-July 2026. The shaded gold band marks
+Team Canada's air-sampling window in that city. **The four data sources report
+non-interchangeable quantities and are each shown on their own independent
+vertical axis; levels must be read within a panel and never compared between
+panels.** Panels A–C (Montreal, Toronto, Vancouver) use the PHAC wastewater
+aggregate (PMMoV-normalized index); panel D (Los Angeles) uses the California
+CDPH/CDC-NWSS JWPCP dataset, self-normalized to fecal load; panel E (Houston)
+uses the Rice/Houston Health Department 69th Street index (SARS-CoV-2 only,
+ending 22 June 2026, before the team's stay). Across all five cities the visit
+windows fall in the seasonal trough, at or near each site's own lowest values,
+indicating no host city was experiencing unusually high community
+respiratory-virus circulation while the team was present.
 
 ### Operational context and team responses
 
@@ -261,7 +265,7 @@ The University of Wisconsin–Madison Institutional Review Board determined that
 
 ### Data sharing statement
 
-The air-sampling detection data reported in this study — cartridge-level results by virus, room type, city, date, sampling window, and cycle-threshold value — are available in the study repository at `analysis/data/cartridges_long.csv` (728 rows: 182 respiratory cartridges × 4 targets; one row per cartridge × virus). The community wastewater surveillance values used for the contextual comparison are provided as per-city extracts in the same repository (`analysis/data/ww_canada.csv`, `analysis/data/ww_losangeles.csv`, and `analysis/data/ww_houston.csv`), each retrieved from the public source cited in the Methods. All figures in this manuscript are reproducible from these files using the analysis scripts in the repository (`analysis/make_figures.py` and `analysis/make_figure3.py`). The repository is at https://github.com/dholab/team-canada-world-cup-2026 \[currently private; it will be made public upon publication — confirm access conditions and add an archived DOI, e.g. via Zenodo, at that time\]. Viral sequencing data from the July 4, 2026 Houston eluates will be deposited in \[repository, e.g., NCBI GenBank/SRA\] under accession \[number\] upon publication. \[Confirm repository, accession numbers, and access conditions.\]
+The air-sampling detection data reported in this study (cartridge-level results by virus, room type, city, date, and cycle-threshold value) are available from the corresponding author on reasonable request \[or: are provided in the Supplementary Material / are available at LabKey/〈repository and accession〉\]. Viral sequencing data will be deposited in \[repository, e.g., NCBI GenBank/SRA\] under accession \[number\] upon publication. \[Confirm repository, accession numbers, and access conditions.\]
 
 ### Patient and public involvement
 

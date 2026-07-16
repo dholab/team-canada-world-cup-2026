@@ -122,9 +122,12 @@ def main() -> None:
     prose = insert_after_paragraph(
         prose, "displayed over time in Figure 1 and Figure 2", FIG1, "Figure 1"
     )
+    # "online supplemental figure 1" is referenced twice (Methods and Results);
+    # place the figure in the Results narrative that discusses the finding,
+    # anchored on a phrase unique to that paragraph.
     prose = insert_after_paragraph(
-        prose, "shown in online supplemental figure 1", FIG_S1,
-        "online supplemental figure 1",
+        prose, "raised the question of whether the team had simply arrived",
+        FIG_S1, "wastewater Results narrative",
     )
 
     doc = (
