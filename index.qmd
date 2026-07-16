@@ -142,8 +142,7 @@ one host city, plotting publicly reported municipal wastewater levels for the
 four study targets (SARS-CoV-2, influenza A, influenza B, and RSV, with the same
 colour used for each virus in every panel) from August 2025 through mid-July
 2026. The shaded gold band marks Team Canada's air-sampling window in that city,
-widened to a minimum readable width and marked "visit" for the shortest 1 to 2
-day stays. **The four data sources report non-interchangeable quantities and are
+widened to a minimum readable width for the shortest 1 to 2 day stays. **The four data sources report non-interchangeable quantities and are
 therefore each shown on their own independent vertical axis. Levels must be read
 within a panel and never compared between panels.** Panels A to C (Montreal,
 Toronto, and Vancouver) use the Public Health Agency of Canada wastewater

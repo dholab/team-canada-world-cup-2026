@@ -29,8 +29,6 @@ AUTHORS = (
 )
 
 FIG1 = """
-### Figure 1
-
 ![Figure 1: respiratory-virus detections across the World Cup](analysis/figure1_static.png)
 
 **Figure 1. Respiratory-virus detections in team-space air samples across the 2026 FIFA World Cup.**
@@ -46,8 +44,6 @@ An asterisk beneath the axis marks a session with partial room validity.
 """
 
 FIG2 = """
-### Figure 2
-
 ![Figure 2: per-room detections during the Houston period](analysis/figure2_houston.png)
 
 **Figure 2. Per-room detections during the Houston sampling period.**
@@ -62,8 +58,6 @@ most strongly in the meal room.
 """
 
 FIG_S1 = """
-### Online supplemental figure 1
-
 ![Online supplemental figure 1: community wastewater context by host city](analysis/figure3_wastewater.png)
 
 **Online supplemental figure 1. Community wastewater surveillance context in each host city over the 2025–2026 respiratory season.**
@@ -92,6 +86,24 @@ BANNER = (
 )
 
 
+def insert_after_paragraph(prose: str, needle: str, block: str, label: str) -> str:
+    """Insert `block` immediately after the paragraph that contains `needle`.
+
+    Paragraphs are separated by blank lines. Raises if the callout is not found,
+    so a Doc edit that drops or renames a figure reference fails loudly rather
+    than silently placing figures in the wrong spot.
+    """
+    paras = prose.split("\n\n")
+    for i, para in enumerate(paras):
+        if needle in para:
+            paras.insert(i + 1, block.strip())
+            return "\n\n".join(paras)
+    raise SystemExit(
+        f"Could not find the {label} callout ('{needle}') in _prose.md — "
+        "did the figure reference change in the Doc?"
+    )
+
+
 def main() -> None:
     prose = PROSE.read_text(encoding="utf-8")
     # Drop the auto-generated HTML comment header from _prose.md.
@@ -99,6 +111,21 @@ def main() -> None:
     # The Quarto anchor links don't resolve on GitHub; make them plain text.
     prose = prose.replace("[Figure 1](#fig-detections)", "Figure 1")
     prose = prose.replace("[Figure 2](#fig-houston)", "Figure 2")
+    prose = prose.strip()
+
+    # Place each figure right after the paragraph that first calls it out.
+    # Figures 1 and 2 are introduced together; insert 2 first so that after
+    # both insertions they end up in 1-then-2 order below that paragraph.
+    prose = insert_after_paragraph(
+        prose, "displayed over time in Figure 1 and Figure 2", FIG2, "Figure 2"
+    )
+    prose = insert_after_paragraph(
+        prose, "displayed over time in Figure 1 and Figure 2", FIG1, "Figure 1"
+    )
+    prose = insert_after_paragraph(
+        prose, "shown in online supplemental figure 1", FIG_S1,
+        "online supplemental figure 1",
+    )
 
     doc = (
         f"# {TITLE}\n\n"
@@ -107,14 +134,7 @@ def main() -> None:
         f"† equal contribution\n\n"
         f"{BANNER}\n\n"
         "---\n\n"
-        f"{prose.strip()}\n\n"
-        "---\n\n"
-        "## Figures\n"
-        f"{FIG1}\n"
-        f"{FIG2}\n"
-        "---\n\n"
-        "## Supplemental material\n"
-        f"{FIG_S1}\n"
+        f"{prose}\n"
     )
     OUT.write_text(doc, encoding="utf-8")
     print(f"wrote {OUT} ({len(doc)} bytes)")

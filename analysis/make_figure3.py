@@ -57,14 +57,19 @@ DATA = HERE / "data"
 # Panel order A-E. Canada cities first (matching Figure 1's city order), then US.
 PANELS = ["Montreal", "Toronto", "Vancouver", "Los Angeles", "Houston"]
 
-# One colour per virus, used identically in every panel.
+# One colour per virus, used identically in every panel. The palette is tuned to
+# sit with Figures 1-2, which are built on a deep-navy -> pale-blue Ct ramp
+# (#08306b .. #4292c6). SARS-CoV-2 keeps that same navy so the primary virus
+# reads consistently across all three figures; the other three are muted,
+# colourblind-safe tones (an Okabe-Ito-derived set) chosen to harmonise rather
+# than clash with the cool, desaturated look of the earlier figures.
 VIRUS_LABEL = {"covN2": "SARS-CoV-2", "fluA": "Influenza A",
                "fluB": "Influenza B", "rsv": "RSV"}
 VIRUS_ORDER = ["covN2", "fluA", "fluB", "rsv"]
-VIRUS_COLOR = {"covN2": "#1b6ca8",   # blue
-               "fluA": "#e07b39",    # orange
-               "fluB": "#c0392b",    # red
-               "rsv": "#2e8b57"}     # green
+VIRUS_COLOR = {"covN2": "#08306b",   # deep navy, matches the Fig 1-2 Ct ramp
+               "fluA": "#c98a2b",    # muted ochre / goldenrod
+               "fluB": "#9e4a5c",    # dusty wine
+               "rsv": "#4c9a86"}     # soft teal-green
 
 # Team Canada sampling window per city (from cartridges_long.csv), plus the
 # Houston caveat that the public feed ends 2026-06-22.
@@ -125,9 +130,16 @@ def _plot_series_mpl(ax, sub: pd.DataFrame) -> list:
 
 
 def build_static(out_pdf: pathlib.Path, out_png: pathlib.Path) -> None:
-    fig, axes = plt.subplots(5, 1, figsize=(9.2, 11.0), sharex=True)
+    fig, axes = plt.subplots(5, 1, figsize=(9.2, 12.4), sharex=True)
     xmin = pd.Timestamp("2025-08-01")
     xmax = pd.Timestamp("2026-07-15")
+
+    # Shared y-limit for the three Canadian panels (A-C), which all report the
+    # same PMMoV-normalized index and so are directly comparable. LA and Houston
+    # use different, non-interchangeable metrics and keep their own autoscale.
+    CANADA = ["Montreal", "Toronto", "Vancouver"]
+    ca_max = max(load_city(c)["value"].max() for c in CANADA)
+    ca_ylim = ca_max * 1.12
 
     for i, city in enumerate(PANELS):
         ax = axes[i]
@@ -136,8 +148,9 @@ def build_static(out_pdf: pathlib.Path, out_png: pathlib.Path) -> None:
         metric = sub["metric"].iloc[0]
 
         # visit shading. Short visits (1-4 d) render as a thin sliver, so widen
-        # the drawn band to a minimum readable width centred on the true window
-        # and drop a marker above it so it is always locatable.
+        # the drawn band to a minimum readable width centred on the true window.
+        # (The band is identified by the legend and the panel title, so no
+        # per-panel "visit" text label is needed.)
         v0, v1 = (pd.Timestamp(VISIT[city][0]), pd.Timestamp(VISIT[city][1]))
         min_days = 3
         if (v1 - v0).days < min_days:
@@ -147,11 +160,6 @@ def build_static(out_pdf: pathlib.Path, out_png: pathlib.Path) -> None:
         else:
             d0, d1 = v0, v1
         ax.axvspan(d0, d1, color="#f2c94c", alpha=0.40, zorder=1, lw=0)
-        vmid = v0 + (v1 - v0) / 2
-        ax.annotate("visit", xy=(mdates.date2num(vmid), 1.0),
-                    xycoords=("data", "axes fraction"), xytext=(0, 2),
-                    textcoords="offset points", ha="center", va="bottom",
-                    fontsize=6.5, color="#9a7d0a", annotation_clip=False)
         if city == "Houston":
             # feed ends before the visit: hatch the un-covered part of the band
             ax.axvspan(HOUSTON_FEED_ENDS, d1, facecolor="none",
@@ -159,15 +167,20 @@ def build_static(out_pdf: pathlib.Path, out_png: pathlib.Path) -> None:
             ax.axvline(HOUSTON_FEED_ENDS, color="#b58900", lw=0.8, ls=":",
                        zorder=2)
 
-        # panel letter + city + metric
-        ax.text(0.008, 0.88, f"({chr(65 + i)})  {city}",
+        # panel letter + city + metric, placed just ABOVE the plot area (in the
+        # inter-panel gap) so long virus lines never collide with the label
+        ax.text(0.0, 1.045, f"({chr(65 + i)})  {city}",
                 transform=ax.transAxes, fontsize=11, fontweight="bold",
-                va="center")
-        ax.text(0.27, 0.88, METRIC_LABEL[metric], transform=ax.transAxes,
-                fontsize=8, color="#555555", va="center", style="italic")
+                va="bottom", ha="left")
+        ax.text(0.27, 1.055, METRIC_LABEL[metric], transform=ax.transAxes,
+                fontsize=8, color="#555555", va="bottom", ha="left",
+                style="italic")
 
-        ax.set_ylim(bottom=0)
-        ax.margins(y=0.12)
+        if city in CANADA:
+            ax.set_ylim(0, ca_ylim)          # shared Canadian scale
+        else:
+            ax.set_ylim(bottom=0)
+            ax.margins(y=0.12)
         ax.grid(axis="y", color="#f0f0f0", zorder=0)
         for s in ("top", "right"):
             ax.spines[s].set_visible(False)
@@ -191,18 +204,21 @@ def build_static(out_pdf: pathlib.Path, out_png: pathlib.Path) -> None:
                ncol=3, frameon=False, fontsize=8.5,
                bbox_to_anchor=(0.5, 1.005))
 
-    fig.subplots_adjust(top=0.93, hspace=0.18, left=0.09, right=0.985,
-                        bottom=0.05)
+    fig.subplots_adjust(top=0.935, hspace=0.42, left=0.09, right=0.985,
+                        bottom=0.045)
     fig.savefig(out_pdf, bbox_inches="tight")
     fig.savefig(out_png, dpi=300, bbox_inches="tight")
     print(f"wrote {out_pdf} and {out_png}")
 
 
 def build_interactive(out: pathlib.Path) -> None:
-    titles = [f"({chr(65 + i)}) {c}  —  {METRIC_LABEL[load_city(c)['metric'].iloc[0]]}"
+    titles = [f"({chr(65 + i)}) {c}, {METRIC_LABEL[load_city(c)['metric'].iloc[0]]}"
               for i, c in enumerate(PANELS)]
     fig = make_subplots(rows=5, cols=1, shared_xaxes=True,
-                        subplot_titles=titles, vertical_spacing=0.045)
+                        subplot_titles=titles, vertical_spacing=0.055)
+
+    CANADA = ["Montreal", "Toronto", "Vancouver"]
+    ca_ylim = max(load_city(c)["value"].max() for c in CANADA) * 1.12
 
     seen_legend = set()
     for i, city in enumerate(PANELS, start=1):
@@ -217,7 +233,7 @@ def build_interactive(out: pathlib.Path) -> None:
                 x=s["week"], y=s["value"], mode="lines",
                 name=VIRUS_LABEL[tgt], legendgroup=tgt, showlegend=show,
                 line=dict(color=VIRUS_COLOR[tgt], width=1.8),
-                hovertemplate=(f"<b>{city} — {VIRUS_LABEL[tgt]}</b><br>"
+                hovertemplate=(f"<b>{city}, {VIRUS_LABEL[tgt]}</b><br>"
                                "week of %{x|%d %b %Y}<br>"
                                "level %{y:.3g}<extra></extra>")),
                 row=i, col=1)
@@ -228,11 +244,16 @@ def build_interactive(out: pathlib.Path) -> None:
         if city == "Houston":
             fig.add_vline(x=HOUSTON_FEED_ENDS, line=dict(color="#b58900",
                           width=1, dash="dot"), row=i, col=1)
-        fig.update_yaxes(rangemode="tozero", title_text="rel. level",
-                         title_font=dict(size=9), row=i, col=1)
+        # shared y-range for the three Canadian panels; own scale otherwise
+        if city in CANADA:
+            fig.update_yaxes(range=[0, ca_ylim], title_text="rel. level",
+                             title_font=dict(size=9), row=i, col=1)
+        else:
+            fig.update_yaxes(rangemode="tozero", title_text="rel. level",
+                             title_font=dict(size=9), row=i, col=1)
 
     fig.update_layout(
-        template="simple_white", height=1150, width=900,
+        template="simple_white", height=1250, width=900,
         title="Online supplemental figure 1. Community wastewater context by host city, 2025–2026 season",
         legend=dict(orientation="h", yanchor="bottom", y=1.03, x=0.5,
                     xanchor="center"),

@@ -102,6 +102,24 @@ To place the air-sampling detections in the context of community-level respirato
 
 These four sources report non-interchangeable quantities on different scales, so we make no cross-city comparison of absolute levels. Instead, each city is plotted on its own native metric across the season, with the team's sampling window marked, and the comparison is strictly within-site, asking whether the levels the team sampled were unusually high relative to that same site's own recent history. Non-detect values in the Canadian aggregate (reported at fixed detection-limit substitution values) were treated as non-detections. Two coverage limits are noted where relevant. At plant level the Houston public feed reports SARS-CoV-2 only and ends June 22, 2026, before the team's stay, and influenza B was not reported at JWPCP during this season. The full per-city season is shown in online supplemental figure 1\.
 
+![Online supplemental figure 1: community wastewater context by host city](analysis/figure3_wastewater.png)
+
+**Online supplemental figure 1. Community wastewater surveillance context in each host city over the 2025–2026 respiratory season.**
+Each panel (A to E) is one host city, plotting publicly reported municipal
+wastewater levels for the four study targets (SARS-CoV-2, influenza A, influenza
+B, and RSV) from August 2025 through mid-July 2026. The shaded gold band marks
+Team Canada's air-sampling window in that city. **The four data sources report
+non-interchangeable quantities and are each shown on their own independent
+vertical axis; levels must be read within a panel and never compared between
+panels.** Panels A–C (Montreal, Toronto, Vancouver) use the PHAC wastewater
+aggregate (PMMoV-normalized index); panel D (Los Angeles) uses the California
+CDPH/CDC-NWSS JWPCP dataset, self-normalized to fecal load; panel E (Houston)
+uses the Rice/Houston Health Department 69th Street index (SARS-CoV-2 only,
+ending 22 June 2026, before the team's stay). Across all five cities the visit
+windows fall in the seasonal trough, at or near each site's own lowest values,
+indicating no host city was experiencing unusually high community
+respiratory-virus circulation while the team was present.
+
 ### Outcomes and analysis
 
 The primary output was the presence or absence of nucleic acid from each of the four target viruses in each air sample, indexed by room type, host city, date, and collection session. Where a target amplified, we also recorded the cycle-threshold (Ct) value as a rough proxy for the amount of viral nucleic acid captured, with lower Ct indicating more material. Because air samples represent virus diluted across a large volume of sampled air, their Ct values are characteristically higher, indicating less template, than those of clinical respiratory specimens. Given that the volume of air sampled per session was not precisely known, we treated Ct as a semi-quantitative, within-sample indicator rather than an absolute measure of airborne viral load. We summarised detections descriptively by virus, room, and city over the sampling period, and related the timing of new detections to the team's competition and travel schedule. No formal sample-size calculation was performed, and sampling was determined by the duration of the team's participation and the number of accessible team spaces.
@@ -117,6 +135,31 @@ Analyses were primarily descriptive, and reporting follows the CHAMP statement [
 Over 32 days (June 3 to July 4, 2026), we collected and tested 182 air-sample cartridges for SARS-CoV-2, influenza A (IAV), influenza B (IBV), and RSV across five host cities: Montreal (n \= 20), Toronto (n \= 36), Vancouver (n \= 79), Los Angeles (n \= 11), and Houston (n \= 36). Sampling covered four team spaces per hotel in Montreal, Toronto, and Vancouver (physiotherapy/treatment room, meal room, equipment/kit room, coaches' meeting room), three in Los Angeles (no coaches' room), and four in Houston (the coaches' room replaced by a team-occupied hallway). \[Invalid cartridges: state the number of runs excluded because the assay's internal sample processing control failed to amplify, with a per-city breakdown, and confirm the number of valid cartridges remaining and that all viral detections came from valid runs — TO ADD.\]
 
 Most samples were negative for all four targets. Across the study, 15 cartridges yielded a detection of at least one respiratory virus: SARS-CoV-2 in 11, IAV in 3, and IBV in 1; no RSV was detected. Detections and their cycle-threshold (Ct) values are summarised in Table 1 and displayed over time in Figure 1 and Figure 2. Consistent with the low summer circulation of these viruses in the Northern hemisphere, detections were sporadic early in the tournament and clustered in the final host cities.
+
+![Figure 1: respiratory-virus detections across the World Cup](analysis/figure1_static.png)
+
+**Figure 1. Respiratory-virus detections in team-space air samples across the 2026 FIFA World Cup.**
+Air was sampled continuously in Team Canada congregate spaces across five host
+cities from 3 June to 4 July 2026, and every cartridge was tested for
+SARS-CoV-2, influenza A, influenza B, and RSV. All cities are shown on a single
+continuous local-time axis. Rows are the four target viruses; each rectangle is
+one cartridge tested for one virus, drawn to its exact sampling window. Rooms
+are merged within each city. A box is blue if the virus was detected in any
+room (fill mapped to the lowest Ct across rooms), white if no room detected it
+but at least one returned a valid negative, and grey if every room was invalid.
+An asterisk beneath the axis marks a session with partial room validity.
+
+![Figure 2: per-room detections during the Houston period](analysis/figure2_houston.png)
+
+**Figure 2. Per-room detections during the Houston sampling period.**
+Sampling in Houston ran from the evening of 30 June to 4 July 2026 across four
+team spaces (physiotherapy room, meal room, equipment room, and a team-occupied
+hallway). Rows group the four target viruses within each room; the horizontal
+axis is local wall-clock time. White boxes are valid negatives, grey boxes are
+invalid runs, and blue boxes are detections (fill mapped to Ct). On 1 July,
+SARS-CoV-2 was detected in the meal room, physiotherapy room, and hallway, and
+influenza A in the equipment room. SARS-CoV-2 returned on 3–4 July at lower Ct,
+most strongly in the meal room.
 
 Detections clustered in the later part of the tournament. 11 of 47 cartridges (23.4%) were positive in the two US cities (Los Angeles, Houston) versus 4 of 135 (3.0%) in the three Canadian cities (Montreal, Toronto, Vancouver) (Fisher's exact test, odds ratio 0.10, p \= 7.5 × 10⁻⁵). We report this contrast descriptively and caution against a geographic reading: host country is completely confounded with time and tournament stage, because the Canadian cities were sampled first (3–24 June) and the US cities last (27 June–4 July). The rise therefore cannot be separated from increasing community circulation over the sampling window, the team's accumulating exposures and enlarging entourage as the tournament progressed, or the specific hotel-staff exposures in Los Angeles and Houston described below. Because cartridges from the same room and day are not independent, the p value is an approximation.
 
@@ -218,7 +261,7 @@ The University of Wisconsin–Madison Institutional Review Board determined that
 
 ### Data sharing statement
 
-The air-sampling detection data reported in this study (cartridge-level results by virus, room type, city, date, and cycle-threshold value) are available from the corresponding author on reasonable request \[or: are provided in the Supplementary Material / are available at LabKey/〈repository and accession〉\]. Viral sequencing data will be deposited in \[repository, e.g., NCBI GenBank/SRA\] under accession \[number\] upon publication. \[Confirm repository, accession numbers, and access conditions.\]
+The air-sampling detection data reported in this study — cartridge-level results by virus, room type, city, date, sampling window, and cycle-threshold value — are available in the study repository at `analysis/data/cartridges_long.csv` (728 rows: 182 respiratory cartridges × 4 targets; one row per cartridge × virus). The community wastewater surveillance values used for the contextual comparison are provided as per-city extracts in the same repository (`analysis/data/ww_canada.csv`, `analysis/data/ww_losangeles.csv`, and `analysis/data/ww_houston.csv`), each retrieved from the public source cited in the Methods. All figures in this manuscript are reproducible from these files using the analysis scripts in the repository (`analysis/make_figures.py` and `analysis/make_figure3.py`). The repository is at https://github.com/dholab/team-canada-world-cup-2026 \[currently private; it will be made public upon publication — confirm access conditions and add an archived DOI, e.g. via Zenodo, at that time\]. Viral sequencing data from the July 4, 2026 Houston eluates will be deposited in \[repository, e.g., NCBI GenBank/SRA\] under accession \[number\] upon publication. \[Confirm repository, accession numbers, and access conditions.\]
 
 ### Patient and public involvement
 
@@ -247,62 +290,3 @@ Timothy Locksmith: \[ORCID — confirm\]
 Nick Minor: \[ORCID — confirm\]
 
 Shelby L. O'Connor: \[ORCID — confirm\]
-
----
-
-## Figures
-
-### Figure 1
-
-![Figure 1: respiratory-virus detections across the World Cup](analysis/figure1_static.png)
-
-**Figure 1. Respiratory-virus detections in team-space air samples across the 2026 FIFA World Cup.**
-Air was sampled continuously in Team Canada congregate spaces across five host
-cities from 3 June to 4 July 2026, and every cartridge was tested for
-SARS-CoV-2, influenza A, influenza B, and RSV. All cities are shown on a single
-continuous local-time axis. Rows are the four target viruses; each rectangle is
-one cartridge tested for one virus, drawn to its exact sampling window. Rooms
-are merged within each city. A box is blue if the virus was detected in any
-room (fill mapped to the lowest Ct across rooms), white if no room detected it
-but at least one returned a valid negative, and grey if every room was invalid.
-An asterisk beneath the axis marks a session with partial room validity.
-
-
-### Figure 2
-
-![Figure 2: per-room detections during the Houston period](analysis/figure2_houston.png)
-
-**Figure 2. Per-room detections during the Houston sampling period.**
-Sampling in Houston ran from the evening of 30 June to 4 July 2026 across four
-team spaces (physiotherapy room, meal room, equipment room, and a team-occupied
-hallway). Rows group the four target viruses within each room; the horizontal
-axis is local wall-clock time. White boxes are valid negatives, grey boxes are
-invalid runs, and blue boxes are detections (fill mapped to Ct). On 1 July,
-SARS-CoV-2 was detected in the meal room, physiotherapy room, and hallway, and
-influenza A in the equipment room. SARS-CoV-2 returned on 3–4 July at lower Ct,
-most strongly in the meal room.
-
----
-
-## Supplemental material
-
-### Online supplemental figure 1
-
-![Online supplemental figure 1: community wastewater context by host city](analysis/figure3_wastewater.png)
-
-**Online supplemental figure 1. Community wastewater surveillance context in each host city over the 2025–2026 respiratory season.**
-Each panel (A to E) is one host city, plotting publicly reported municipal
-wastewater levels for the four study targets (SARS-CoV-2, influenza A, influenza
-B, and RSV) from August 2025 through mid-July 2026. The shaded gold band marks
-Team Canada's air-sampling window in that city. **The four data sources report
-non-interchangeable quantities and are each shown on their own independent
-vertical axis; levels must be read within a panel and never compared between
-panels.** Panels A–C (Montreal, Toronto, Vancouver) use the PHAC wastewater
-aggregate (PMMoV-normalized index); panel D (Los Angeles) uses the California
-CDPH/CDC-NWSS JWPCP dataset, self-normalized to fecal load; panel E (Houston)
-uses the Rice/Houston Health Department 69th Street index (SARS-CoV-2 only,
-ending 22 June 2026, before the team's stay). Across all five cities the visit
-windows fall in the seasonal trough, at or near each site's own lowest values,
-indicating no host city was experiencing unusually high community
-respiratory-virus circulation while the team was present.
-
