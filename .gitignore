@@ -24,3 +24,7 @@ analysis/figure3_wastewater_interactive.html
 .DS_Store
 
 /.quarto/
+
+# Editable Illustrator masters live in Google Drive, not the repo (only the
+# rendered PNG/PDF exports are committed).
+*.ai

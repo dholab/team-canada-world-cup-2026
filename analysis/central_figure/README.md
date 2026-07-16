@@ -3,24 +3,31 @@
 The study's **Central figure** and the source graphics assembled into it in
 Adobe Illustrator.
 
-## `central_figure.ai` / `central_figure.png`
+## `central_figure.png`
 
-`central_figure.ai` is the editable Illustrator master (the layout that combines
-the sampling workflow, the detection timeline, and the response-action icons).
-`central_figure.png` is a trimmed raster export of it, embedded at the top of
-the manuscript in both `index.qmd` (interactive site) and `PREVIEW.md`.
+`central_figure.png` is a trimmed raster export of the Central figure, embedded
+at the top of the manuscript in both `index.qmd` (interactive site) and
+`PREVIEW.md`. The Central figure combines the sampling workflow, the detection
+timeline, and the response-action icons.
 
-After editing the `.ai`, re-export the PNG. If Illustrator is available, export
-directly (best quality). Otherwise a quick trimmed raster can be made with:
+The editable Illustrator master (`central figure.ai`) is **not kept in this
+repo**. Non-programmatic assets live in the manuscript's Google Drive folder
+(`.../2026-07 Team Canada air sampling/figures/central figure.ai`), which is the
+single place to edit it. This repo holds only the rendered `.png` it needs to
+display the figure.
+
+After editing the `.ai` in Illustrator, export a new PNG and drop it in here.
+If Illustrator is unavailable, a quick trimmed raster can be made from the
+Illustrator-exported PDF with:
 
 ```bash
-qlmanage -t -s 3000 -o /tmp "analysis/central_figure/central_figure.ai"
-magick "/tmp/central_figure.ai.png" -background white -flatten -fuzz 2% \
+qlmanage -t -s 3000 -o /tmp "central figure.pdf"
+magick "/tmp/central figure.pdf.png" -background white -flatten -fuzz 2% \
   -trim +repage analysis/central_figure/central_figure.png
 ```
 
 For final journal submission, export a high-resolution PNG or a vector PDF
-straight from Illustrator rather than using the quick raster above.
+straight from Illustrator.
 
 ## Source graphics
 
