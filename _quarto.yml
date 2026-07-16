@@ -1,0 +1,25 @@
+project:
+  type: default
+  output-dir: _site
+  render:
+    - index.qmd
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-location: left
+    toc-depth: 2
+    page-layout: full
+    embed-resources: false
+    css: styles.css
+    grid:
+      body-width: 900px
+    link-external-newwindow: true
+  pdf:
+    documentclass: article
+    geometry:
+      - margin=1in
+    fontsize: 11pt
+    colorlinks: true
+    keep-tex: false

@@ -1,0 +1,15 @@
+/* Manuscript page tweaks for the interactive HTML build. */
+.quarto-title-block .quarto-title .title {
+  font-size: 1.9rem;
+  line-height: 1.2;
+}
+figure iframe,
+.cell iframe {
+  background: #fff;
+}
+/* Give embedded figure captions a touch more separation. */
+:is(#fig-detections, #fig-houston) p:last-of-type {
+  font-size: 0.9rem;
+  color: #444;
+  margin-top: 0.5rem;
+}

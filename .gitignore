@@ -1,0 +1,24 @@
+# uv / Python environment
+.venv/
+__pycache__/
+*.pyc
+.uvcache/
+.uv/
+
+# Quarto / build outputs
+_site/
+.quarto/
+*.tex
+
+# Generated figures (rebuilt in CI from analysis/data/)
+analysis/figure1_interactive.html
+analysis/figure1_static.pdf
+analysis/figure1_static.png
+analysis/figure2_houston.pdf
+analysis/figure2_houston.png
+analysis/figure2_houston_interactive.html
+
+# macOS
+.DS_Store
+
+/.quarto/

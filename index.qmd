@@ -1,0 +1,108 @@
+---
+title: "Air sampling in team congregate spaces for early detection of respiratory virus threats"
+subtitle: "Viral air sampling in team settings"
+author:
+  - name: "David Simon"
+    affiliations: [Canada Soccer]
+  - name: "Timothy Locksmith"
+    affiliations: [UW–Madison]
+  - name: "Nick Minor"
+    affiliations: [UW–Madison]
+  - name: "Eli J. O'Connor"
+    affiliations: [UW–Madison]
+  - name: "Shelby L. O'Connor"
+    affiliations: [UW–Madison]
+    note: "equal contribution"
+  - name: "David H. O'Connor"
+    affiliations: [UW–Madison]
+    note: "equal contribution; corresponding author (dhoconno@wisc.edu)"
+date: last-modified
+keywords:
+  - respiratory infection
+  - team sport
+  - athlete health
+  - public health
+---
+
+::: {.callout-note appearance="simple"}
+This is the interactive version of the manuscript. The figures below are
+explorable — hover for per-room, per-city detail. The prose is authored in
+Google Docs and synced automatically; the figures are regenerated from the
+committed data in [`analysis/`](https://github.com/dholab/team-canada-world-cup-2026/tree/main/analysis)
+on every build. A [submission PDF](team-canada-air-sampling.pdf) with static
+figures is produced from the same source.
+:::
+
+{{< include _prose.md >}}
+
+## Figures
+
+::: {#fig-detections}
+
+```{=html}
+<iframe src="analysis/figure1_interactive.html" width="100%" height="620"
+        style="border:none;" loading="lazy"
+        title="Figure 1: respiratory-virus detections across the World Cup"></iframe>
+```
+
+::: {.content-visible when-format="pdf"}
+![](analysis/figure1_static.png)
+:::
+
+**Figure 1. Respiratory-virus detections in team-space air samples across the
+2026 FIFA World Cup.** Air was sampled continuously in Team Canada congregate
+spaces across five host cities from 3 June to 4 July 2026, and every cartridge
+was tested for SARS-CoV-2, influenza A, influenza B, and respiratory syncytial
+virus (RSV). All cities are shown on a single continuous local-time axis. Rows
+are the four target viruses; each rectangle is one cartridge tested for one
+virus, drawn to that cartridge's exact sampling window. Rooms are merged within
+each city, so each box summarises all rooms sampled in that session. A box is
+blue if the virus was detected in any room, with fill mapped to the lowest
+cycle-threshold (Ct) value across rooms; white if no room detected the virus
+but at least one returned a valid negative result; grey if every room in that
+session was invalid. An asterisk beneath the axis marks a session with partial
+room validity. A sample counted as a detection if the instrument reported any
+Ct value, regardless of qualitative call. The per-room data are explorable
+above, and the Houston episode is shown by room in @fig-houston.
+
+:::
+
+::: {#fig-houston}
+
+```{=html}
+<iframe src="analysis/figure2_houston_interactive.html" width="100%" height="520"
+        style="border:none;" loading="lazy"
+        title="Figure 2: per-room detections during the Houston period"></iframe>
+```
+
+::: {.content-visible when-format="pdf"}
+![](analysis/figure2_houston.png)
+:::
+
+**Figure 2. Per-room detections during the Houston sampling period.** Sampling
+in Houston ran from the evening of 30 June to 4 July 2026 across four team
+spaces (physiotherapy room, meal room, equipment room, and a team-occupied
+hallway). Rows group the four target viruses within each room; the horizontal
+axis is local wall-clock time. Each rectangle is one cartridge tested for one
+virus, drawn to its exact sampling window. White boxes are valid negatives,
+grey boxes are invalid runs, and blue boxes are detections, with fill mapped to
+the Ct value. On 1 July, SARS-CoV-2 was detected in the meal room, the
+physiotherapy room, and the hallway, and influenza A in the equipment room. No
+virus was detected on 2 July. SARS-CoV-2 returned on 3–4 July at lower Ct, most
+strongly in the meal room. The two invalid runs fell on 1 July.
+
+:::
+
+## Data and code
+
+The underlying dataset — one row per cartridge × target virus (728 rows: 182
+respiratory cartridges × 4 viruses) — and the script that builds every figure
+are in the repository:
+
+- Data: [`analysis/data/cartridges_long.csv`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/data/cartridges_long.csv)
+- Figure pipeline: [`analysis/make_figures.py`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/make_figures.py)
+
+Columns: `city, room, sampler, cartridge, start, end, dur_h, virus, ct, qual,
+detected, spc`. A blank `ct` means the target did not amplify; `detected = 1`
+marks a reported Ct regardless of the instrument's qualitative call; `spc` is
+the internal sample-processing control.

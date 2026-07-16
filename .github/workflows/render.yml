@@ -1,0 +1,85 @@
+name: Render manuscript
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    # Daily at 11:00 UTC — picks up Google Doc edits without a manual push.
+    - cron: "0 11 * * *"
+
+# Allow the workflow to deploy to GitHub Pages.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one Pages deployment at a time; let a newer run supersede an in-flight one.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Fetch manuscript prose from Google Doc
+        # Non-fatal: if the Doc is not link-viewable yet, keep the committed
+        # _prose.md snapshot so the build still succeeds.
+        run: |
+          python scripts/fetch_prose.py || \
+            echo "Doc fetch failed; using committed _prose.md snapshot."
+
+      - name: Build figures
+        working-directory: analysis
+        run: |
+          uv sync
+          uv run python make_figures.py
+
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          tinytex: true
+
+      - name: Render HTML site
+        run: quarto render --to html
+
+      - name: Render submission PDF
+        run: |
+          quarto render index.qmd --to pdf
+          # Place the PDF inside the site so the in-page download link resolves.
+          cp index.pdf _site/team-canada-air-sampling.pdf || \
+            cp *.pdf _site/team-canada-air-sampling.pdf
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Upload PDF as build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: manuscript-pdf
+          path: _site/team-canada-air-sampling.pdf
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
