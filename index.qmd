@@ -100,9 +100,70 @@ respiratory cartridges × 4 viruses) — and the script that builds every figure
 are in the repository:
 
 - Data: [`analysis/data/cartridges_long.csv`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/data/cartridges_long.csv)
-- Figure pipeline: [`analysis/make_figures.py`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/make_figures.py)
+- Main-figure pipeline (Figures 1–2): [`analysis/make_figures.py`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/make_figures.py)
+- Supplemental-figure pipeline (online supplemental figure 1): [`analysis/make_figure3.py`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/make_figure3.py)
 
 Columns: `city, room, sampler, cartridge, start, end, dur_h, virus, ct, qual,
 detected, spc`. A blank `ct` means the target did not amplify; `detected = 1`
 marks a reported Ct regardless of the instrument's qualitative call; `spc` is
 the internal sample-processing control.
+
+The wastewater comparison in [online supplemental figure 1](#fig-s1-wastewater)
+is built from per-city extracts of the public dashboards, committed alongside
+the figure script so the figure is reproducible without re-downloading the large
+source files:
+
+- Canada (Montreal, Toronto, Vancouver): [`analysis/data/ww_canada.csv`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/data/ww_canada.csv), from the [PHAC wastewater aggregate](https://health-infobase.canada.ca/src/data/wastewater/wastewater_aggregate.csv)
+- Los Angeles (JWPCP): [`analysis/data/ww_losangeles.csv`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/data/ww_losangeles.csv), from the California CDPH/NWSS open dataset
+- Houston (69th Street): [`analysis/data/ww_houston.csv`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/data/ww_houston.csv), from the Rice/HHD dashboard ArcGIS feature service
+
+Each extract has columns `city, target, week, value, source, metric`; `target`
+uses `covN2, fluA, fluB, rsv`; `metric` records which non-interchangeable
+quantity that source reports (`pmmov_index`, `fecal_normalized`,
+`houston_vl_index`).
+
+## Supplemental material
+
+::: {#fig-s1-wastewater}
+
+```{=html}
+<iframe src="analysis/figure3_wastewater_interactive.html" width="100%" height="1180"
+        style="border:none;" loading="lazy"
+        title="Online supplemental figure 1, community wastewater context by host city"></iframe>
+```
+
+::: {.content-visible when-format="pdf"}
+![](analysis/figure3_wastewater.png)
+:::
+
+**Online supplemental figure 1. Community wastewater surveillance context in
+each host city over the 2025–2026 respiratory season.** Each panel (A to E) is
+one host city, plotting publicly reported municipal wastewater levels for the
+four study targets (SARS-CoV-2, influenza A, influenza B, and RSV, with the same
+colour used for each virus in every panel) from August 2025 through mid-July
+2026. The shaded gold band marks Team Canada's air-sampling window in that city,
+widened to a minimum readable width and marked "visit" for the shortest 1 to 2
+day stays. **The four data sources report non-interchangeable quantities and are
+therefore each shown on their own independent vertical axis. Levels must be read
+within a panel and never compared between panels.** Panels A to C (Montreal,
+Toronto, and Vancouver) use the Public Health Agency of Canada wastewater
+aggregate (health-infobase), a PMMoV-normalized viral index, with the weekly
+median taken across contributing sub-sites (Vancouver is reported as "Metro
+Vancouver"). Open circles mark non-detections plotted at the source's
+detection-limit substitution value. Panel D (Los Angeles) uses the California
+open dataset (CDPH and CDC NWSS) for the Joint Water Pollution Control Plant in
+Carson, which serves the Torrance area where the team stayed. Because that
+source reports absolute concentrations, each target is self-normalized to fecal
+load as copies/L divided by the reported human fecal marker concentration
+(×10⁶), and influenza B was not reported at this plant during the season. Panel
+E (Houston) uses the Rice University and Houston Health Department dashboard for
+the 69th Street plant serving the downtown Main Street hotel, reporting the
+published viral-load index for SARS-CoV-2 only at plant level, scaled so that
+100 represents the July 2020 baseline. The dotted line and hatched band mark
+that this public feed ends 22 June 2026, before the team's 30 June to 4 July
+stay. Across all five cities the visit windows fall in the seasonal trough, at
+or near each site's own lowest values of the season, indicating that no host
+city, Canadian or US, was experiencing an unusually high level of community
+respiratory-virus circulation while the team was present.
+
+:::

@@ -475,6 +475,11 @@ def main() -> None:
                   HERE / "figure2_houston.pdf", HERE / "figure2_houston.png")
     build_figure2_interactive(df, "Houston", HERE / "figure2_houston_interactive.html")
 
+    # Figure 3: community wastewater context per host city (own module; reads the
+    # committed per-city extracts in data/ww_*.csv).
+    import make_figure3
+    make_figure3.main()
+
 
 if __name__ == "__main__":
     main()

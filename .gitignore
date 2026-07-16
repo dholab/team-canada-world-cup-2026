@@ -10,13 +10,18 @@ _site/
 .quarto/
 *.tex
 
-# Generated figures (rebuilt in CI from analysis/data/)
+# Generated figures (rebuilt in CI from analysis/data/).
+# The two static PNGs are committed on purpose so they render in PREVIEW.md
+# on GitHub while the interactive Pages site is held back.
 analysis/figure1_interactive.html
 analysis/figure1_static.pdf
-analysis/figure1_static.png
 analysis/figure2_houston.pdf
-analysis/figure2_houston.png
 analysis/figure2_houston_interactive.html
+analysis/figure3_wastewater.pdf
+analysis/figure3_wastewater_interactive.html
+analysis/figure3_wastewater.pdf
+analysis/figure3_wastewater.png
+analysis/figure3_wastewater_interactive.html
 
 # macOS
 .DS_Store
