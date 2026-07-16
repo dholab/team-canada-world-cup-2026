@@ -31,3 +31,21 @@ uv run python central_figure/make_timeline.py
 
 It reads `../data/cartridges_long.csv`, so it always reflects the latest
 corrected dataset.
+
+## `icons/` — response-action silhouettes
+
+Seven solid-silhouette SVG icons, one per low-regret action the manuscript names
+as a response to a positive detection (Discussion), for arraying horizontally in
+the Central Figure:
+
+`ventilation`, `purifier`, `far_uvc`, `mask`, `access`, `exclude_ill`,
+`vigilance`.
+
+Each is a standalone 64 × 64 pt SVG with a single fill colour (edit `FILL` in
+`make_action_icons.py`, or recolour in Illustrator). `action_icons_strip.svg`
+lays all seven in a row. Regenerate:
+
+```bash
+cd analysis
+uv run python central_figure/make_action_icons.py
+```
