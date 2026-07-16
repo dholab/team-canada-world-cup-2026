@@ -128,23 +128,24 @@ def main() -> None:
     # The Quarto anchor links don't resolve on GitHub; make them plain text.
     prose = prose.replace("[Figure 1](#fig-detections)", "Figure 1")
     prose = prose.replace("[Figure 2](#fig-houston)", "Figure 2")
+    # Drop an editorial word-count note the author added to the Abstract heading.
+    prose = re.sub(r"^(##\s+Abstract)\s*\([^)]*\)\s*$", r"\1", prose, flags=re.M)
     prose = prose.strip()
 
-    # Place each figure right after the paragraph that first calls it out.
-    # Figures 1 and 2 are introduced together; insert 2 first so that after
-    # both insertions they end up in 1-then-2 order below that paragraph.
+    # Place each figure right after the paragraph that first calls it out. In the
+    # current Doc, Figure 1 is introduced in the Sampling overview and Figure 2
+    # in the Detections-by-city paragraph; the wastewater supplemental figure is
+    # anchored to the bridging sentence that survived in the main-text Results.
     prose = insert_after_paragraph(
-        prose, "displayed over time in Figure 1 and Figure 2", FIG2, "Figure 2"
+        prose, "summarized in Figure 1", FIG1, "Figure 1"
     )
     prose = insert_after_paragraph(
-        prose, "displayed over time in Figure 1 and Figure 2", FIG1, "Figure 1"
+        prose, "Houston accounted for 8 of the 15 detections (Figure 2)",
+        FIG2, "Figure 2",
     )
-    # "online supplemental figure 1" is referenced twice (Methods and Results);
-    # place the figure in the Results narrative that discusses the finding,
-    # anchored on a phrase unique to that paragraph.
     prose = insert_after_paragraph(
-        prose, "raised the question of whether the team had simply arrived",
-        FIG_S1, "wastewater Results narrative",
+        prose, "online supplemental methods and online supplementary figure 1",
+        FIG_S1, "wastewater supplemental figure",
     )
 
     doc = (

@@ -29,9 +29,11 @@ OUT = HERE.parent / "_prose.md"
 
 # The body we keep starts at "## Abstract" and ends just before the trailing
 # boilerplate sections that Quarto supplies itself.
-BODY_START = re.compile(r"^##\s+Abstract\s*$", re.M)
+# The Abstract heading may carry a trailing note such as "(233 words)", so match
+# the heading prefix rather than requiring the line to end at "Abstract".
+BODY_START = re.compile(r"^##\s+Abstract\b.*$", re.M)
 # Everything from "## References" onward is boilerplate/placeholder in the Doc.
-BODY_END = re.compile(r"^##\s+References\s*$", re.M)
+BODY_END = re.compile(r"^##\s+References\b.*$", re.M)
 
 
 def fetch(source: str | None) -> str:
