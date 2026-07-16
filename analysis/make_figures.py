@@ -274,22 +274,21 @@ def build_static(df: pd.DataFrame, out_pdf: pathlib.Path, out_png: pathlib.Path)
     ax.set_xlim(mdates.date2num(t0), mdates.date2num(t1))
     ax.set_ylim(-0.6, len(yorder) - 0.4)
 
-    # One box per session x virus. Negatives are a soft light-grey fill with a
-    # subtle edge so each individual sampling interval remains visible; detections
-    # and invalids sit on top with a white edge so each stands out.
-    NEG_FILL = "#eef1f4"
+    # One box per session x virus. Every box carries the same thin light-grey
+    # border so individual sampling intervals stay visible. Valid negatives are
+    # white; detections are filled by Ct and invalids grey, and sit on top.
     cells = _merge_cells(df)
     for r in cells[cells.status == "neg"].itertuples():
         x0 = mdates.date2num(r.start)
         ax.add_patch(plt.Rectangle(
             (x0, ypos[r.virus] - ROW_H / 2), mdates.date2num(r.end) - x0, ROW_H,
-            facecolor=NEG_FILL, edgecolor=NEG_EDGE, linewidth=0.4, zorder=1))
+            facecolor=NEG_COLOR, edgecolor=NEG_EDGE, linewidth=0.4, zorder=1))
     for r in cells[cells.status != "neg"].itertuples():
         x0 = mdates.date2num(r.start)
         fc = ct_hex(r.ct) if r.status == "det" else INVALID_COLOR
         ax.add_patch(plt.Rectangle(
             (x0, ypos[r.virus] - ROW_H / 2), mdates.date2num(r.end) - x0, ROW_H,
-            facecolor=fc, edgecolor="white", linewidth=0.6, zorder=3))
+            facecolor=fc, edgecolor=NEG_EDGE, linewidth=0.5, zorder=3))
 
     # asterisk beneath each cartridge that had an invalid run (SPC did not
     # amplify), placed at the run's real time on the axis. These sessions still
@@ -331,7 +330,7 @@ def build_static(df: pd.DataFrame, out_pdf: pathlib.Path, out_png: pathlib.Path)
     cbar.set_label("Ct value (lower = more virus)", fontsize=8)
     cbar.ax.tick_params(labelsize=7)
     fig.subplots_adjust(bottom=0.26)
-    handles = [plt.Rectangle((0, 0), 1, 1, fc="#eef1f4", ec=NEG_EDGE, lw=0.5)]
+    handles = [plt.Rectangle((0, 0), 1, 1, fc=NEG_COLOR, ec=NEG_EDGE, lw=0.5)]
     fig.legend(handles,
                ["Sampled, no viral genetic material detected        "
                 "*  one or more rooms invalid this session (SPC did not amplify)"],
@@ -350,11 +349,39 @@ def build_figure2(df: pd.DataFrame, city: str,
                   out_pdf: pathlib.Path, out_png: pathlib.Path) -> None:
     sub = df[df.city == city].copy()
     rooms = [r for r in ROOM_ORDER if r in sub["room"].unique()]
-    # y = room x virus (four virus sub-rows per room), grouped by room
-    ycats = [(room, v) for room in rooms for v in VIRUS_ORDER]
-    ypos = {rv: i for i, rv in enumerate(reversed(ycats))}
+    # y = room x virus (four virus sub-rows per room), grouped by room with a
+    # blank gap between room blocks so the groups read as distinct.
+    ROOM_GAP = 1.2                 # extra blank rows between room blocks
+    n_v = len(VIRUS_ORDER)
+    # Assign a y-coordinate to each (room, virus). Rooms stack top-to-bottom, so
+    # the first room gets the highest y-values.
+    ypos, yticks, yticklabels = {}, [], []
+    room_span = {}
+    n_rooms = len(rooms)
+    slot = 0.0
+    for room in rooms:
+        block_positions = []
+        for v in VIRUS_ORDER:
+            block_positions.append(slot)
+            slot += 1.0
+        # invert so the first virus sits at the top of its block
+        top_slot = block_positions[0]
+        bot_slot = block_positions[-1]
+        for v, s in zip(VIRUS_ORDER, block_positions):
+            ypos[(room, v)] = s
+            yticks.append(s)
+            yticklabels.append(v)
+        room_span[room] = (top_slot, bot_slot)
+        slot += ROOM_GAP
+    total = slot - ROOM_GAP
+    # flip vertically so first room is on top
+    def flip(y):
+        return total - y
+    ypos = {k: flip(v) for k, v in ypos.items()}
+    yticks = [flip(t) for t in yticks]
+    room_span = {r: (flip(a), flip(b)) for r, (a, b) in room_span.items()}
 
-    fig, ax = plt.subplots(figsize=(7.5, 0.42 * len(ycats) + 1.2))
+    fig, ax = plt.subplots(figsize=(7.5, 0.42 * len(rooms) * n_v + 1.2))
     c0, c1 = sub["start"].min(), sub["end"].max()
     pad = pd.Timedelta(hours=4)
     ax.set_xlim(mdates.date2num(c0 - pad), mdates.date2num(c1 + pad))
@@ -366,24 +393,20 @@ def build_figure2(df: pd.DataFrame, city: str,
             continue
         _draw_box(ax, r, ypos[yk], ROW_H)
 
-    # y tick labels: show virus name; add a bold room label + separators
-    ax.set_yticks(range(len(ycats)))
-    ax.set_yticklabels([v for (_room, v) in reversed(ycats)], fontsize=8)
-    for k, room in enumerate(rooms):
-        top = ypos[(room, VIRUS_ORDER[0])]
-        bot = ypos[(room, VIRUS_ORDER[-1])]
-        ymid = (top + bot) / 2
+    # y tick labels: virus name per sub-row, bold room label centred on the block
+    ax.set_yticks(yticks)
+    ax.set_yticklabels(yticklabels, fontsize=8)
+    for room in rooms:
+        a, b = room_span[room]
+        ymid = (a + b) / 2
         ax.text(-0.135, ymid, room, transform=ax.get_yaxis_transform(),
                 ha="right", va="center", fontsize=9, fontweight="bold")
-        if k < len(rooms) - 1:
-            ax.axhline(min(top, bot) - 0.5, color="#dddddd", lw=0.7, zorder=0)
 
-    ax.set_ylim(-0.6, len(ycats) - 0.4)
+    ax.set_ylim(min(ypos.values()) - 0.7, max(ypos.values()) + 0.7)
     ax.xaxis.set_major_locator(mdates.DayLocator(interval=1))
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%d %b"))
     for lab in ax.get_xticklabels():
         lab.set(rotation=45, ha="right", fontsize=8)
-    ax.grid(axis="x", color=GRID, zorder=0)
     for s in ax.spines.values():
         s.set_visible(False)
     ax.tick_params(length=0)

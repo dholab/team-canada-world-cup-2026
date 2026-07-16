@@ -80,7 +80,6 @@ VISIT = {
     "Los Angeles": ("2026-06-27", "2026-06-28"),
     "Houston": ("2026-06-30", "2026-07-04"),
 }
-HOUSTON_FEED_ENDS = pd.Timestamp("2026-06-22")
 
 # Non-detect floor values in the Canadian aggregate (detection-limit
 # substitutions); anything at/below these is plotted but flagged as non-detect.
@@ -159,13 +158,10 @@ def build_static(out_pdf: pathlib.Path, out_png: pathlib.Path) -> None:
             d1 = mid + pd.Timedelta(days=min_days / 2)
         else:
             d0, d1 = v0, v1
-        ax.axvspan(d0, d1, color="#f2c94c", alpha=0.40, zorder=1, lw=0)
-        if city == "Houston":
-            # feed ends before the visit: hatch the un-covered part of the band
-            ax.axvspan(HOUSTON_FEED_ENDS, d1, facecolor="none",
-                       edgecolor="#b58900", hatch="////", lw=0.0, zorder=2)
-            ax.axvline(HOUSTON_FEED_ENDS, color="#b58900", lw=0.8, ls=":",
-                       zorder=2)
+        # Solid gold band marking Team Canada's stay in every city. (In Houston
+        # the public feed ends before the visit, which is stated in the legend,
+        # so the band itself stays solid rather than hatched.)
+        ax.axvspan(d0, d1, color="#f2c94c", alpha=0.55, zorder=1, lw=0)
 
         # panel letter + city + metric, placed just ABOVE the plot area (in the
         # inter-panel gap) so long virus lines never collide with the label
@@ -196,7 +192,7 @@ def build_static(out_pdf: pathlib.Path, out_png: pathlib.Path) -> None:
     # single shared virus legend + a visit-band key, across the top
     virus_handles = [plt.Line2D([0], [0], color=VIRUS_COLOR[t], lw=2,
                                 label=VIRUS_LABEL[t]) for t in VIRUS_ORDER]
-    band = plt.Rectangle((0, 0), 1, 1, fc="#f2c94c", alpha=0.35,
+    band = plt.Rectangle((0, 0), 1, 1, fc="#f2c94c", alpha=0.55,
                          label="Team Canada sampling window")
     nd = plt.Line2D([0], [0], marker="o", color="#888", mfc="white", mew=0.8,
                     ls="none", ms=5, label="non-detect (at detection floor)")
@@ -239,11 +235,8 @@ def build_interactive(out: pathlib.Path) -> None:
                 row=i, col=1)
         # visit band
         v0, v1 = VISIT[city]
-        fig.add_vrect(x0=v0, x1=v1, fillcolor="#f2c94c", opacity=0.3,
+        fig.add_vrect(x0=v0, x1=v1, fillcolor="#f2c94c", opacity=0.55,
                       line_width=0, row=i, col=1)
-        if city == "Houston":
-            fig.add_vline(x=HOUSTON_FEED_ENDS, line=dict(color="#b58900",
-                          width=1, dash="dot"), row=i, col=1)
         # shared y-range for the three Canadian panels; own scale otherwise
         if city in CANADA:
             fig.update_yaxes(range=[0, ca_ylim], title_text="rel. level",
