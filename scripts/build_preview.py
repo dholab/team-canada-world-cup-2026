@@ -28,15 +28,6 @@ AUTHORS = (
     "Shelby L. O'Connor†, David H. O'Connor† (corresponding: dhoconno@wisc.edu)"
 )
 
-TIMELINE = """
-![Detection timeline: ticks mark every sampling window in which any of the four viruses was detected, across the tournament](analysis/figure_timeline.svg)
-
-*Simplified detection timeline. One line spanning the tournament (3 June to 4
-July 2026); each tick marks a sampling window in which any of the four
-respiratory viruses was detected. Detections were sparse early and clustered in
-the final week. The full breakdown by virus, room, and city is in Figure 1.*
-"""
-
 FIG1 = """
 ![Figure 1: respiratory-virus detections across the World Cup](analysis/figure1_static.png)
 
@@ -130,11 +121,6 @@ def main() -> None:
     )
     prose = insert_after_paragraph(
         prose, "displayed over time in Figure 1 and Figure 2", FIG1, "Figure 1"
-    )
-    # Simplified single-line timeline leads in, just before Figure 1.
-    prose = insert_after_paragraph(
-        prose, "displayed over time in Figure 1 and Figure 2", TIMELINE,
-        "detection timeline",
     )
     # "online supplemental figure 1" is referenced twice (Methods and Results);
     # place the figure in the Results narrative that discusses the finding,
