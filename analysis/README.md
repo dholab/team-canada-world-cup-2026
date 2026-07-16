@@ -33,5 +33,19 @@ uv run python make_figures.py
 This writes `figure1_interactive.html`, `figure1_static.pdf`, and
 `figure1_static.png` into the project root.
 
-To regenerate the dataset from the raw results HTML, see the extraction step in
-the study's analysis notes (not required to build the figures).
+## Regenerating the dataset
+
+`data/cartridges_long.csv` is derived from the raw LabKey export in
+`raw/API_PER_ROOM.html` (the "Pathogen heat map by room" dashboard). To rebuild
+it after a corrected export is dropped into `raw/`:
+
+```bash
+uv run python extract_data.py
+```
+
+The extractor joins each cartridge's authoritative sampling window (from the
+dashboard's `points` data) with its Ct and qualitative call (from the embedded
+per-target CSV), keeps the four respiratory targets, and applies the study's
+detection rule (0 < Ct < 99 counts as a detection). See `extract_data.py` for
+details. Rebuilding the dataset is only needed when the source export changes;
+the figures build directly from the committed CSV.
