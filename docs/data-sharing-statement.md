@@ -11,8 +11,12 @@ assigned — fill those in before submission.
 The air-sampling detection data reported in this study — cartridge-level results
 by virus, room type, city, date, sampling window, and cycle-threshold value —
 are available in the study repository at
-`analysis/data/cartridges_long.csv` (728 rows: 182 respiratory cartridges × 4
-targets; one row per cartridge × virus). The community wastewater surveillance
+`analysis/data/cartridges_long.csv` (739 rows, the complete record of collected
+samples, being 182 respiratory cartridges tested for 4 targets plus 11
+cartridges that produced no valid test data). Each cartridge carries a `status`
+flag (valid, spc_negative, probe_error, or no_valid_data), and the figures show
+valid runs only, so invalid samples appear in the table but not in the figures.
+The community wastewater surveillance
 values used for the contextual comparison are provided as per-city extracts in
 the same repository (`analysis/data/ww_canada.csv`,
 `analysis/data/ww_losangeles.csv`, and `analysis/data/ww_houston.csv`), each

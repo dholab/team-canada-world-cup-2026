@@ -110,18 +110,23 @@ strongly in the meal room. The two invalid runs fell on 1 July.
 
 ## Data and code
 
-The underlying dataset — one row per cartridge × target virus (728 rows: 182
-respiratory cartridges × 4 viruses) — and the script that builds every figure
-are in the repository:
+The underlying dataset — the complete record of collected samples (739 rows:
+182 respiratory cartridges × 4 targets, plus 11 cartridges that produced no
+valid test data) — and the script that builds every figure are in the
+repository:
 
 - Data: [`analysis/data/cartridges_long.csv`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/data/cartridges_long.csv)
 - Main-figure pipeline (Figures 1–2): [`analysis/make_figures.py`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/make_figures.py)
 - Supplemental-figure pipeline (online supplemental figure 1): [`analysis/make_figure3.py`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/make_figure3.py)
 
 Columns: `city, room, sampler, cartridge, start, end, dur_h, virus, ct, qual,
-detected, spc`. A blank `ct` means the target did not amplify; `detected = 1`
-marks a reported Ct regardless of the instrument's qualitative call; `spc` is
-the internal sample-processing control.
+detected, spc, spc_ct, status`. A blank `ct` means the target did not amplify;
+`detected = 1` marks a reported Ct regardless of the instrument's qualitative
+call; `spc`/`spc_ct` are the internal sample-processing control's call and Ct;
+`status` flags each cartridge as `valid`, `spc_negative`, `probe_error`, or
+`no_valid_data`. The figures show valid runs only, so samples with a negative
+control, a probe error, or no valid data appear in this table but not in the
+figures.
 
 The wastewater comparison in [online supplemental figure 1](#fig-s1-wastewater)
 is built from per-city extracts of the public dashboards, committed alongside

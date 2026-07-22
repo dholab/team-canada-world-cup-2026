@@ -54,6 +54,10 @@ def ct_hex(ct: float) -> str:
 
 def load() -> pd.DataFrame:
     df = pd.read_csv(DATA)
+    # The dataset also records cartridges that produced no valid test data
+    # (status "no_valid_data", blank virus). Those are for the data table only;
+    # the figures show the four respiratory targets on tested cartridges.
+    df = df[df["virus"].notna() & (df["virus"].astype(str).str.strip() != "")]
     df["start"] = pd.to_datetime(df["start"])
     df["end"] = pd.to_datetime(df["end"])
     df["mid"] = df["start"] + (df["end"] - df["start"]) / 2
