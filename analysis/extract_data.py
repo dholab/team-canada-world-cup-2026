@@ -12,19 +12,18 @@ by (cartridge, target):
   - ct / qual          <- csv     (Average Result / Qualitative Result)
   - spc / spc_ct       <- csv     (SPC row's Qualitative Result / Average Result)
 
-The four respiratory targets are emitted as 4 rows per cartridge (182 x 4 = 728
-rows). In addition, cartridges recorded only as "(invalid - no valid test data)"
-— real collected samples that produced no result — are appended as one row each
-(11 rows), so the CSV is the complete record of collected respiratory-scope
-samples. Norovirus-only cartridges remain out of scope. Total: 739 rows.
+The four respiratory targets are emitted as 4 rows per cartridge. Every
+cartridge carries a `status` of either:
+  - valid     SPC positive and not flagged as invalid by the authors
+  - invalid   SPC did not amplify, a probe error (SPC Ct < 5), or an author
+              override (see FORCE_INVALID)
 
-Every cartridge carries a `status` describing its validity:
-  - valid          SPC positive; targets tested and reportable
-  - spc_negative   SPC did not amplify (Average Result 99)
-  - probe_error    SPC invalid, Ct < 5 (Average Result 0, assay error)
-  - no_valid_data  cartridge produced only "(invalid - no valid test data)"
+Author corrections (see REMOVE / FORCE_INVALID) are applied on every run so the
+dataset is reproducible from the raw export. Cartridges recorded only as
+"(invalid - no valid test data)" are dropped. Norovirus-only cartridges remain
+out of scope.
 
-The figures plot valid runs only; the invalid rows are for the data table.
+The figures plot valid runs only; invalid rows are for the data table.
 
 Detection rule (matches the study definition): a reported Ct with 0 < Ct < 99
 counts as a detection regardless of the instrument's qualitative call; 99 (or a
@@ -45,6 +44,21 @@ HERE = Path(__file__).resolve().parent
 SRC = HERE / "raw" / "API_PER_ROOM.html"
 OUT = HERE / "data" / "cartridges_long.csv"
 
+# Manual corrections not derivable from the raw export (applied on every run so
+# the corrected dataset is reproducible from raw/API_PER_ROOM.html):
+#
+# REMOVE — cartridges excluded from the dataset entirely (these were the
+# "(invalid - no valid test data)" cartridges; per author review they are
+# dropped rather than retained as no_valid_data rows).
+REMOVE = {
+    "IB000010008679", "IB000010008467", "IB000010008659", "IB000010008466",
+    "IB000010008471", "IB000010006962", "IB000010006678", "IB000010006975",
+    "IB000010006980", "IB000010006965", "IB000010006974",
+}
+# FORCE_INVALID — cartridges the export reports as valid (SPC positive) but that
+# the authors have determined are invalid on external grounds.
+FORCE_INVALID = {"IB000010008416"}
+
 # LabKey assay-target names -> the short virus labels used in the figures/CSV.
 VIRUS = {
     "SARS-CoV-2": "SARS-CoV-2",
@@ -52,7 +66,6 @@ VIRUS = {
     "Influenza B virus": "Influenza B",
     "Respiratory syncytial virus": "RSV",
 }
-INVALID_TARGET = "(invalid - no valid test data)"
 COLUMNS = ["city", "room", "sampler", "cartridge", "start", "end", "dur_h",
            "virus", "ct", "qual", "detected", "spc", "spc_ct", "status"]
 
@@ -85,45 +98,26 @@ def ct_value(avg: str) -> str:
     return avg if 0 < val < 99 else ""
 
 
-def parse_local(ts: str) -> str:
-    """'2026-07-04 06:20 CDT' -> naive local wall-clock ISO string.
-
-    Used for invalid cartridges, which have no `points` entry to supply epochs.
-    Drops the trailing timezone abbreviation and keeps the wall-clock time, to
-    match how iso_local() decodes the epoch-based rows."""
-    ts = (ts or "").strip()
-    if not ts:
-        return ""
-    body = ts.rsplit(" ", 1)[0]  # strip 'CDT'/'PDT'/'EDT'
-    return datetime.strptime(body, "%Y-%m-%d %H:%M").isoformat()
-
-
-def spc_status(spc_call: str, spc_avg: str) -> tuple[str, str]:
+def spc_status(cart: str, spc_call: str, spc_avg: str) -> tuple[str, str]:
     """Return (spc_ct, status) for a tested cartridge from its SPC row.
 
-    A positive SPC gives a real Ct (~28-30) and status 'valid'. A negative SPC
-    is either no-amplification (avg 99 -> spc_negative) or a probe error
-    (avg 0, 'Ct < 5 (assay error)' -> probe_error)."""
+    A positive SPC gives a real Ct (~28-30) and status 'valid', unless the
+    cartridge is in FORCE_INVALID. Any non-positive SPC (no amplification or a
+    Ct < 5 probe error) is 'invalid' with a blank spc_ct."""
+    if cart in FORCE_INVALID:
+        return ct_value(spc_avg), "invalid"
     if (spc_call or "").strip().lower() == "positive":
         return ct_value(spc_avg), "valid"
-    try:
-        val = float((spc_avg or "").strip())
-    except ValueError:
-        val = None
-    if val is not None and val < 5:
-        return "", "probe_error"
-    return "", "spc_negative"
+    return "", "invalid"
 
 
 def main() -> None:
     facilities = load_facilities(SRC.read_text(encoding="utf-8", errors="replace"))
 
-    # csv payloads: (cartridge, target) -> row; per-cartridge SPC call + Ct;
-    # and the invalid-only cartridges (metadata taken from their invalid row).
+    # csv payloads: (cartridge, target) -> row; per-cartridge SPC call + Ct.
     csv_rows: dict[tuple[str, str], dict] = {}
     spc: dict[str, str] = {}
     spc_avg: dict[str, str] = {}
-    invalid_meta: dict[str, dict] = {}
     for f in facilities:
         text = f.get("csv", "")
         if not text.strip():
@@ -133,8 +127,6 @@ def main() -> None:
             if r["Assay Target"] == "SPC":
                 spc[r["Cartridge Id"]] = r["Qualitative Result"]
                 spc_avg[r["Cartridge Id"]] = r["Average Result"]
-            elif r["Assay Target"] == INVALID_TARGET:
-                invalid_meta[r["Cartridge Id"]] = r
 
     out_rows = []
     for f in facilities:
@@ -143,10 +135,13 @@ def main() -> None:
             if target not in VIRUS:
                 continue
             cart = p["cartridge"]
+            if cart in REMOVE:
+                continue
             meta = csv_rows.get((cart, target), {})
             ct = ct_value(meta.get("Average Result", ""))
             dur_h = round((p["end"] - p["start"]) / 3_600_000, 2)
-            spc_ct, status = spc_status(spc.get(cart, ""), spc_avg.get(cart, ""))
+            spc_ct, status = spc_status(cart, spc.get(cart, ""),
+                                        spc_avg.get(cart, ""))
             out_rows.append({
                 "city": p["city"],
                 "room": f["roomType"],
@@ -164,37 +159,7 @@ def main() -> None:
                 "status": status,
             })
 
-    # Invalid-only cartridges: one row each, no per-virus data. Metadata comes
-    # from the invalid CSV row (these have no `points` to supply epochs).
-    tested = {r["cartridge"] for r in out_rows}
-    for cart, meta in invalid_meta.items():
-        if cart in tested:
-            continue  # a cartridge that also has real target rows is not lost
-        start = parse_local(meta.get("Start Time (local)", ""))
-        end = parse_local(meta.get("End Time (local)", ""))
-        try:
-            dur_h = f"{(datetime.fromisoformat(end) - datetime.fromisoformat(start)).total_seconds() / 3600:.2f}"
-        except ValueError:
-            dur_h = ""
-        out_rows.append({
-            "city": meta.get("City", ""),
-            "room": meta.get("Room", ""),
-            "sampler": meta.get("Sampler Name", ""),
-            "cartridge": cart,
-            "start": start,
-            "end": end,
-            "dur_h": dur_h,
-            "virus": "",
-            "ct": "",
-            "qual": "",
-            "detected": 0,
-            "spc": spc.get(cart, ""),
-            "spc_ct": "",
-            "status": "no_valid_data",
-        })
-
-    # Stable order: city, room, sampler, cartridge start, then a fixed virus
-    # order (blank-virus invalid rows sort last within their cartridge/session).
+    # Stable order: city, room, sampler, cartridge start, then a fixed virus order.
     vorder = {v: i for i, v in enumerate(
         ["RSV", "Influenza B", "SARS-CoV-2", "Influenza A"])}
     out_rows.sort(key=lambda r: (r["city"], r["room"], r["sampler"],
@@ -207,9 +172,9 @@ def main() -> None:
 
     dets = sum(r["detected"] for r in out_rows)
     carts = len({r["cartridge"] for r in out_rows})
-    invalid = sum(1 for r in out_rows if r["status"] == "no_valid_data")
+    invalid = len({r["cartridge"] for r in out_rows if r["status"] == "invalid"})
     print(f"wrote {OUT}  ({len(out_rows)} rows, {carts} cartridges, {dets} "
-          f"detections, {invalid} invalid-cartridge rows)")
+          f"detections, {invalid} invalid cartridges)")
 
 
 if __name__ == "__main__":

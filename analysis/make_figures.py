@@ -38,7 +38,7 @@ ROOM_ORDER = ["Physio room", "Meal room", "Equipment/Kit room",
 CT_MIN, CT_MAX = 34.0, 46.0
 NEG_COLOR = "#ffffff"     # sampled, valid, virus not detected -> white
 NEG_EDGE = "#c8c8c8"      # thin outline so white boxes read against white bg
-INVALID_COLOR = "#bdbdbd"  # invalid run (SPC not positive) -> grey
+INVALID_COLOR = "#bdbdbd"  # invalid run (status = invalid) -> grey
 GRID = "#f2f2f2"
 
 # Ct colour scale: light blue (high Ct = little virus) -> deep blue (low Ct).
@@ -54,9 +54,9 @@ def ct_hex(ct: float) -> str:
 
 def load() -> pd.DataFrame:
     df = pd.read_csv(DATA)
-    # The dataset also records cartridges that produced no valid test data
-    # (status "no_valid_data", blank virus). Those are for the data table only;
-    # the figures show the four respiratory targets on tested cartridges.
+    # Keep only rows with a named virus (guards against any blank-virus rows).
+    # Validity is read from the `status` column (valid / invalid); invalid runs
+    # are drawn grey, not dropped, so coverage stays visible.
     df = df[df["virus"].notna() & (df["virus"].astype(str).str.strip() != "")]
     df["start"] = pd.to_datetime(df["start"])
     df["end"] = pd.to_datetime(df["end"])
@@ -79,6 +79,7 @@ def build_interactive(df: pd.DataFrame, out: pathlib.Path) -> None:
               .apply(lambda g: pd.Series({
                   "dur_h": g["dur_h"].iloc[0],
                   "spc": g["spc"].iloc[0],
+                  "status": g["status"].iloc[0],
                   "n_det": int(g["detected"].sum()),
                   "min_ct": g.loc[g["detected"] == 1, "ct"].min()
                             if g["detected"].sum() else np.nan,
@@ -101,7 +102,7 @@ def build_interactive(df: pd.DataFrame, out: pathlib.Path) -> None:
 
         idxs = []
         # split into: detections, valid negatives (white), invalid runs (grey)
-        is_invalid = sub["spc"].astype(str).str.strip().str.lower().ne("positive")
+        is_invalid = sub["status"].astype(str).str.strip().str.lower().eq("invalid")
         det = sub[sub["n_det"] > 0]
         neg = sub[(sub["n_det"] == 0) & (~is_invalid)]
         inv = sub[(sub["n_det"] == 0) & (is_invalid)]
@@ -201,7 +202,7 @@ def _draw_box(ax, r, y_center, row_h):
     only the fill differs."""
     x0 = mdates.date2num(r.start)
     w = mdates.date2num(r.end) - x0
-    invalid = str(r.spc).strip().lower() != "positive"
+    invalid = str(r.status).strip().lower() == "invalid"
     if r.detected:
         fc = ct_hex(r.ct)
     elif invalid:
@@ -243,7 +244,7 @@ def _merge_cells(df: pd.DataFrame) -> pd.DataFrame:
     was invalid is the cell invalid (grey). The cell's time span is the union of
     the contributing rooms' windows."""
     df = _assign_sessions(df)
-    df["invalid"] = df["spc"].astype(str).str.strip().str.lower().ne("positive")
+    df["invalid"] = df["status"].astype(str).str.strip().str.lower().eq("invalid")
 
     rows = []
     for (city, session, virus), g in df.groupby(["city", "session", "virus"],
@@ -298,7 +299,7 @@ def build_static(df: pd.DataFrame, out_pdf: pathlib.Path, out_png: pathlib.Path)
     # amplify), placed at the run's real time on the axis. These sessions still
     # have valid negative results in other rooms, so their cells are not grey;
     # the asterisk flags that one or more rooms could not be evaluated.
-    inv_carts = (df[df["spc"].astype(str).str.strip().str.lower().ne("positive")]
+    inv_carts = (df[df["status"].astype(str).str.strip().str.lower().eq("invalid")]
                  .drop_duplicates("cartridge"))
     for r in inv_carts.itertuples():
         cmid = r.start + (r.end - r.start) / 2
@@ -441,7 +442,7 @@ def build_figure2_interactive(df: pd.DataFrame, city: str, out: pathlib.Path) ->
     yindex = {lab: k for k, lab in enumerate(ycats)}
     sub["ylab"] = sub["room"] + "  |  " + sub["virus"].astype(str)
     sub["yy"] = sub["ylab"].map(yindex)
-    sub["invalid"] = sub["spc"].astype(str).str.strip().str.lower().ne("positive")
+    sub["invalid"] = sub["status"].astype(str).str.strip().str.lower().eq("invalid")
 
     ct_scale = [[0.0, "#08306b"], [0.33, "#4292c6"],
                 [0.66, "#c6dbef"], [1.0, "#f2f8fd"]]

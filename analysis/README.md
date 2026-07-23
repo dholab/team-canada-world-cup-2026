@@ -10,10 +10,8 @@ Both figures are built from a single tidy dataset by one script.
 
 ## Data
 
-`data/cartridges_long.csv` — the complete record of collected respiratory-scope
-samples (739 rows), exported from the GeneXpert results. The 182 cartridges that
-were tested for the four respiratory targets contribute 4 rows each (728 rows);
-11 cartridges that produced no valid test data contribute one row each.
+`data/cartridges_long.csv` — one row per cartridge x target virus (728 rows =
+182 respiratory cartridges x 4 viruses), exported from the GeneXpert results.
 
 Columns: `city, room, sampler, cartridge, start, end, dur_h, virus, ct, qual, detected, spc, spc_ct, status`
 
@@ -21,14 +19,15 @@ Columns: `city, room, sampler, cartridge, start, end, dur_h, virus, ct, qual, de
 - `detected` = 1 for a reported Ct regardless of the instrument's qualitative call.
 - `spc` is the internal Sample Processing Control call (Positive / Negative).
 - `spc_ct` is the SPC control's Ct, present only when the control amplified.
-- `status` is the cartridge's validity: `valid` (SPC positive), `spc_negative`
-  (control did not amplify), `probe_error` (SPC Ct < 5, assay error), or
-  `no_valid_data` (cartridge returned no target result; these rows have a blank
-  `virus`).
-- The figures show valid runs only. Invalid samples (`spc_negative`,
-  `probe_error`, `no_valid_data`) are kept in this table but not plotted. Of the
-  182 respiratory cartridges, 5 are invalid (2 `spc_negative`, 3 `probe_error`);
+- `status` is the cartridge's validity, `valid` or `invalid`. Invalid covers a
+  non-amplifying SPC, a probe error (SPC Ct < 5), and author-designated invalid
+  runs (see `FORCE_INVALID` in `extract_data.py`).
+- The figures show valid runs only; invalid runs are drawn grey / marked with an
+  asterisk but are kept in this table. Of the 182 cartridges, 6 are invalid;
   none of the 15 detections came from those.
+
+Some cartridges that produced no valid test data are excluded from the dataset
+entirely (see `REMOVE` in `extract_data.py`).
 
 ## Build
 

@@ -15,10 +15,10 @@ Houston,Equipment/Kit room,Sharpova,IB000010006702,2026-07-01T16:38:00,2026-07-0
 Houston,Equipment/Kit room,Sharpova,IB000010006702,2026-07-01T16:38:00,2026-07-01T20:04:00,3.43,Influenza B,,Negative,0,Positive,35.6,valid
 Houston,Equipment/Kit room,Sharpova,IB000010006702,2026-07-01T16:38:00,2026-07-01T20:04:00,3.43,SARS-CoV-2,,Negative,0,Positive,35.6,valid
 Houston,Equipment/Kit room,Sharpova,IB000010006702,2026-07-01T16:38:00,2026-07-01T20:04:00,3.43,Influenza A,,Negative,0,Positive,35.6,valid
-Houston,Equipment/Kit room,Sharpova,IB000010006703,2026-07-01T20:05:00,2026-07-02T09:55:00,13.83,RSV,,Negative,0,Negative,,spc_negative
-Houston,Equipment/Kit room,Sharpova,IB000010006703,2026-07-01T20:05:00,2026-07-02T09:55:00,13.83,Influenza B,,Negative,0,Negative,,spc_negative
-Houston,Equipment/Kit room,Sharpova,IB000010006703,2026-07-01T20:05:00,2026-07-02T09:55:00,13.83,SARS-CoV-2,,Negative,0,Negative,,spc_negative
-Houston,Equipment/Kit room,Sharpova,IB000010006703,2026-07-01T20:05:00,2026-07-02T09:55:00,13.83,Influenza A,,Negative,0,Negative,,spc_negative
+Houston,Equipment/Kit room,Sharpova,IB000010006703,2026-07-01T20:05:00,2026-07-02T09:55:00,13.83,RSV,,Negative,0,Negative,,invalid
+Houston,Equipment/Kit room,Sharpova,IB000010006703,2026-07-01T20:05:00,2026-07-02T09:55:00,13.83,Influenza B,,Negative,0,Negative,,invalid
+Houston,Equipment/Kit room,Sharpova,IB000010006703,2026-07-01T20:05:00,2026-07-02T09:55:00,13.83,SARS-CoV-2,,Negative,0,Negative,,invalid
+Houston,Equipment/Kit room,Sharpova,IB000010006703,2026-07-01T20:05:00,2026-07-02T09:55:00,13.83,Influenza A,,Negative,0,Negative,,invalid
 Houston,Equipment/Kit room,Sharpova,IB000010006684,2026-07-02T09:56:00,2026-07-02T18:29:00,8.55,RSV,,Negative,0,Positive,29.9,valid
 Houston,Equipment/Kit room,Sharpova,IB000010006684,2026-07-02T09:56:00,2026-07-02T18:29:00,8.55,Influenza B,,Negative,0,Positive,29.9,valid
 Houston,Equipment/Kit room,Sharpova,IB000010006684,2026-07-02T09:56:00,2026-07-02T18:29:00,8.55,SARS-CoV-2,,Negative,0,Positive,29.9,valid
@@ -31,7 +31,6 @@ Houston,Equipment/Kit room,Sharpova,IB000010006687,2026-07-03T08:12:00,2026-07-0
 Houston,Equipment/Kit room,Sharpova,IB000010006687,2026-07-03T08:12:00,2026-07-03T16:10:00,7.97,Influenza B,,Negative,0,Positive,29.5,valid
 Houston,Equipment/Kit room,Sharpova,IB000010006687,2026-07-03T08:12:00,2026-07-03T16:10:00,7.97,SARS-CoV-2,,Negative,0,Positive,29.5,valid
 Houston,Equipment/Kit room,Sharpova,IB000010006687,2026-07-03T08:12:00,2026-07-03T16:10:00,7.97,Influenza A,,Negative,0,Positive,29.5,valid
-Houston,Equipment/Kit room,Sharpova,IB000010006678,2026-07-03T16:10:00,2026-07-04T17:02:00,24.87,,,,0,,,no_valid_data
 Houston,Hallway/Lounge,Rybakina,IB000010008633,2026-06-30T11:58:00,2026-06-30T16:20:00,4.37,RSV,,Negative,0,Positive,29.3,valid
 Houston,Hallway/Lounge,Rybakina,IB000010008633,2026-06-30T11:58:00,2026-06-30T16:20:00,4.37,Influenza B,,Negative,0,Positive,29.3,valid
 Houston,Hallway/Lounge,Rybakina,IB000010008633,2026-06-30T11:58:00,2026-06-30T16:20:00,4.37,SARS-CoV-2,,Negative,0,Positive,29.3,valid
@@ -44,10 +43,10 @@ Houston,Hallway/Lounge,Rybakina,IB000010008697,2026-07-01T08:33:00,2026-07-01T16
 Houston,Hallway/Lounge,Rybakina,IB000010008697,2026-07-01T08:33:00,2026-07-01T16:35:00,8.03,Influenza B,,Negative,0,Positive,30.0,valid
 Houston,Hallway/Lounge,Rybakina,IB000010008697,2026-07-01T08:33:00,2026-07-01T16:35:00,8.03,SARS-CoV-2,42.1,Positive,1,Positive,30.0,valid
 Houston,Hallway/Lounge,Rybakina,IB000010008697,2026-07-01T08:33:00,2026-07-01T16:35:00,8.03,Influenza A,,Negative,0,Positive,30.0,valid
-Houston,Hallway/Lounge,Rybakina,IB000010006697,2026-07-01T16:36:00,2026-07-01T20:03:00,3.45,RSV,,Negative,0,Negative,,spc_negative
-Houston,Hallway/Lounge,Rybakina,IB000010006697,2026-07-01T16:36:00,2026-07-01T20:03:00,3.45,Influenza B,,Negative,0,Negative,,spc_negative
-Houston,Hallway/Lounge,Rybakina,IB000010006697,2026-07-01T16:36:00,2026-07-01T20:03:00,3.45,SARS-CoV-2,,Negative,0,Negative,,spc_negative
-Houston,Hallway/Lounge,Rybakina,IB000010006697,2026-07-01T16:36:00,2026-07-01T20:03:00,3.45,Influenza A,,Negative,0,Negative,,spc_negative
+Houston,Hallway/Lounge,Rybakina,IB000010006697,2026-07-01T16:36:00,2026-07-01T20:03:00,3.45,RSV,,Negative,0,Negative,,invalid
+Houston,Hallway/Lounge,Rybakina,IB000010006697,2026-07-01T16:36:00,2026-07-01T20:03:00,3.45,Influenza B,,Negative,0,Negative,,invalid
+Houston,Hallway/Lounge,Rybakina,IB000010006697,2026-07-01T16:36:00,2026-07-01T20:03:00,3.45,SARS-CoV-2,,Negative,0,Negative,,invalid
+Houston,Hallway/Lounge,Rybakina,IB000010006697,2026-07-01T16:36:00,2026-07-01T20:03:00,3.45,Influenza A,,Negative,0,Negative,,invalid
 Houston,Hallway/Lounge,Rybakina,IB000010007098,2026-07-01T20:04:00,2026-07-02T09:53:00,13.82,RSV,,Negative,0,Positive,29.2,valid
 Houston,Hallway/Lounge,Rybakina,IB000010007098,2026-07-01T20:04:00,2026-07-02T09:53:00,13.82,Influenza B,,Negative,0,Positive,29.2,valid
 Houston,Hallway/Lounge,Rybakina,IB000010007098,2026-07-01T20:04:00,2026-07-02T09:53:00,13.82,SARS-CoV-2,,Negative,0,Positive,29.2,valid
@@ -68,7 +67,6 @@ Houston,Hallway/Lounge,Rybakina,IB000010007110,2026-07-03T16:09:00,2026-07-04T09
 Houston,Hallway/Lounge,Rybakina,IB000010007110,2026-07-03T16:09:00,2026-07-04T09:30:00,17.35,Influenza B,,Negative,0,Positive,30.6,valid
 Houston,Hallway/Lounge,Rybakina,IB000010007110,2026-07-03T16:09:00,2026-07-04T09:30:00,17.35,SARS-CoV-2,37.8,Positive,1,Positive,30.6,valid
 Houston,Hallway/Lounge,Rybakina,IB000010007110,2026-07-03T16:09:00,2026-07-04T09:30:00,17.35,Influenza A,,Negative,0,Positive,30.6,valid
-Houston,Hallway/Lounge,Rybakina,IB000010006965,2026-07-04T09:30:00,2026-07-04T17:01:00,7.52,,,,0,,,no_valid_data
 Houston,Meal room,Jabeur,IB000010008472,2026-06-30T11:52:00,2026-06-30T16:14:00,4.37,RSV,,Negative,0,Positive,29.6,valid
 Houston,Meal room,Jabeur,IB000010008472,2026-06-30T11:52:00,2026-06-30T16:14:00,4.37,Influenza B,,Negative,0,Positive,29.6,valid
 Houston,Meal room,Jabeur,IB000010008472,2026-06-30T11:52:00,2026-06-30T16:14:00,4.37,SARS-CoV-2,,Negative,0,Positive,29.6,valid
@@ -105,13 +103,10 @@ Houston,Meal room,Jabeur,IB000010006972,2026-07-03T16:04:00,2026-07-04T06:19:00,
 Houston,Meal room,Jabeur,IB000010006972,2026-07-03T16:04:00,2026-07-04T06:19:00,14.25,Influenza B,,Negative,0,Positive,29.2,valid
 Houston,Meal room,Jabeur,IB000010006972,2026-07-03T16:04:00,2026-07-04T06:19:00,14.25,SARS-CoV-2,35.5,Positive,1,Positive,29.2,valid
 Houston,Meal room,Jabeur,IB000010006972,2026-07-03T16:04:00,2026-07-04T06:19:00,14.25,Influenza A,,Negative,0,Positive,29.2,valid
-Houston,Meal room,Jabeur,IB000010006975,2026-07-04T06:20:00,2026-07-04T16:38:00,10.30,,,,0,,,no_valid_data
 Houston,Meal room,Sabalenka,IB000010006963,2026-07-03T16:02:00,2026-07-04T09:31:00,17.48,RSV,,Negative,0,Positive,30.6,valid
 Houston,Meal room,Sabalenka,IB000010006963,2026-07-03T16:02:00,2026-07-04T09:31:00,17.48,Influenza B,,Negative,0,Positive,30.6,valid
 Houston,Meal room,Sabalenka,IB000010006963,2026-07-03T16:02:00,2026-07-04T09:31:00,17.48,SARS-CoV-2,34.5,Positive,1,Positive,30.6,valid
 Houston,Meal room,Sabalenka,IB000010006963,2026-07-03T16:02:00,2026-07-04T09:31:00,17.48,Influenza A,,Negative,0,Positive,30.6,valid
-Houston,Meal room,Sabalenka,IB000010006974,2026-07-04T09:32:00,2026-07-04T16:37:00,7.08,,,,0,,,no_valid_data
-Houston,Physio room,Barty,IB000010006962,2026-07-03T16:07:00,2026-07-04T16:59:00,24.87,,,,0,,,no_valid_data
 Houston,Physio room,Kerber,IB000010008470,2026-06-30T11:46:00,2026-06-30T16:16:00,4.50,RSV,,Negative,0,Positive,29.3,valid
 Houston,Physio room,Kerber,IB000010008470,2026-06-30T11:46:00,2026-06-30T16:16:00,4.50,Influenza B,,Negative,0,Positive,29.3,valid
 Houston,Physio room,Kerber,IB000010008470,2026-06-30T11:46:00,2026-06-30T16:16:00,4.50,SARS-CoV-2,,Negative,0,Positive,29.3,valid
@@ -148,7 +143,6 @@ Houston,Physio room,Kerber,IB000010006967,2026-07-03T16:06:00,2026-07-04T06:21:0
 Houston,Physio room,Kerber,IB000010006967,2026-07-03T16:06:00,2026-07-04T06:21:00,14.25,Influenza B,,Negative,0,Positive,29.6,valid
 Houston,Physio room,Kerber,IB000010006967,2026-07-03T16:06:00,2026-07-04T06:21:00,14.25,SARS-CoV-2,,Negative,0,Positive,29.6,valid
 Houston,Physio room,Kerber,IB000010006967,2026-07-03T16:06:00,2026-07-04T06:21:00,14.25,Influenza A,,Negative,0,Positive,29.6,valid
-Houston,Physio room,Kerber,IB000010006980,2026-07-04T06:21:00,2026-07-04T16:40:00,10.32,,,,0,,,no_valid_data
 Los Angeles,Equipment/Kit room,Rybakina,IB000010008459,2026-06-27T09:32:00,2026-06-27T17:00:00,7.47,RSV,,Negative,0,Positive,29.2,valid
 Los Angeles,Equipment/Kit room,Rybakina,IB000010008459,2026-06-27T09:32:00,2026-06-27T17:00:00,7.47,Influenza B,,Negative,0,Positive,29.2,valid
 Los Angeles,Equipment/Kit room,Rybakina,IB000010008459,2026-06-27T09:32:00,2026-06-27T17:00:00,7.47,SARS-CoV-2,,Negative,0,Positive,29.2,valid
@@ -161,7 +155,6 @@ Los Angeles,Equipment/Kit room,Rybakina,IB000010008657,2026-06-28T07:30:00,2026-
 Los Angeles,Equipment/Kit room,Rybakina,IB000010008657,2026-06-28T07:30:00,2026-06-28T17:02:00,9.53,Influenza B,,Negative,0,Positive,29.3,valid
 Los Angeles,Equipment/Kit room,Rybakina,IB000010008657,2026-06-28T07:30:00,2026-06-28T17:02:00,9.53,SARS-CoV-2,,Negative,0,Positive,29.3,valid
 Los Angeles,Equipment/Kit room,Rybakina,IB000010008657,2026-06-28T07:30:00,2026-06-28T17:02:00,9.53,Influenza A,,Negative,0,Positive,29.3,valid
-Los Angeles,Equipment/Kit room,Rybakina,IB000010008471,2026-06-28T17:02:00,2026-06-28T18:58:00,1.93,,,,0,,,no_valid_data
 Los Angeles,Meal room,Kerber,IB000010008469,2026-06-27T09:35:00,2026-06-27T16:58:00,7.38,RSV,,Negative,0,Positive,29.6,valid
 Los Angeles,Meal room,Kerber,IB000010008469,2026-06-27T09:35:00,2026-06-27T16:58:00,7.38,Influenza B,,Negative,0,Positive,29.6,valid
 Los Angeles,Meal room,Kerber,IB000010008469,2026-06-27T09:35:00,2026-06-27T16:58:00,7.38,SARS-CoV-2,34.0,Positive,1,Positive,29.6,valid
@@ -174,17 +167,14 @@ Los Angeles,Meal room,Kerber,IB000010008660,2026-06-28T07:25:00,2026-06-28T16:56
 Los Angeles,Meal room,Kerber,IB000010008660,2026-06-28T07:25:00,2026-06-28T16:56:00,9.52,Influenza B,,Negative,0,Positive,29.0,valid
 Los Angeles,Meal room,Kerber,IB000010008660,2026-06-28T07:25:00,2026-06-28T16:56:00,9.52,SARS-CoV-2,,Negative,0,Positive,29.0,valid
 Los Angeles,Meal room,Kerber,IB000010008660,2026-06-28T07:25:00,2026-06-28T16:56:00,9.52,Influenza A,,Negative,0,Positive,29.0,valid
-Los Angeles,Meal room,Kerber,IB000010008467,2026-06-28T16:57:00,2026-06-28T18:53:00,1.93,,,,0,,,no_valid_data
 Los Angeles,Meal room,Sabalenka,IB000010008643,2026-06-27T09:38:00,2026-06-27T16:56:00,7.30,RSV,,Negative,0,Positive,29.1,valid
 Los Angeles,Meal room,Sabalenka,IB000010008643,2026-06-27T09:38:00,2026-06-27T16:56:00,7.30,Influenza B,,Negative,0,Positive,29.1,valid
 Los Angeles,Meal room,Sabalenka,IB000010008643,2026-06-27T09:38:00,2026-06-27T16:56:00,7.30,SARS-CoV-2,39.3,Positive,1,Positive,29.1,valid
 Los Angeles,Meal room,Sabalenka,IB000010008643,2026-06-27T09:38:00,2026-06-27T16:56:00,7.30,Influenza A,,Negative,0,Positive,29.1,valid
-Los Angeles,Meal room,Sabalenka,IB000010008462,2026-06-27T16:57:00,2026-06-28T07:23:00,14.43,RSV,,Negative,0,Negative,,probe_error
-Los Angeles,Meal room,Sabalenka,IB000010008462,2026-06-27T16:57:00,2026-06-28T07:23:00,14.43,Influenza B,,Negative,0,Negative,,probe_error
-Los Angeles,Meal room,Sabalenka,IB000010008462,2026-06-27T16:57:00,2026-06-28T07:23:00,14.43,SARS-CoV-2,,Negative,0,Negative,,probe_error
-Los Angeles,Meal room,Sabalenka,IB000010008462,2026-06-27T16:57:00,2026-06-28T07:23:00,14.43,Influenza A,,Negative,0,Negative,,probe_error
-Los Angeles,Meal room,Sabalenka,IB000010008679,2026-06-28T16:56:00,2026-06-28T18:51:00,1.92,,,,0,,,no_valid_data
-Los Angeles,Physio room,Barty,IB000010008466,2026-06-28T17:01:00,2026-06-28T18:55:00,1.90,,,,0,,,no_valid_data
+Los Angeles,Meal room,Sabalenka,IB000010008462,2026-06-27T16:57:00,2026-06-28T07:23:00,14.43,RSV,,Negative,0,Negative,,invalid
+Los Angeles,Meal room,Sabalenka,IB000010008462,2026-06-27T16:57:00,2026-06-28T07:23:00,14.43,Influenza B,,Negative,0,Negative,,invalid
+Los Angeles,Meal room,Sabalenka,IB000010008462,2026-06-27T16:57:00,2026-06-28T07:23:00,14.43,SARS-CoV-2,,Negative,0,Negative,,invalid
+Los Angeles,Meal room,Sabalenka,IB000010008462,2026-06-27T16:57:00,2026-06-28T07:23:00,14.43,Influenza A,,Negative,0,Negative,,invalid
 Los Angeles,Physio room,Sharpova,IB000010008456,2026-06-27T09:29:00,2026-06-27T17:02:00,7.55,RSV,,Negative,0,Positive,29.5,valid
 Los Angeles,Physio room,Sharpova,IB000010008456,2026-06-27T09:29:00,2026-06-27T17:02:00,7.55,Influenza B,,Negative,0,Positive,29.5,valid
 Los Angeles,Physio room,Sharpova,IB000010008456,2026-06-27T09:29:00,2026-06-27T17:02:00,7.55,SARS-CoV-2,,Negative,0,Positive,29.5,valid
@@ -197,7 +187,6 @@ Los Angeles,Physio room,Sharpova,IB000010008642,2026-06-28T07:28:00,2026-06-28T1
 Los Angeles,Physio room,Sharpova,IB000010008642,2026-06-28T07:28:00,2026-06-28T16:59:00,9.52,Influenza B,,Negative,0,Positive,30.0,valid
 Los Angeles,Physio room,Sharpova,IB000010008642,2026-06-28T07:28:00,2026-06-28T16:59:00,9.52,SARS-CoV-2,,Negative,0,Positive,30.0,valid
 Los Angeles,Physio room,Sharpova,IB000010008642,2026-06-28T07:28:00,2026-06-28T16:59:00,9.52,Influenza A,,Negative,0,Positive,30.0,valid
-Los Angeles,Physio room,Sharpova,IB000010008659,2026-06-28T16:59:00,2026-06-28T18:54:00,1.92,,,,0,,,no_valid_data
 Montreal,Coaches room,Sharpova,IB000010007317,2026-06-04T14:30:00,2026-06-05T07:25:00,16.92,RSV,,Negative,0,Positive,29.3,valid
 Montreal,Coaches room,Sharpova,IB000010007317,2026-06-04T14:30:00,2026-06-05T07:25:00,16.92,Influenza B,,Negative,0,Positive,29.3,valid
 Montreal,Coaches room,Sharpova,IB000010007317,2026-06-04T14:30:00,2026-06-05T07:25:00,16.92,SARS-CoV-2,,Negative,0,Positive,29.3,valid
@@ -482,14 +471,14 @@ Vancouver,Coaches room,Sharpova,IB000010008401,2026-06-22T06:46:00,2026-06-23T07
 Vancouver,Coaches room,Sharpova,IB000010008401,2026-06-22T06:46:00,2026-06-23T07:31:00,24.75,Influenza B,,Negative,0,Positive,30.3,valid
 Vancouver,Coaches room,Sharpova,IB000010008401,2026-06-22T06:46:00,2026-06-23T07:31:00,24.75,SARS-CoV-2,,Negative,0,Positive,30.3,valid
 Vancouver,Coaches room,Sharpova,IB000010008401,2026-06-22T06:46:00,2026-06-23T07:31:00,24.75,Influenza A,,Negative,0,Positive,30.3,valid
-Vancouver,Coaches room,Sharpova,IB000010008416,2026-06-23T07:32:00,2026-06-23T16:09:00,8.62,RSV,,Negative,0,Positive,29.8,valid
-Vancouver,Coaches room,Sharpova,IB000010008416,2026-06-23T07:32:00,2026-06-23T16:09:00,8.62,Influenza B,,Negative,0,Positive,29.8,valid
-Vancouver,Coaches room,Sharpova,IB000010008416,2026-06-23T07:32:00,2026-06-23T16:09:00,8.62,SARS-CoV-2,,Negative,0,Positive,29.8,valid
-Vancouver,Coaches room,Sharpova,IB000010008416,2026-06-23T07:32:00,2026-06-23T16:09:00,8.62,Influenza A,,Negative,0,Positive,29.8,valid
-Vancouver,Coaches room,Sharpova,IB000010008443,2026-06-23T16:11:00,2026-06-24T06:14:00,14.05,RSV,,Negative,0,Negative,,probe_error
-Vancouver,Coaches room,Sharpova,IB000010008443,2026-06-23T16:11:00,2026-06-24T06:14:00,14.05,Influenza B,,Negative,0,Negative,,probe_error
-Vancouver,Coaches room,Sharpova,IB000010008443,2026-06-23T16:11:00,2026-06-24T06:14:00,14.05,SARS-CoV-2,,Negative,0,Negative,,probe_error
-Vancouver,Coaches room,Sharpova,IB000010008443,2026-06-23T16:11:00,2026-06-24T06:14:00,14.05,Influenza A,,Negative,0,Negative,,probe_error
+Vancouver,Coaches room,Sharpova,IB000010008416,2026-06-23T07:32:00,2026-06-23T16:09:00,8.62,RSV,,Negative,0,Positive,29.8,invalid
+Vancouver,Coaches room,Sharpova,IB000010008416,2026-06-23T07:32:00,2026-06-23T16:09:00,8.62,Influenza B,,Negative,0,Positive,29.8,invalid
+Vancouver,Coaches room,Sharpova,IB000010008416,2026-06-23T07:32:00,2026-06-23T16:09:00,8.62,SARS-CoV-2,,Negative,0,Positive,29.8,invalid
+Vancouver,Coaches room,Sharpova,IB000010008416,2026-06-23T07:32:00,2026-06-23T16:09:00,8.62,Influenza A,,Negative,0,Positive,29.8,invalid
+Vancouver,Coaches room,Sharpova,IB000010008443,2026-06-23T16:11:00,2026-06-24T06:14:00,14.05,RSV,,Negative,0,Negative,,invalid
+Vancouver,Coaches room,Sharpova,IB000010008443,2026-06-23T16:11:00,2026-06-24T06:14:00,14.05,Influenza B,,Negative,0,Negative,,invalid
+Vancouver,Coaches room,Sharpova,IB000010008443,2026-06-23T16:11:00,2026-06-24T06:14:00,14.05,SARS-CoV-2,,Negative,0,Negative,,invalid
+Vancouver,Coaches room,Sharpova,IB000010008443,2026-06-23T16:11:00,2026-06-24T06:14:00,14.05,Influenza A,,Negative,0,Negative,,invalid
 Vancouver,Coaches room,Sharpova,IB000010008499,2026-06-24T06:15:00,2026-06-24T15:17:00,9.03,RSV,,Negative,0,Positive,29.3,valid
 Vancouver,Coaches room,Sharpova,IB000010008499,2026-06-24T06:15:00,2026-06-24T15:17:00,9.03,Influenza B,,Negative,0,Positive,29.3,valid
 Vancouver,Coaches room,Sharpova,IB000010008499,2026-06-24T06:15:00,2026-06-24T15:17:00,9.03,SARS-CoV-2,,Negative,0,Positive,29.3,valid
@@ -646,10 +635,10 @@ Vancouver,Meal room,Jabeur,IB000010008426,2026-06-23T16:21:00,2026-06-24T06:20:0
 Vancouver,Meal room,Jabeur,IB000010008426,2026-06-23T16:21:00,2026-06-24T06:20:00,13.98,Influenza B,,Negative,0,Positive,29.6,valid
 Vancouver,Meal room,Jabeur,IB000010008426,2026-06-23T16:21:00,2026-06-24T06:20:00,13.98,SARS-CoV-2,,Negative,0,Positive,29.6,valid
 Vancouver,Meal room,Jabeur,IB000010008426,2026-06-23T16:21:00,2026-06-24T06:20:00,13.98,Influenza A,,Negative,0,Positive,29.6,valid
-Vancouver,Meal room,Jabeur,IB000010008498,2026-06-24T06:21:00,2026-06-24T15:24:00,9.05,RSV,,Negative,0,Negative,,probe_error
-Vancouver,Meal room,Jabeur,IB000010008498,2026-06-24T06:21:00,2026-06-24T15:24:00,9.05,Influenza B,,Negative,0,Negative,,probe_error
-Vancouver,Meal room,Jabeur,IB000010008498,2026-06-24T06:21:00,2026-06-24T15:24:00,9.05,SARS-CoV-2,,Negative,0,Negative,,probe_error
-Vancouver,Meal room,Jabeur,IB000010008498,2026-06-24T06:21:00,2026-06-24T15:24:00,9.05,Influenza A,,Negative,0,Negative,,probe_error
+Vancouver,Meal room,Jabeur,IB000010008498,2026-06-24T06:21:00,2026-06-24T15:24:00,9.05,RSV,,Negative,0,Negative,,invalid
+Vancouver,Meal room,Jabeur,IB000010008498,2026-06-24T06:21:00,2026-06-24T15:24:00,9.05,Influenza B,,Negative,0,Negative,,invalid
+Vancouver,Meal room,Jabeur,IB000010008498,2026-06-24T06:21:00,2026-06-24T15:24:00,9.05,SARS-CoV-2,,Negative,0,Negative,,invalid
+Vancouver,Meal room,Jabeur,IB000010008498,2026-06-24T06:21:00,2026-06-24T15:24:00,9.05,Influenza A,,Negative,0,Negative,,invalid
 Vancouver,Meal room,Jabeur,IB000010008478,2026-06-24T15:24:00,2026-06-25T07:17:00,15.88,RSV,,Negative,0,Positive,29.7,valid
 Vancouver,Meal room,Jabeur,IB000010008478,2026-06-24T15:24:00,2026-06-25T07:17:00,15.88,Influenza B,,Negative,0,Positive,29.7,valid
 Vancouver,Meal room,Jabeur,IB000010008478,2026-06-24T15:24:00,2026-06-25T07:17:00,15.88,SARS-CoV-2,,Negative,0,Positive,29.7,valid
