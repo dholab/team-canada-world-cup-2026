@@ -159,11 +159,12 @@ def main() -> None:
                 "status": status,
             })
 
-    # Stable order: city, room, sampler, cartridge start, then a fixed virus order.
+    # Order chronologically by sampling start, then by cartridge and a fixed
+    # virus order so each cartridge's four rows stay grouped.
     vorder = {v: i for i, v in enumerate(
         ["RSV", "Influenza B", "SARS-CoV-2", "Influenza A"])}
-    out_rows.sort(key=lambda r: (r["city"], r["room"], r["sampler"],
-                                 r["start"], vorder.get(r["virus"], 9)))
+    out_rows.sort(key=lambda r: (r["start"], r["cartridge"],
+                                 vorder.get(r["virus"], 9)))
 
     with OUT.open("w", newline="") as fh:
         w = csv.DictWriter(fh, fieldnames=COLUMNS)
