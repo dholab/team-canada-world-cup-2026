@@ -47,7 +47,7 @@ ventilation, and excluding visibly ill personnel (bottom).
 
 {{< include _prose.md >}}
 
-## Figures
+{{< pagebreak >}}
 
 ::: {#fig-detections}
 
@@ -79,6 +79,8 @@ above, and the Houston episode is shown by room in @fig-houston.
 
 :::
 
+{{< pagebreak >}}
+
 ::: {#fig-houston}
 
 ```{=html}
@@ -108,6 +110,8 @@ strongly in the meal room. The two invalid runs fell on 1 July.
 The same Houston episode was examined independently by metagenomic sequencing
 (@fig-sequencing), which confirms the airborne SARS-CoV-2 and recovers
 additional respiratory viruses that the GeneXpert panel does not target.
+
+{{< pagebreak >}}
 
 ::: {#fig-sequencing}
 
@@ -142,6 +146,9 @@ OC43, and rhinovirus, none of which are on the GeneXpert panel.
 :::
 
 ## Data and code
+
+All data and analysis code for this study are openly available in the GitHub
+repository <https://github.com/dholab/team-canada-world-cup-2026>.
 
 The underlying dataset — one row per cartridge × target virus (728 rows: 182
 respiratory cartridges × 4 targets) — and the script that builds every figure
@@ -185,7 +192,7 @@ quantity that source reports (`pmmov_index`, `fecal_normalized`,
 ```
 
 ::: {.content-visible when-format="pdf"}
-![](analysis/figure3_wastewater.png){fig-alt="Community wastewater surveillance context by host city."}
+![](analysis/figure3_wastewater.png){fig-alt="Community wastewater surveillance context by host city." height="7.8in"}
 :::
 
 **Online supplemental figure 1. Community wastewater surveillance context in

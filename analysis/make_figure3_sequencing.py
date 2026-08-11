@@ -225,7 +225,10 @@ def build_interactive(df: pd.DataFrame, out: pathlib.Path) -> None:
 # transparent=True gives a Keynote-ready alpha PNG; False gives cream.          #
 # --------------------------------------------------------------------------- #
 def build_static(df: pd.DataFrame, out_png: pathlib.Path, *,
-                 transparent: bool = False) -> None:
+                 transparent: bool = False, bg: str = CREAM) -> None:
+    # bg is the background + cell-gap color for the opaque PNG (CREAM by default,
+    # "#FFFFFF" for the manuscript/PDF version). Ignored when transparent=True.
+    edge = bg
     rooms = [r for r in ROOM_ORDER if r in df["room"].unique()]
     viruses = virus_order(df)
     hdr = room_headers(df)
@@ -246,10 +249,10 @@ def build_static(df: pd.DataFrame, out_png: pathlib.Path, *,
             u = uniq[(v, r)]
             y = nrow - 1 - i
             if u is None:
-                continue  # no detection -> draw nothing (transparent / cream)
+                continue  # no detection -> draw nothing (transparent / bg color)
             fc = cmap(norm(u))
             ax.add_patch(plt.Rectangle((j, y), 0.92, 0.92, facecolor=fc,
-                                       edgecolor=CREAM, linewidth=2, zorder=2))
+                                       edgecolor=edge, linewidth=2, zorder=2))
             b = bucket(u)
             tc = "#FFFFFF" if b >= 3 else "#042C53"
             ax.text(j + 0.46, y + 0.46, str(u), ha="center", va="center",
@@ -299,18 +302,18 @@ def build_static(df: pd.DataFrame, out_png: pathlib.Path, *,
     ax.text(note_x, ramp_y + 0.15, "blank = virus not detected in this room",
             ha="left", va="center", fontsize=7, family="Arial", color=TEAL)
 
-    face = "none" if transparent else CREAM
-    fig.patch.set_facecolor(face if not transparent else "none")
+    fig.patch.set_facecolor("none" if transparent else bg)
     ax.set_facecolor("none")
     fig.savefig(out_png, dpi=300, bbox_inches="tight", transparent=transparent,
-                facecolor=(None if transparent else CREAM))
-    print(f"wrote {out_png}" + (" (transparent)" if transparent else ""))
+                facecolor=(None if transparent else bg))
+    print(f"wrote {out_png}" + (" (transparent)" if transparent else f" (bg {bg})"))
 
 
 def main() -> None:
     df = load()
     build_interactive(df, HERE / "figure3_sequencing.html")
-    build_static(df, HERE / "figure3_sequencing.png")
+    # Manuscript / PDF version on a white background.
+    build_static(df, HERE / "figure3_sequencing.png", bg="#FFFFFF")
     build_static(df, HERE / "figure3_sequencing_transparent.png", transparent=True)
 
 
