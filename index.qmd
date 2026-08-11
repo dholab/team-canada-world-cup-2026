@@ -108,6 +108,43 @@ strongly in the meal room. The two invalid runs fell on 1 July.
 
 :::
 
+The same Houston episode was examined independently by metagenomic sequencing
+(@fig-sequencing), which confirms the airborne SARS-CoV-2 and recovers
+additional respiratory viruses that the GeneXpert panel does not target.
+
+::: {#fig-sequencing}
+
+```{=html}
+<iframe src="analysis/figure3_sequencing.html" width="100%" height="600"
+        style="border:none;" loading="lazy"
+        title="Figure 3: human viruses detected by sequencing of Houston air samples"></iframe>
+```
+
+::: {.content-visible when-format="pdf"}
+![](analysis/figure3_sequencing.png)
+:::
+
+**Figure 3. Human viruses detected by metagenomic sequencing of the Houston air
+samples.** Six air cartridges from the Houston team spaces were pulled from the
+samplers on the afternoon of 4 July 2026 and sequenced, and reads were
+classified against a curated viral reference database with EsViritu. These
+cartridges were collected the same day but are not the same cartridges tested on
+the GeneXpert, so sequencing is an independent line of evidence for the viruses
+present. Columns are the six sequenced samples, labelled by room, sampler,
+GeneXpert SARS-CoV-2 status where a same-room result exists, and sampling start
+time and elapsed duration. Rows are the human viruses detected, with Merkel cell
+polyomavirus and SARS-CoV-2 on top and the rest ordered by total distinct reads.
+Each cell reports distinct (deduplicated) reads for that virus in that sample,
+with fill mapped to that count on a light-to-deep blue scale. A cell shows 0 when
+the virus was sought and not found (SARS-CoV-2 was assessed in every sample) and
+is left unshaded when not detected. SARS-CoV-2 was recovered from both meal-room
+samples and the equipment room, confirming the airborne SARS-CoV-2 seen in these
+spaces on 4 July. Merkel cell polyomavirus, a commensal skin virus, was found in
+every sample. Sequencing additionally recovered influenza A, human coronavirus
+OC43, and rhinovirus, none of which are on the GeneXpert panel.
+
+:::
+
 ## Data and code
 
 The underlying dataset — one row per cartridge × target virus (728 rows: 182
@@ -117,6 +154,7 @@ are in the repository:
 - Data: [`analysis/data/cartridges_long.csv`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/data/cartridges_long.csv)
 - Main-figure pipeline (Figures 1–2): [`analysis/make_figures.py`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/make_figures.py)
 - Supplemental-figure pipeline (online supplemental figure 1): [`analysis/make_figure3.py`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/make_figure3.py)
+- Sequencing figure (Figure 3): [`analysis/make_figure3_sequencing.py`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/make_figure3_sequencing.py) with data [`analysis/data/sequencing_detections.csv`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/data/sequencing_detections.csv)
 
 Columns: `city, room, sampler, cartridge, start, end, dur_h, virus, ct, qual,
 detected, spc, spc_ct, status`. A blank `ct` means the target did not amplify;
