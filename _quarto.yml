@@ -23,3 +23,19 @@ format:
     fontsize: 11pt
     colorlinks: true
     keep-tex: false
+    # Each figure on its own page.
+    fig-pos: 'p'
+    include-in-header:
+      text: |
+        % Page break before every major section. Quarto maps ## headings to
+        % \subsection in this class, so hook \subsection (not \section).
+        \usepackage{etoolbox}
+        \pretocmd{\subsection}{\clearpage}{}{}
+        % Bold the figure label ("Figure 3") in captions; titles are already bold.
+        \usepackage{caption}
+        \captionsetup{labelfont=bf}
+        % Allow a full page of floats so a figure can sit alone on its page.
+        \renewcommand{\floatpagefraction}{0.01}
+        \renewcommand{\topfraction}{0.99}
+        \renewcommand{\bottomfraction}{0.99}
+        \renewcommand{\textfraction}{0.01}

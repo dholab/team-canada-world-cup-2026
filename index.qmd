@@ -1,21 +1,6 @@
 ---
 title: "Air sampling in team congregate spaces for early detection of respiratory virus threats"
 subtitle: "Viral air sampling in team settings"
-author:
-  - name: "David Simon"
-    affiliations: [Canada Soccer]
-  - name: "Timothy Locksmith"
-    affiliations: [UW–Madison]
-  - name: "Nick Minor"
-    affiliations: [UW–Madison]
-  - name: "Eli J. O'Connor"
-    affiliations: [UW–Madison]
-  - name: "Shelby L. O'Connor"
-    affiliations: [UW–Madison]
-    note: "equal contribution"
-  - name: "David H. O'Connor"
-    affiliations: [UW–Madison]
-    note: "equal contribution; corresponding author (dhoconno@wisc.edu)"
 date: last-modified
 keywords:
   - respiratory infection
@@ -24,14 +9,26 @@ keywords:
   - public health
 ---
 
-::: {.callout-note appearance="simple"}
-This is the interactive version of the manuscript. The figures below are
-explorable — hover for per-room, per-city detail. The prose is authored in
-Google Docs and synced automatically; the figures are regenerated from the
-committed data in [`analysis/`](https://github.com/dholab/team-canada-world-cup-2026/tree/main/analysis)
-on every build. A [submission PDF](team-canada-air-sampling.pdf) with static
-figures is produced from the same source.
-:::
+**Authors**
+
+David Simon,^1^ Timothy J. Locksmith,^2^ Nick Minor,^2^ Eli J. O'Connor,^2^ Shelby L. O'Connor^2,&^ and David H. O'Connor^2,&^
+
+**Affiliations**
+
+1. Canada Soccer, Ottawa, Ontario, Canada
+2. Department of Pathology and Laboratory Medicine, University of Wisconsin School of Medicine and Public Health, University of Wisconsin–Madison, 5510 Elements Way Suite #500, Madison, WI 53719, USA
+
+^&^ These authors contributed equally.
+
+**ORCID iDs**
+
+David Simon [ORCID to confirm], Timothy J. Locksmith 0009-0007-1112-6759, Nick Minor [ORCID to confirm], Eli J. O'Connor 0009-0001-8795-8320, Shelby L. O'Connor 0000-0003-0183-5010, David H. O'Connor 0000-0003-2139-470X.
+
+**Corresponding author**
+
+David H. O'Connor, Department of Pathology and Laboratory Medicine, University of Wisconsin School of Medicine and Public Health, 555 Science Drive, Madison, WI 53719, USA. Email: dhoconno@wisc.edu; Tel: +1 (608) 890-0845.
+
+{{< pagebreak >}}
 
 ## Central figure
 
