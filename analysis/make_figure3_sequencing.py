@@ -110,11 +110,10 @@ def build_interactive(df: pd.DataFrame, out: pathlib.Path) -> None:
             total[(row.virus, row.room)] += row.total_reads
             present[(row.virus, row.room)] = True
 
-    # SARS-CoV-2 was tested in every room; tested-but-absent cells read 0.
-    tested_zero = {"SARS-CoV-2"}
-
     # cell_text collects per-cell labels with an explicit color so text on dark
     # cells is white and text on light cells is deep navy (readable on both).
+    # Non-detection cells are left empty (no number, no fill) in every column,
+    # including negative SARS-CoV-2 cells.
     DARK_TEXT = "#042C53"
     z, custom, cell_text = [], [], []
     for v in viruses:
@@ -125,14 +124,9 @@ def build_interactive(df: pd.DataFrame, out: pathlib.Path) -> None:
                 b = bucket(u)
                 zr.append(b)
                 label, tcolor = str(u), ("#FFFFFF" if b >= 3 else DARK_TEXT)
-            elif v in tested_zero:
-                zr.append(None)
-                label, tcolor = "0", DARK_TEXT
-            else:
-                zr.append(None)
-                label, tcolor = "", DARK_TEXT
-            if label:
                 cell_text.append(dict(x=rooms.index(r), y=v, text=label, tcolor=tcolor))
+            else:
+                zr.append(None)  # transparent cell, no label
             h = hdr.get(r, {})
             cr.append([v, r, u, total[(v, r)], h.get("start", ""), h.get("elapsed", "")])
         z.append(zr)
@@ -242,9 +236,6 @@ def build_static(df: pd.DataFrame, out_png: pathlib.Path, *,
     for row in df.itertuples():
         if row.room in rooms and row.virus in viruses:
             uniq[(row.virus, row.room)] = (uniq[(row.virus, row.room)] or 0) + row.unique_reads
-    for r in rooms:  # SARS tested everywhere -> explicit 0
-        if uniq[("SARS-CoV-2", r)] is None:
-            uniq[("SARS-CoV-2", r)] = 0
 
     cmap = mcolors.LinearSegmentedColormap.from_list("blues6", BLUES)
     norm = mcolors.BoundaryNorm([0, 2, 5, 10, 25, 100, 10_000], cmap.N)
@@ -257,9 +248,7 @@ def build_static(df: pd.DataFrame, out_png: pathlib.Path, *,
             u = uniq[(v, r)]
             y = nrow - 1 - i
             if u is None:
-                ax.add_patch(plt.Rectangle((j, y), 0.92, 0.92, facecolor="#efe8da",
-                                           edgecolor=CREAM, linewidth=2, zorder=1))
-                continue
+                continue  # no detection -> draw nothing (transparent / cream)
             fc = cmap(norm(u))
             ax.add_patch(plt.Rectangle((j, y), 0.92, 0.92, facecolor=fc,
                                        edgecolor=CREAM, linewidth=2, zorder=2))
@@ -296,7 +285,8 @@ def build_static(df: pd.DataFrame, out_png: pathlib.Path, *,
         ax.text(j + 0.46, nrow + 0.16, f"{h.get('start','')}  Δ{h.get('elapsed','')}",
                 ha="center", va="bottom", fontsize=7, family="Arial", color=TERRA)
 
-    # legend strip beneath the grid: blue ramp + not-detected swatch
+    # legend strip beneath the grid: blue ramp, plus a note that blank = not
+    # detected (blank cells no longer carry a fill to point at).
     ramp_y = -0.85
     ramp_x0 = 0.0
     for k, c in enumerate(BLUES):
@@ -307,10 +297,8 @@ def build_static(df: pd.DataFrame, out_png: pathlib.Path, *,
             fontsize=7, family="Arial", color=TEAL)
     ax.text(ramp_x0 + len(BLUES) * 0.34, ramp_y - 0.12, "more distinct reads",
             ha="left", va="top", fontsize=7, family="Arial", color=TEAL)
-    nd_x = ramp_x0 + len(BLUES) * 0.34 + 2.6
-    ax.add_patch(plt.Rectangle((nd_x, ramp_y), 0.34, 0.30, facecolor="#efe8da",
-                               edgecolor="none", clip_on=False, zorder=3))
-    ax.text(nd_x + 0.44, ramp_y + 0.15, "virus not detected in this room",
+    note_x = ramp_x0 + len(BLUES) * 0.34 + 2.6
+    ax.text(note_x, ramp_y + 0.15, "blank = virus not detected in this room",
             ha="left", va="center", fontsize=7, family="Arial", color=TEAL)
 
     face = "none" if transparent else CREAM
