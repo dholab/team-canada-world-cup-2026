@@ -1,0 +1,3 @@
+<!-- AUTO-GENERATED from the manuscript Google Doc by scripts/fetch_prose.py. Do not edit by hand; edit the Doc. -->
+
+**Per-room detections during the Houston sampling period.** Sampling in Houston ran from the evening of 30 June to 4 July 2026 across four team spaces (physiotherapy room, meal room, equipment room, and a team-occupied hallway). Rows group the four target viruses within each room; the horizontal axis is local wall-clock time. White boxes are valid negatives, grey boxes are invalid runs, and blue boxes are detections (fill mapped to Ct). On 1 July, SARS-CoV-2 was detected in the meal room, physiotherapy room, and hallway, and influenza A in the equipment room. SARS-CoV-2 returned on 3–4 July at lower Ct, most strongly in the meal room.
