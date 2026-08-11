@@ -113,72 +113,112 @@ def build_interactive(df: pd.DataFrame, out: pathlib.Path) -> None:
     # SARS-CoV-2 was tested in every room; tested-but-absent cells read 0.
     tested_zero = {"SARS-CoV-2"}
 
-    z, text, custom = [], [], []
+    # cell_text collects per-cell labels with an explicit color so text on dark
+    # cells is white and text on light cells is deep navy (readable on both).
+    DARK_TEXT = "#042C53"
+    z, custom, cell_text = [], [], []
     for v in viruses:
-        zr, tr, cr = [], [], []
+        zr, cr = [], []
         for r in rooms:
             u = uniq[(v, r)]
             if present[(v, r)]:
-                zr.append(bucket(u))
-                tr.append(str(u))
+                b = bucket(u)
+                zr.append(b)
+                label, tcolor = str(u), ("#FFFFFF" if b >= 3 else DARK_TEXT)
             elif v in tested_zero:
                 zr.append(None)
-                tr.append("0")
+                label, tcolor = "0", DARK_TEXT
             else:
                 zr.append(None)
-                tr.append("")
+                label, tcolor = "", DARK_TEXT
+            if label:
+                cell_text.append(dict(x=rooms.index(r), y=v, text=label, tcolor=tcolor))
             h = hdr.get(r, {})
-            cr.append([v, r, h.get("sampler", ""), u, total[(v, r)],
-                       h.get("start", ""), h.get("elapsed", "")])
+            cr.append([v, r, u, total[(v, r)], h.get("start", ""), h.get("elapsed", "")])
         z.append(zr)
-        text.append(tr)
         custom.append(cr)
 
     # Natural order (Merkel first); yaxis autorange="reversed" puts it on top.
     colorscale = [[i / (len(BLUES) - 1), c] for i, c in enumerate(BLUES)]
 
-    xlabels = [f"<b>{r}</b>" for r in rooms]
+    # x categories are plain indices; the full header is drawn as annotations
+    # below so line spacing is controlled (avoids the cramped tick-label stack).
+    xcats = list(range(len(rooms)))
 
     fig = go.Figure(go.Heatmap(
-        z=z, x=xlabels, y=viruses,
-        text=text, texttemplate="%{text}", textfont=dict(size=13, color=TEAL),
+        z=z, x=xcats, y=viruses,
         customdata=custom,
         colorscale=colorscale, zmin=0, zmax=5, showscale=False,
         xgap=3, ygap=3,
         hovertemplate=(
             "<b>%{customdata[0]}</b> in <b>%{customdata[1]}</b><br>"
-            "Sampler %{customdata[2]}<br>"
-            "Distinct reads %{customdata[3]}  (total mapped %{customdata[4]})<br>"
-            "Start %{customdata[5]}  &#183;  elapsed %{customdata[6]}"
+            "Distinct reads %{customdata[2]}  (total mapped %{customdata[3]})<br>"
+            "Start %{customdata[4]}  &#183;  elapsed %{customdata[5]}"
             "<extra></extra>"),
         hoverlabel=dict(bgcolor="white", bordercolor=RULE,
                         font=dict(family="Arial", size=12, color=TEAL)),
     ))
 
-    # room sub-labels (sampler + sc2 + start + elapsed) as x annotations
+    # Column headers as stacked annotations, one line per field with even
+    # spacing: room name (bold teal), SC2 status, start time, elapsed. Sampler
+    # names are intentionally omitted (internal-only). Each line is its own
+    # annotation at a fixed paper-y so the rows align across every column.
     ann = []
+    # per-cell number labels, colored for contrast (white on dark, navy on light)
+    for c in cell_text:
+        ann.append(dict(x=c["x"], y=c["y"], xref="x", yref="y", showarrow=False,
+                        text=c["text"], font=dict(family="Arial", size=13,
+                                                  color=c["tcolor"]),
+                        xanchor="center", yanchor="middle"))
+
+    LINE_Y = {"room1": 1.150, "room2": 1.110, "sc2": 1.070,
+              "start": 1.038, "elapsed": 1.010}
     for i, r in enumerate(rooms):
         h = hdr.get(r, {})
-        sub = f"<i>{h.get('sampler','')}</i>"
+        words = r.upper().split(" ")
+        # wrap room name to two balanced lines (e.g. "MEAL / ROOM 1")
+        if len(words) >= 2:
+            line1 = words[0]
+            line2 = " ".join(words[1:])
+        else:
+            line1, line2 = r.upper(), ""
+        ann.append(dict(x=i, y=LINE_Y["room1"], xref="x", yref="paper",
+                        showarrow=False, text=f"<b>{line1}</b>",
+                        font=dict(family="Arial", size=12, color=TEAL),
+                        xanchor="center", yanchor="middle"))
+        if line2:
+            ann.append(dict(x=i, y=LINE_Y["room2"], xref="x", yref="paper",
+                            showarrow=False, text=f"<b>{line2}</b>",
+                            font=dict(family="Arial", size=12, color=TEAL),
+                            xanchor="center", yanchor="middle"))
+        # Always occupy the SC2 slot (blank when no same-room GeneXpert) so the
+        # start and elapsed lines stay on one baseline across every column.
         sc2 = h.get("sc2", "")
-        if sc2:
-            sub += f"  {sc2}"
-        sub += f"<br>{h.get('start','')}  &#916;{h.get('elapsed','')}"
-        ann.append(dict(x=i, y=1.045, xref="x", yref="paper", showarrow=False,
-                        text=sub, font=dict(family="Arial", size=10, color=TERRA),
-                        xanchor="center", yanchor="bottom"))
+        ann.append(dict(x=i, y=LINE_Y["sc2"], xref="x", yref="paper",
+                        showarrow=False, text=(sc2 if sc2 else "&#160;"),
+                        font=dict(family="Arial", size=10, color=TEAL),
+                        xanchor="center", yanchor="middle"))
+        ann.append(dict(x=i, y=LINE_Y["start"], xref="x", yref="paper",
+                        showarrow=False, text=h.get("start", ""),
+                        font=dict(family="Arial", size=10, color=TEAL),
+                        xanchor="center", yanchor="middle"))
+        ann.append(dict(x=i, y=LINE_Y["elapsed"], xref="x", yref="paper",
+                        showarrow=False, text=f"&#916;{h.get('elapsed','')}",
+                        font=dict(family="Arial", size=10, color=TERRA),
+                        xanchor="center", yanchor="middle"))
 
     fig.update_layout(
         title=dict(
             text="<b>Figure 3</b>  Human viruses detected by sequencing of Houston air samples",
             font=dict(family="Georgia, serif", size=19, color=TEAL),
-            x=0.0, xanchor="left", y=0.98),
+            x=0.0, xanchor="left", y=0.975),
         paper_bgcolor=CREAM, plot_bgcolor=CREAM,
         font=dict(family="Arial", color=TEAL),
-        width=940, height=560,
-        margin=dict(l=210, r=40, t=140, b=40),
-        xaxis=dict(side="top", tickfont=dict(family="Arial", size=11, color=TEAL),
-                   showgrid=False, zeroline=False, ticks=""),
+        width=940, height=580,
+        margin=dict(l=210, r=40, t=170, b=40),
+        xaxis=dict(side="top", showticklabels=False,
+                   showgrid=False, zeroline=False, ticks="",
+                   range=[-0.5, len(rooms) - 0.5]),
         yaxis=dict(autorange="reversed", tickfont=dict(family="Arial", size=12, color=TEAL),
                    showgrid=False, zeroline=False, ticks=""),
         annotations=ann,
@@ -229,7 +269,7 @@ def build_static(df: pd.DataFrame, out_png: pathlib.Path, *,
                     fontsize=10, color=tc, family="Arial", zorder=3)
 
     ax.set_xlim(-0.05, ncol)
-    ax.set_ylim(-1.2, nrow + 0.85)
+    ax.set_ylim(-1.2, nrow + 1.05)
     ax.set_xticks([])
     ax.set_yticks([])
     for s in ax.spines.values():
@@ -243,18 +283,18 @@ def build_static(df: pd.DataFrame, out_png: pathlib.Path, *,
                 family="Arial", color=TEAL, fontweight=weight)
 
     # room headers (top): room bold + sampler/start/elapsed
+    # Column headers: room name (bold) / SC2 status / start Δelapsed. Sampler
+    # names are intentionally omitted (internal-only).
     for j, r in enumerate(rooms):
         h = hdr.get(r, {})
-        ax.text(j + 0.46, nrow + 0.60, r.upper(), ha="center", va="bottom",
+        ax.text(j + 0.46, nrow + 0.72, r.upper(), ha="center", va="bottom",
                 fontsize=8.5, family="Arial", color=TEAL, fontweight="bold")
         sc2 = h.get("sc2", "")
-        sub = h.get("sampler", "")
-        line2 = f"{h.get('start','')}  Δ{h.get('elapsed','')}"
-        ax.text(j + 0.46, nrow + 0.44, sub + ("  " + sc2 if sc2 else ""),
-                ha="center", va="bottom", fontsize=7.2, family="Arial",
-                color=TERRA, style="italic")
-        ax.text(j + 0.46, nrow + 0.14, line2, ha="center", va="bottom",
-                fontsize=7, family="Arial", color=TEAL)
+        if sc2:
+            ax.text(j + 0.46, nrow + 0.42, sc2, ha="center", va="bottom",
+                    fontsize=7.2, family="Arial", color=TEAL)
+        ax.text(j + 0.46, nrow + 0.16, f"{h.get('start','')}  Δ{h.get('elapsed','')}",
+                ha="center", va="bottom", fontsize=7, family="Arial", color=TERRA)
 
     # legend strip beneath the grid: blue ramp + not-detected swatch
     ramp_y = -0.85

@@ -130,9 +130,9 @@ samplers on the afternoon of 4 July 2026 and sequenced, and reads were
 classified against a curated viral reference database with EsViritu. These
 cartridges were collected the same day but are not the same cartridges tested on
 the GeneXpert, so sequencing is an independent line of evidence for the viruses
-present. Columns are the six sequenced samples, labelled by room, sampler,
-GeneXpert SARS-CoV-2 status where a same-room result exists, and sampling start
-time and elapsed duration. Rows are the human viruses detected, with Merkel cell
+present. Columns are the six sequenced samples, labelled by room, GeneXpert
+SARS-CoV-2 status where a same-room result exists, and sampling start time and
+elapsed duration. Rows are the human viruses detected, with Merkel cell
 polyomavirus and SARS-CoV-2 on top and the rest ordered by total distinct reads.
 Each cell reports distinct (deduplicated) reads for that virus in that sample,
 with fill mapped to that count on a light-to-deep blue scale. A cell shows 0 when
