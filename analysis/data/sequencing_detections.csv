@@ -16,11 +16,11 @@ Meal room 1,Jabeur,IB000010006975_S58_L001,Cytomegalovirus,2,12,7/4 11:20,7/4 21
 Meal room 1,Jabeur,IB000010006975_S58_L001,Rhinovirus,1,1,7/4 11:20,7/4 21:38,10:18,SC2+
 Meal room 1,Jabeur,IB000010006975_S58_L001,JC polyomavirus,1,30,7/4 11:20,7/4 21:38,10:18,SC2+
 Meal room 1,Jabeur,IB000010006975_S58_L001,Molluscum contagiosum virus,1,1,7/4 11:20,7/4 21:38,10:18,SC2+
-Meal room 2,Sabalenka,IB000010006974_S62_L001,Merkel cell polyomavirus,13,323,7/4 14:32,7/4 21:37,7:05,
-Meal room 2,Sabalenka,IB000010006974_S62_L001,SARS-CoV-2,7,74,7/4 14:32,7/4 21:37,7:05,
+Meal room 2,Sabalenka,IB000010006974_S62_L001,Merkel cell polyomavirus,13,323,7/4 14:32,7/4 21:37,7:05,SC2 N/A
+Meal room 2,Sabalenka,IB000010006974_S62_L001,SARS-CoV-2,7,74,7/4 14:32,7/4 21:37,7:05,SC2 N/A
 Physio room 1,Kerber,IB000010006980_S57_L001,Merkel cell polyomavirus,17,521,7/4 11:21,7/4 21:40,10:19,SC2-
-Physio room 2,Barty,IB000010006962_S59_L001,Merkel cell polyomavirus,278,8169,7/3 21:07,7/4 21:59,24:52,
-Physio room 2,Barty,IB000010006962_S59_L001,Human papillomavirus,3,49,7/3 21:07,7/4 21:59,24:52,
-Physio room 2,Barty,IB000010006962_S59_L001,Herpes simplex virus 1,1,29,7/3 21:07,7/4 21:59,24:52,
-Physio room 2,Barty,IB000010006962_S59_L001,Influenza A virus,1,6,7/3 21:07,7/4 21:59,24:52,
-Physio room 2,Barty,IB000010006962_S59_L001,Human polyomavirus 6,1,11,7/3 21:07,7/4 21:59,24:52,
+Physio room 2,Barty,IB000010006962_S59_L001,Merkel cell polyomavirus,278,8169,7/3 21:07,7/4 21:59,24:52,SC2 N/A
+Physio room 2,Barty,IB000010006962_S59_L001,Human papillomavirus,3,49,7/3 21:07,7/4 21:59,24:52,SC2 N/A
+Physio room 2,Barty,IB000010006962_S59_L001,Herpes simplex virus 1,1,29,7/3 21:07,7/4 21:59,24:52,SC2 N/A
+Physio room 2,Barty,IB000010006962_S59_L001,Influenza A virus,1,6,7/3 21:07,7/4 21:59,24:52,SC2 N/A
+Physio room 2,Barty,IB000010006962_S59_L001,Human polyomavirus 6,1,11,7/3 21:07,7/4 21:59,24:52,SC2 N/A
