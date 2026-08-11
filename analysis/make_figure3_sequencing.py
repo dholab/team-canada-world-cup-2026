@@ -168,7 +168,7 @@ def build_interactive(df: pd.DataFrame, out: pathlib.Path) -> None:
     # Header lines: room name (one or two), SC2 status, cartridge runtime.
     # Start/end clock times are omitted (they read as confusing); runtime alone
     # conveys how long each cartridge sampled.
-    LINE_Y = {"room1": 1.135, "room2": 1.092, "sc2": 1.048, "runtime": 1.010}
+    LINE_Y = {"room1": 1.140, "room2": 1.097, "sc2": 1.053, "runtime": 0.998}
     for i, r in enumerate(rooms):
         h = hdr.get(r, {})
         words = r.upper().split(" ")
@@ -273,17 +273,18 @@ def build_static(df: pd.DataFrame, out_png: pathlib.Path, *,
                 family="Arial", color=TEAL, fontweight=weight)
 
     # room headers (top): room bold + sampler/start/elapsed
-    # Column headers: room name (bold) / SC2 status / start Δelapsed. Sampler
-    # names are intentionally omitted (internal-only).
+    # Column headers: room name (bold) / SC2 status / cartridge runtime (h:mm).
+    # Sampler names are intentionally omitted (internal-only). Extra gap above
+    # the runtime line separates it from the SC2 status.
     for j, r in enumerate(rooms):
         h = hdr.get(r, {})
-        ax.text(j + 0.46, nrow + 0.62, r.upper(), ha="center", va="bottom",
+        ax.text(j + 0.46, nrow + 0.64, r.upper(), ha="center", va="bottom",
                 fontsize=8.5, family="Arial", color=TEAL, fontweight="bold")
         sc2 = h.get("sc2", "")
         if sc2:
-            ax.text(j + 0.46, nrow + 0.36, sc2, ha="center", va="bottom",
+            ax.text(j + 0.46, nrow + 0.40, sc2, ha="center", va="bottom",
                     fontsize=7.2, family="Arial", color=TEAL)
-        ax.text(j + 0.46, nrow + 0.14, f"{h.get('elapsed','')} runtime",
+        ax.text(j + 0.46, nrow + 0.10, f"{h.get('elapsed','')} runtime",
                 ha="center", va="bottom", fontsize=7, family="Arial", color=TERRA)
 
     # legend strip beneath the grid: blue ramp, plus a note that blank = not
