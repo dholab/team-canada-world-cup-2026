@@ -165,8 +165,10 @@ def build_interactive(df: pd.DataFrame, out: pathlib.Path) -> None:
                                                   color=c["tcolor"]),
                         xanchor="center", yanchor="middle"))
 
-    LINE_Y = {"room1": 1.150, "room2": 1.110, "sc2": 1.070,
-              "start": 1.038, "elapsed": 1.010}
+    # Header lines: room name (one or two), SC2 status, cartridge runtime.
+    # Start/end clock times are omitted (they read as confusing); runtime alone
+    # conveys how long each cartridge sampled.
+    LINE_Y = {"room1": 1.135, "room2": 1.092, "sc2": 1.048, "runtime": 1.010}
     for i, r in enumerate(rooms):
         h = hdr.get(r, {})
         words = r.upper().split(" ")
@@ -186,18 +188,14 @@ def build_interactive(df: pd.DataFrame, out: pathlib.Path) -> None:
                             font=dict(family="Arial", size=12, color=TEAL),
                             xanchor="center", yanchor="middle"))
         # Always occupy the SC2 slot (blank when no same-room GeneXpert) so the
-        # start and elapsed lines stay on one baseline across every column.
+        # runtime line stays on one baseline across every column.
         sc2 = h.get("sc2", "")
         ann.append(dict(x=i, y=LINE_Y["sc2"], xref="x", yref="paper",
                         showarrow=False, text=(sc2 if sc2 else "&#160;"),
                         font=dict(family="Arial", size=10, color=TEAL),
                         xanchor="center", yanchor="middle"))
-        ann.append(dict(x=i, y=LINE_Y["start"], xref="x", yref="paper",
-                        showarrow=False, text=h.get("start", ""),
-                        font=dict(family="Arial", size=10, color=TEAL),
-                        xanchor="center", yanchor="middle"))
-        ann.append(dict(x=i, y=LINE_Y["elapsed"], xref="x", yref="paper",
-                        showarrow=False, text=f"&#916;{h.get('elapsed','')}",
+        ann.append(dict(x=i, y=LINE_Y["runtime"], xref="x", yref="paper",
+                        showarrow=False, text=f"{h.get('elapsed','')} runtime",
                         font=dict(family="Arial", size=10, color=TERRA),
                         xanchor="center", yanchor="middle"))
 
@@ -258,7 +256,7 @@ def build_static(df: pd.DataFrame, out_png: pathlib.Path, *,
                     fontsize=10, color=tc, family="Arial", zorder=3)
 
     ax.set_xlim(-0.05, ncol)
-    ax.set_ylim(-1.2, nrow + 1.05)
+    ax.set_ylim(-1.2, nrow + 0.9)
     ax.set_xticks([])
     ax.set_yticks([])
     for s in ax.spines.values():
@@ -276,13 +274,13 @@ def build_static(df: pd.DataFrame, out_png: pathlib.Path, *,
     # names are intentionally omitted (internal-only).
     for j, r in enumerate(rooms):
         h = hdr.get(r, {})
-        ax.text(j + 0.46, nrow + 0.72, r.upper(), ha="center", va="bottom",
+        ax.text(j + 0.46, nrow + 0.62, r.upper(), ha="center", va="bottom",
                 fontsize=8.5, family="Arial", color=TEAL, fontweight="bold")
         sc2 = h.get("sc2", "")
         if sc2:
-            ax.text(j + 0.46, nrow + 0.42, sc2, ha="center", va="bottom",
+            ax.text(j + 0.46, nrow + 0.36, sc2, ha="center", va="bottom",
                     fontsize=7.2, family="Arial", color=TEAL)
-        ax.text(j + 0.46, nrow + 0.16, f"{h.get('start','')}  Δ{h.get('elapsed','')}",
+        ax.text(j + 0.46, nrow + 0.14, f"{h.get('elapsed','')} runtime",
                 ha="center", va="bottom", fontsize=7, family="Arial", color=TERRA)
 
     # legend strip beneath the grid: blue ramp, plus a note that blank = not

@@ -46,6 +46,7 @@ jobs:
         run: |
           uv sync
           uv run python make_figures.py
+          uv run python make_figure3_sequencing.py
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
