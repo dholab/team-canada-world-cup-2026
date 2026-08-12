@@ -57,10 +57,6 @@ keywords:
 
 :::
 
-The same Houston episode was examined independently by metagenomic sequencing
-(@fig-sequencing), which confirms the airborne SARS-CoV-2 and recovers
-additional respiratory viruses that the GeneXpert panel does not target.
-
 {{< pagebreak >}}
 
 ::: {#fig-sequencing}

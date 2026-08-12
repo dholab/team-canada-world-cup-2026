@@ -72,6 +72,16 @@ def normalize(md: str) -> str:
     # Drop empty divider headers ("## " on their own line, from Doc page breaks).
     body = re.sub(r"^#{1,6}\s*$\n?", "", body, flags=re.M)
 
+    # Unwrap Paperpile hyperlinks: the Doc exports each citation number as a link
+    # to paperpile.com, e.g. "[\[1\]](https://paperpile.com/...)". Keep the link
+    # text (the citation number, which itself contains escaped brackets) and drop
+    # the URL, so the PDF shows plain citation numbers. The interactive version
+    # will link to the actual manuscripts instead. The link text is everything
+    # from the opening "[" up to the "](http...paperpile...)" tail.
+    body = re.sub(
+        r"\[((?:[^\[\]]|\\\[|\\\])*)\]\(https?://(?:www\.)?paperpile\.com/[^)]*\)",
+        r"\1", body)
+
     # Inject Quarto cross-references where the prose names the figures, so the
     # actual embedded figures (defined in index.qmd) render inline.
     body = body.replace(
