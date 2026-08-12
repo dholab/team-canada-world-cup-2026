@@ -2,7 +2,7 @@
 
 **Authors**
 
-David Simon,¹ Timothy J. Locksmith,² Nick Minor,² Eli J. O’Connor², Shelby L. O'Connor, Ph.D.*,*&² David H. O'Connor, Ph.D.&²
+David Simon,¹ Timothy J. Locksmith,² Nick Minor,² Eli J. O’Connor², Shelby L. O'Connor, Ph.D.,&² David H. O'Connor, Ph.D.&²
 
 **Affiliations**
 
