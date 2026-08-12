@@ -27,6 +27,13 @@ EXPORT_URL = f"https://docs.google.com/document/d/{DOC_ID}/export?format=md"
 HERE = Path(__file__).resolve().parent
 OUT = HERE.parent / "_prose.md"
 LEGENDS_DIR = HERE.parent / "_legends"
+FRONTMATTER = HERE.parent / "_frontmatter.md"
+
+# Author front matter lives in its own Doc sections before the Abstract. We pull
+# Authors, Affiliations, ORCID iDs, and Corresponding author so the title-page
+# block comes from the Doc (Twitter handles and Manuscript metrics are Doc-only
+# working notes and are intentionally skipped).
+FRONTMATTER_SECTIONS = ["Authors", "Affiliations", "ORCID iDs", "Corresponding author"]
 
 # The figure legends live in their own Doc sections, after References. Each is a
 # bold-led paragraph "**Figure N. Title.** body...". We pull them so the
@@ -142,9 +149,52 @@ def write_legends(legends: dict[str, str]) -> None:
           + ", ".join(sorted(legends)))
 
 
+def _section_body(md: str, name: str) -> str | None:
+    """Return the text of a '### <name>' section, up to the next ## or ### heading."""
+    m = re.search(rf"^###\s+{re.escape(name)}\s*$", md, re.M)
+    if not m:
+        return None
+    rest = md[m.end():]
+    nxt = re.search(r"^#{2,3}\s+\S", rest, re.M)
+    body = rest[: nxt.start()] if nxt else rest
+    # Collapse trailing hard-break spaces the Doc export leaves on each line.
+    body = re.sub(r"[ \t]+$", "", body, flags=re.M).strip()
+    return body
+
+
+def extract_frontmatter(md: str) -> str:
+    """Build the title-page author block from the Doc's Authors / Affiliations /
+    ORCID iDs / Corresponding author sections. Returns Markdown with bold section
+    labels, matching how the block renders on the title page."""
+    parts = []
+    labels = {
+        "Authors": "Authors",
+        "Affiliations": "Affiliations",
+        "ORCID iDs": "ORCID iDs",
+        "Corresponding author": "Corresponding author",
+    }
+    for name in FRONTMATTER_SECTIONS:
+        body = _section_body(md, name)
+        if not body:
+            continue
+        # Unescape the Doc export's "\[confirm\]" so ORCID placeholders read cleanly.
+        body = body.replace("\\[", "[").replace("\\]", "]")
+        parts.append(f"**{labels[name]}**\n\n{body}")
+    return "\n\n".join(parts)
+
+
+def write_frontmatter(md: str) -> None:
+    block = extract_frontmatter(md)
+    banner = ("<!-- AUTO-GENERATED from the manuscript Google Doc by "
+              "scripts/fetch_prose.py. Do not edit by hand; edit the Doc. -->\n\n")
+    FRONTMATTER.write_text(banner + block + "\n", encoding="utf-8")
+    print(f"wrote {FRONTMATTER} ({len(block)} bytes)")
+
+
 def main() -> None:
     source = sys.argv[1] if len(sys.argv) > 1 else None
     raw = fetch(source)
+    write_frontmatter(raw)
     write_legends(extract_legends(raw))
     md = normalize(raw)
     OUT.write_text(md, encoding="utf-8")
