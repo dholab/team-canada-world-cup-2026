@@ -84,13 +84,13 @@ def normalize(md: str) -> str:
 
 
 def extract_legends(md: str) -> dict[str, str]:
-    """Pull each figure legend from the Doc's '## Figure legends' and
-    '## Online supplemental figure legends' sections. Returns {key: caption},
-    with the leading 'Figure N.' label stripped and the escaped '\\.' cleaned,
-    so index.qmd can include the caption under a Quarto-numbered figure.
-    Keys: fig1, fig2, fig3, supp1, ...  Only 'Figure' and 'Online supplemental
-    figure' paragraphs are kept (a 'Central Figure' paragraph, which has no
-    number, is skipped here and stays authored in index.qmd)."""
+    """Pull every figure legend from the Doc's '## Figure legends' and
+    '## Online supplemental figure legends' sections. Returns {key: caption}.
+    For Quarto-numbered main figures the leading 'Figure N.' label is stripped
+    (Quarto supplies the number). The unnumbered Central Figure and the
+    supplemental figures keep their full label. All figure captions come from
+    the Doc; index.qmd includes these files and hard-codes no caption text.
+    Keys: central, fig1, fig2, fig3, supp1, ..."""
     # Take everything from the first legends section to the next '## ' that is
     # not itself a legends section (e.g. '## Online supplemental methods').
     sec = re.search(r"^##\s+Figure legends\b.*$", md, re.M)
@@ -107,9 +107,14 @@ def extract_legends(md: str) -> dict[str, str]:
         para = para.strip()
         if not para.startswith("**"):
             continue
+        # The Central Figure legend is unnumbered ("**Central Figure: ...**").
+        # It is not Quarto-numbered, so keep it verbatim under key "central".
+        if re.match(r"^\*\*\s*Central Figure\b", para, re.I):
+            legends["central"] = para
+            continue
         m = LEGEND_LEAD.match(para)
         if not m:
-            continue  # e.g. the unnumbered "**Central Figure: ...**" paragraph
+            continue
         num = m.group("num")
         is_supp = m.group("kind").startswith("Online")
         key = ("supp" if is_supp else "fig") + num
