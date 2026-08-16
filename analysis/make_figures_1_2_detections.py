@@ -52,6 +52,7 @@ GRID = "#f2f2f2"
 # cream page on the Quarto site; the static PNG/PDF exports keep matplotlib's
 # white ground, which the submission PDF requires.
 CREAM = "#F8F4E9"
+TEAL = "#163139"          # house ink, for interactive labels
 
 # Ct colour scale: light blue (high Ct = little virus) -> deep blue (low Ct).
 # Reversed so LOW Ct maps to the DEEP end.
@@ -187,22 +188,25 @@ def build_interactive(df: pd.DataFrame, out: pathlib.Path) -> None:
     s0 = cart[cart["city"] == first]
     rooms0 = [r for r in ROOM_ORDER if r in s0["room"].unique()]
     fig.update_layout(
-        title=f"Sampling intervals and detections — {first}",
-        template="simple_white", height=440, width=940,
+        # No in-plot title: the figure legend beneath the figure already carries
+        # "Figure 1. ..." and a second title inside the plot duplicates it.
+        template="simple_white", height=430, autosize=True,
         paper_bgcolor=CREAM, plot_bgcolor=CREAM,
+        font=dict(family="Arial", color=TEAL),
         barmode="overlay", bargap=0.35,
-        margin=dict(l=150, r=120, t=90, b=50),
+        margin=dict(l=130, r=30, t=62, b=50),
         yaxis=dict(tickmode="array", tickvals=list(range(len(rooms0))),
                    ticktext=rooms0, autorange="reversed", showgrid=False),
         xaxis=dict(type="date", showgrid=True, gridcolor=GRID,
                    range=[s0["start"].min() - pd.Timedelta(hours=6),
                           s0["end"].max() + pd.Timedelta(hours=6)]),
         updatemenus=[dict(buttons=buttons, direction="down", showactive=True,
-                          x=0.0, xanchor="left", y=1.18, yanchor="top")],
-        annotations=[dict(text="Host city:", x=-0.16, y=1.18, xref="paper",
+                          x=0.0, xanchor="left", y=1.16, yanchor="top")],
+        annotations=[dict(text="Host city:", x=-0.155, y=1.13, xref="paper",
                           yref="paper", showarrow=False, xanchor="left",
                           font=dict(size=12))])
-    fig.write_html(out, include_plotlyjs="cdn", full_html=True)
+    fig.write_html(out, include_plotlyjs="cdn", full_html=True,
+                   config={"displayModeBar": False, "responsive": True})
     print(f"wrote {out}")
 
 
@@ -497,15 +501,17 @@ def build_figure2_interactive(df: pd.DataFrame, city: str, out: pathlib.Path) ->
     add(sub[(sub.detected == 0) & (sub.invalid)], "inv")
 
     fig.update_layout(
-        title=f"{city} respiratory-virus detections by room",
-        template="simple_white", height=26 * len(ycats) + 140, width=900,
+        # No in-plot title: the legend beneath the figure carries "Figure 2. ...".
+        template="simple_white", height=26 * len(ycats) + 90, autosize=True,
         paper_bgcolor=CREAM, plot_bgcolor=CREAM,
+        font=dict(family="Arial", color=TEAL),
         barmode="overlay", bargap=0.3,
-        margin=dict(l=200, r=120, t=70, b=50),
+        margin=dict(l=185, r=30, t=20, b=50),
         yaxis=dict(tickmode="array", tickvals=list(range(len(ycats))),
                    ticktext=ycats, autorange="reversed", showgrid=False),
         xaxis=dict(type="date", showgrid=True, gridcolor=GRID))
-    fig.write_html(out, include_plotlyjs="cdn", full_html=True)
+    fig.write_html(out, include_plotlyjs="cdn", full_html=True,
+                   config={"displayModeBar": False, "responsive": True})
     print(f"wrote {out}")
 
 

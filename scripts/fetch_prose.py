@@ -96,7 +96,7 @@ def fetch(source: str | None) -> str:
         return resp.read().decode("utf-8")
 
 
-def normalize(md: str) -> str:
+def normalize(md: str, cite_urls: dict[int, str] | None = None) -> str:
     start = BODY_START.search(md)
     if not start:
         raise SystemExit("Could not find '## Abstract' — Doc structure changed?")
@@ -124,10 +124,95 @@ def normalize(md: str) -> str:
         "Figure 2 \\[per-room heat-map\\]", "[Figure 2](#fig-houston)"
     )
 
+    if cite_urls:
+        body = link_citations(body, cite_urls)
+
+    body = place_figures(body)
+
     # Collapse >2 blank lines.
     body = re.sub(r"\n{3,}", "\n\n", body).strip() + "\n"
 
     return BANNER + body
+
+
+# Each figure is placed immediately after the paragraph that first cites it, so
+# a reader meets the figure where it is discussed instead of finding all of them
+# stacked at the end. The anchor is a distinctive phrase from that paragraph;
+# the figure markup itself lives in the hand-editable _figN.md partials.
+FIGURE_ANCHORS = [
+    ("summarized in Figure 1", "_fig1.md"),
+    ("Houston accounted for 8 of the 15 detections", "_fig2.md"),
+    ("Metagenomic sequencing of air samples", "_fig3.md"),
+]
+
+
+def place_figures(body: str) -> str:
+    """Insert each figure include after the paragraph that first cites it.
+
+    Raises if an anchor is missing: a silently unplaced figure would drop it
+    from the manuscript entirely, which is far worse than a loud failure."""
+    paras = body.split("\n\n")
+    for anchor, partial in FIGURE_ANCHORS:
+        for i, para in enumerate(paras):
+            if anchor in para:
+                paras.insert(i + 1, "{{< include " + partial + " >}}")
+                break
+        else:
+            raise SystemExit(
+                f"Could not find the anchor for {partial!r} ({anchor!r}) in the "
+                "Doc prose. The wording changed — update FIGURE_ANCHORS."
+            )
+    return "\n\n".join(paras)
+
+
+# A citation marker in the Doc export is a bracketed run of reference numbers,
+# with the brackets backslash-escaped: "\[1\]", "\[19,20\]", "\[10–12\]" (en dash).
+CITATION = re.compile(r"\\\[((?:\d+)(?:\s*[,–-]\s*\d+)*)\\\]")
+
+
+def link_citations(body: str, cite_urls: dict[int, str]) -> str:
+    """Turn each inline citation marker into per-number hyperlinks to the source.
+
+    "\\[19,20\\]" becomes "[[19](url),[20](url)]" so a reader can click straight
+    through to the paper instead of hunting the reference list. Ranges are kept
+    as written ("10–12" stays a range) but each endpoint links; numbers with no
+    resolvable URL are left as plain text."""
+    def one(num_text: str) -> str:
+        n = int(num_text)
+        url = cite_urls.get(n)
+        return f"[{num_text}]({url})" if url else num_text
+
+    def repl(m: re.Match[str]) -> str:
+        inner = m.group(1)
+        # Rebuild the run, linking each number and preserving its separators.
+        out = re.sub(r"\d+", lambda d: one(d.group(0)), inner)
+        return f"[{out}]"
+
+    return CITATION.sub(repl, body)
+
+
+# A reference entry usually ends with "doi: 10.xxxx/yyyy"; the handful without a
+# DOI (dashboards, websites) carry a bare URL instead.
+REF_DOI = re.compile(r"doi:\s*(10\.\d{4,9}/\S+?)(?:[.,;)\]]*)$", re.I)
+REF_URL = re.compile(r"(https?://[^\s)\]]+?)(?:[.,;)\]]*)(?:\s|$)")
+
+
+def citation_urls(refs: list[tuple[int, str]]) -> dict[int, str]:
+    """Map each reference number to the best link for its source.
+
+    Prefers the DOI (resolves to the publisher's full text, and is the stable
+    identifier); falls back to the first plain URL in the entry for the
+    dashboards and websites that have no DOI."""
+    urls: dict[int, str] = {}
+    for num, text in refs:
+        m = REF_DOI.search(text.rstrip())
+        if m:
+            urls[num] = "https://doi.org/" + m.group(1).rstrip(".,;)]")
+            continue
+        u = REF_URL.search(text)
+        if u:
+            urls[num] = u.group(1).rstrip(".,;)]")
+    return urls
 
 
 def extract_legends(md: str) -> dict[str, str]:
@@ -248,29 +333,35 @@ def write_references(md: str) -> None:
     print(f"wrote {REFERENCES} ({len(refs)} references)")
 
 
-def extract_supplement(md: str) -> str:
+def extract_supplement(md: str, cite_urls: dict[int, str] | None = None) -> str:
     """Pull the Doc's '## Online supplemental methods' section through the end
     of the document. This sits after '## References' in the Doc, so the main
-    body normalizer never sees it; index.qmd renders it above the online
-    supplemental figure whose methods it describes."""
+    body normalizer never sees it.
+
+    The Doc's own '## Online supplemental methods' heading is dropped: index.qmd
+    supplies the section heading, and on a page that IS the online version the
+    word "online" is redundant. The subsections (e.g. '### Community wastewater
+    comparison') are kept."""
     sec = re.search(r"^##\s+Online supplemental methods\b.*$", md, re.M)
     if not sec:
         raise SystemExit(
             "Could not find '## Online supplemental methods' — Doc structure changed?"
         )
-    body = md[sec.start():]
+    body = md[sec.end():]
     # Same Paperpile unwrapping the main body gets: keep the citation marker
     # text, drop the URL.
     body = re.sub(
         r"\[((?:[^\[\]]|\\\[|\\\])*)\]\(https?://(?:www\.)?paperpile\.com/[^)]*\)",
         r"\1", body)
+    if cite_urls:
+        body = link_citations(body, cite_urls)
     body = re.sub(r"^#{1,6}\s*$\n?", "", body, flags=re.M)
     body = re.sub(r"\n{3,}", "\n\n", body).strip() + "\n"
     return body
 
 
-def write_supplement(md: str) -> None:
-    body = extract_supplement(md)
+def write_supplement(md: str, cite_urls: dict[int, str] | None = None) -> None:
+    body = extract_supplement(md, cite_urls)
     SUPPLEMENT.write_text(BANNER + body, encoding="utf-8")
     print(f"wrote {SUPPLEMENT} ({len(body)} bytes)")
 
@@ -296,6 +387,31 @@ def _section_body(md: str, name: str) -> str | None:
     return body
 
 
+# The Doc superscripts both the affiliation number and the "&" equal-contribution
+# marker, but the markdown export can only carry the digits: Unicode has
+# superscript forms for 0-9 (¹²³…) and none for "&", so the marker flattens to a
+# plain "&" sitting on the baseline next to a raised digit. Re-raise it, and fold
+# the neighbouring Unicode superscript digits into the same <sup> so the whole
+# marker sits on one line.
+SUPERSCRIPT_DIGITS = {"⁰": "0", "¹": "1", "²": "2", "³": "3", "⁴": "4",
+                      "⁵": "5", "⁶": "6", "⁷": "7", "⁸": "8", "⁹": "9"}
+MARKER_RUN = re.compile(r"&([" + "".join(SUPERSCRIPT_DIGITS) + r"]*)")
+
+
+def _superscript_markers(text: str) -> str:
+    """Render "&²" as a single superscript "&2" marker.
+
+    Only touches a "&" that is directly followed by superscript digits or that
+    directly follows one, which is how the equal-contribution marker appears; a
+    standalone ampersand in prose (e.g. the "& denotes equal contribution"
+    legend) is left alone."""
+    def repl(m: re.Match[str]) -> str:
+        digits = "".join(SUPERSCRIPT_DIGITS[c] for c in m.group(1))
+        return f"<sup>&amp;{digits}</sup>" if digits else m.group(0)
+
+    return MARKER_RUN.sub(repl, text)
+
+
 def extract_frontmatter(md: str) -> str:
     """Build the title-page author block from the Doc's Authors / Affiliations /
     ORCID iDs / Corresponding author sections. Returns Markdown with bold section
@@ -313,6 +429,8 @@ def extract_frontmatter(md: str) -> str:
             continue
         # Unescape the Doc export's "\[confirm\]" so ORCID placeholders read cleanly.
         body = body.replace("\\[", "[").replace("\\]", "]")
+        if name == "Authors":
+            body = _superscript_markers(body)
         parts.append(f"**{labels[name]}**\n\n{body}")
     return "\n\n".join(parts)
 
@@ -362,10 +480,13 @@ def main() -> None:
     write_frontmatter(raw)
     write_legends(extract_legends(raw))
     write_references(raw)
-    write_supplement(raw)
-    md = normalize(raw)
+    # Inline citation markers link straight to each source, so the rendered
+    # manuscript is navigable rather than carrying bare numbers.
+    cite_urls = citation_urls(extract_references(raw))
+    write_supplement(raw, cite_urls)
+    md = normalize(raw, cite_urls)
     OUT.write_text(md, encoding="utf-8")
-    print(f"wrote {OUT} ({len(md)} bytes)")
+    print(f"wrote {OUT} ({len(md)} bytes, {len(cite_urls)} citation links)")
 
 
 if __name__ == "__main__":

@@ -14,67 +14,11 @@
 
 {{< include _legends/central.md >}}
 
+<!-- Figures 1-3 are not listed here: scripts/fetch_prose.py injects each
+     _figN.md partial into _prose.md right after the paragraph that cites it,
+     so every figure appears with the text that discusses it. -->
+
 {{< include _prose.md >}}
-
-{{< pagebreak >}}
-
-::: {#fig-detections}
-
-```{=html}
-<iframe src="analysis/figures/figure1_detections_interactive.html" width="100%" height="620"
-        style="border:none;" loading="lazy"
-        title="Figure 1: respiratory-virus detections across the World Cup"></iframe>
-```
-
-::: {.content-visible when-format="pdf"}
-![](analysis/figures/figure1_detections_static.png)
-:::
-
-{{< include _legends/fig1.md >}}
-
-:::
-
-{{< pagebreak >}}
-
-::: {#fig-houston}
-
-```{=html}
-<iframe src="analysis/figures/figure2_houston_interactive.html" width="100%" height="520"
-        style="border:none;" loading="lazy"
-        title="Figure 2: per-room detections during the Houston period"></iframe>
-```
-
-::: {.content-visible when-format="pdf"}
-![](analysis/figures/figure2_houston.png)
-:::
-
-{{< include _legends/fig2.md >}}
-
-:::
-
-{{< pagebreak >}}
-
-::: {#fig-sequencing}
-
-```{=html}
-<iframe src="analysis/figures/figure3_sequencing.html" width="100%" height="600"
-        style="border:none;" loading="lazy"
-        title="Figure 3: human viruses detected by sequencing of Houston air samples"></iframe>
-```
-
-::: {.content-visible when-format="pdf"}
-![](analysis/figures/figure3_sequencing.png)
-:::
-
-{{< include _legends/fig3.md >}}
-
-:::
-
-{{< pagebreak >}}
-
-## References
-
-{{< include _references.md >}}
 
 ## Data and code
 
@@ -113,15 +57,15 @@ uses `covN2, fluA, fluB, rsv`; `metric` records which non-interchangeable
 quantity that source reports (`pmmov_index`, `fecal_normalized`,
 `houston_vl_index`).
 
-## Supplemental material
+## Supplemental methods
 
 {{< include _supplement.md >}}
 
 ::: {#supp-wastewater}
 
 ```{=html}
-<iframe src="analysis/figures/supplement1_wastewater_interactive.html" width="100%" height="1180"
-        style="border:none;" loading="lazy"
+<iframe src="analysis/figures/supplement1_wastewater_interactive.html" width="100%" height="1226"
+        style="border:none;" loading="lazy" scrolling="no"
         title="Online supplemental figure 1, community wastewater context by host city"></iframe>
 ```
 
@@ -132,3 +76,9 @@ quantity that source reports (`pmmov_index`, `fecal_normalized`,
 {{< include _legends/supp1.md >}}
 
 :::
+
+{{< pagebreak >}}
+
+## References
+
+{{< include _references.md >}}

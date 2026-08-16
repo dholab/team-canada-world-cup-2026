@@ -82,6 +82,7 @@ VIRUS_COLOR = {"covN2": "#08306b",   # deep navy, matches the Fig 1-2 Ct ramp
 # cream page on the Quarto site; the static PNG/PDF exports keep matplotlib's
 # white ground, which the submission PDF requires.
 CREAM = "#F8F4E9"
+TEAL = "#163139"          # house ink, for interactive labels
 
 # Team Canada sampling window per city (from cartridges_long.csv). The Houston
 # 69th St feed now spans the visit window (refreshed 2026-08-15), so no gap
@@ -259,14 +260,19 @@ def build_interactive(out: pathlib.Path) -> None:
                              title_font=dict(size=9), row=i, col=1)
 
     fig.update_layout(
-        template="simple_white", height=1250, width=900,
+        # No in-plot title: the legend beneath the figure carries the full
+        # "Online supplemental figure 1. ..." caption.
+        template="simple_white", height=1210, autosize=True,
         paper_bgcolor=CREAM, plot_bgcolor=CREAM,
-        title="Online supplemental figure 1. Community wastewater context by host city, 2025–2026 season",
-        legend=dict(orientation="h", yanchor="bottom", y=1.03, x=0.5,
-                    xanchor="center"),
-        margin=dict(l=70, r=40, t=110, b=50))
+        font=dict(family="Arial", color=TEAL),
+        legend=dict(orientation="h", yanchor="bottom", y=1.012, x=0.5,
+                    xanchor="center", font=dict(family="Arial", color=TEAL)),
+        margin=dict(l=70, r=30, t=54, b=45))
+    # Panel titles in the house ink, matching the other three figures.
+    fig.update_annotations(font=dict(family="Arial", size=12, color=TEAL))
     fig.update_xaxes(range=["2025-08-01", "2026-07-15"], row=5, col=1)
-    fig.write_html(out, include_plotlyjs="cdn", full_html=True)
+    fig.write_html(out, include_plotlyjs="cdn", full_html=True,
+                   config={"displayModeBar": False, "responsive": True})
     print(f"wrote {out}")
 
 

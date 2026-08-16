@@ -174,7 +174,9 @@ def build_interactive(df: pd.DataFrame, out: pathlib.Path) -> None:
     # Header lines: room name (one or two), SC2 status, cartridge runtime.
     # Start/end clock times are omitted (they read as confusing); runtime alone
     # conveys how long each cartridge sampled.
-    LINE_Y = {"room1": 1.140, "room2": 1.097, "sc2": 1.053, "runtime": 0.998}
+    # Paper-space baselines for the stacked column header. The runtime line must
+    # clear y=1.0 or it overprints the first heat-map row.
+    LINE_Y = {"room1": 1.150, "room2": 1.105, "sc2": 1.062, "runtime": 1.020}
     for i, r in enumerate(rooms):
         h = hdr.get(r, {})
         words = r.upper().split(" ")
@@ -186,12 +188,12 @@ def build_interactive(df: pd.DataFrame, out: pathlib.Path) -> None:
             line1, line2 = r.upper(), ""
         ann.append(dict(x=i, y=LINE_Y["room1"], xref="x", yref="paper",
                         showarrow=False, text=f"<b>{line1}</b>",
-                        font=dict(family="Arial", size=12, color=TEAL),
+                        font=dict(family="Arial", size=10, color=TEAL),
                         xanchor="center", yanchor="middle"))
         if line2:
             ann.append(dict(x=i, y=LINE_Y["room2"], xref="x", yref="paper",
                             showarrow=False, text=f"<b>{line2}</b>",
-                            font=dict(family="Arial", size=12, color=TEAL),
+                            font=dict(family="Arial", size=10, color=TEAL),
                             xanchor="center", yanchor="middle"))
         # Always occupy the SC2 slot (blank when no same-room GeneXpert) so the
         # runtime line stays on one baseline across every column.
@@ -200,20 +202,25 @@ def build_interactive(df: pd.DataFrame, out: pathlib.Path) -> None:
                         showarrow=False, text=(sc2 if sc2 else "&#160;"),
                         font=dict(family="Arial", size=10, color=TEAL),
                         xanchor="center", yanchor="middle"))
+        # Runtime as the bare h:mm value. Repeating the word "runtime" in every
+        # column collides once the figure scales to the page width; the row
+        # label to the left names the unit once instead.
         ann.append(dict(x=i, y=LINE_Y["runtime"], xref="x", yref="paper",
-                        showarrow=False, text=f"{h.get('elapsed','')} runtime",
+                        showarrow=False, text=h.get("elapsed", ""),
                         font=dict(family="Arial", size=10, color=TERRA),
                         xanchor="center", yanchor="middle"))
+    # One label for the runtime row, in the left margin.
+    ann.append(dict(x=0, y=LINE_Y["runtime"], xref="paper", yref="paper",
+                    showarrow=False, text="RUNTIME (h:mm)", xshift=-12,
+                    font=dict(family="Arial", size=9, color=TERRA),
+                    xanchor="right", yanchor="middle"))
 
     fig.update_layout(
-        title=dict(
-            text="<b>Figure 3</b>  Human viruses detected by sequencing of Houston air samples",
-            font=dict(family="Georgia, serif", size=19, color=TEAL),
-            x=0.0, xanchor="left", y=0.975),
+        # No in-plot title: the legend beneath the figure carries "Figure 3. ...".
         paper_bgcolor=CREAM, plot_bgcolor=CREAM,
         font=dict(family="Arial", color=TEAL),
-        width=940, height=580,
-        margin=dict(l=210, r=40, t=170, b=40),
+        autosize=True, height=560,
+        margin=dict(l=195, r=40, t=96, b=30),
         xaxis=dict(side="top", showticklabels=False,
                    showgrid=False, zeroline=False, ticks="",
                    range=[-0.5, len(rooms) - 0.5]),

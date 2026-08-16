@@ -76,3 +76,50 @@ def test_keywords_come_from_the_doc(doc_md):
         "athlete health",
         "public health",
     ]
+
+
+def test_every_reference_resolves_to_a_link(doc_md):
+    refs = fetch_prose.extract_references(doc_md)
+    urls = fetch_prose.citation_urls(refs)
+    # Each of the 49 entries carries either a DOI or a bare URL, so a reader can
+    # click any inline citation through to its source.
+    assert len(urls) == len(refs) == 49
+
+
+def test_doi_is_preferred_over_a_bare_url(doc_md):
+    urls = fetch_prose.citation_urls(fetch_prose.extract_references(doc_md))
+    assert urls[1] == "https://doi.org/10.1080/24733938.2024.2357568"
+    # Reference 49 is a dashboard with no DOI, so it falls back to its URL.
+    assert urls[49] == "https://covidwwtp.spatialstudieslab.org/"
+
+
+def test_citation_markers_become_links():
+    body = r"early work \[1\] and later \[19,20\] and a range \[10–12\]."
+    out = fetch_prose.link_citations(body, {1: "u1", 10: "u10", 12: "u12",
+                                            19: "u19", 20: "u20"})
+    assert "[[1](u1)]" in out
+    assert "[[19](u19),[20](u20)]" in out
+    assert "[[10](u10)–[12](u12)]" in out
+
+
+def test_citation_without_a_url_stays_plain_text():
+    out = fetch_prose.link_citations(r"see \[7\].", {})
+    assert out == "see [7]."
+
+
+def test_equal_contribution_marker_is_superscripted():
+    # Google Docs exports the superscript affiliation digit as "²" but has no
+    # superscript form for "&", so the marker arrives split. It must render as
+    # one raised marker.
+    assert fetch_prose._superscript_markers("O'Connor&²") == "O'Connor<sup>&amp;2</sup>"
+
+
+def test_standalone_ampersand_is_left_alone():
+    assert fetch_prose._superscript_markers("& denotes equal contribution") == \
+        "& denotes equal contribution"
+
+
+def test_supplement_drops_the_online_methods_heading(doc_md):
+    supp = fetch_prose.extract_supplement(doc_md)
+    assert "Online supplemental methods" not in supp
+    assert "### Community wastewater comparison" in supp
