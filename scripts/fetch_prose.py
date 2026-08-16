@@ -29,6 +29,7 @@ OUT = HERE.parent / "_prose.md"
 LEGENDS_DIR = HERE.parent / "_legends"
 FRONTMATTER = HERE.parent / "_frontmatter.md"
 REFERENCES = HERE.parent / "_references.md"
+SUPPLEMENT = HERE.parent / "_supplement.md"
 
 BANNER = (
     "<!-- AUTO-GENERATED from the manuscript Google Doc by "
@@ -240,6 +241,41 @@ def write_references(md: str) -> None:
     print(f"wrote {REFERENCES} ({len(refs)} references)")
 
 
+def extract_supplement(md: str) -> str:
+    """Pull the Doc's '## Online supplemental methods' section through the end
+    of the document. This sits after '## References' in the Doc, so the main
+    body normalizer never sees it; index.qmd renders it above the online
+    supplemental figure whose methods it describes."""
+    sec = re.search(r"^##\s+Online supplemental methods\b.*$", md, re.M)
+    if not sec:
+        raise SystemExit(
+            "Could not find '## Online supplemental methods' — Doc structure changed?"
+        )
+    body = md[sec.start():]
+    # Same Paperpile unwrapping the main body gets: keep the citation marker
+    # text, drop the URL.
+    body = re.sub(
+        r"\[((?:[^\[\]]|\\\[|\\\])*)\]\(https?://(?:www\.)?paperpile\.com/[^)]*\)",
+        r"\1", body)
+    body = re.sub(r"^#{1,6}\s*$\n?", "", body, flags=re.M)
+    body = re.sub(r"\n{3,}", "\n\n", body).strip() + "\n"
+    return body
+
+
+def write_supplement(md: str) -> None:
+    body = extract_supplement(md)
+    SUPPLEMENT.write_text(BANNER + body, encoding="utf-8")
+    print(f"wrote {SUPPLEMENT} ({len(body)} bytes)")
+
+
+def extract_keywords(md: str) -> list[str]:
+    """The Doc's '### Keywords' section, one comma-separated line."""
+    body = _section_body(md, "Keywords")
+    if not body:
+        return []
+    return [kw.strip() for kw in body.replace("\n", " ").split(",") if kw.strip()]
+
+
 def _section_body(md: str, name: str) -> str | None:
     """Return the text of a '### <name>' section, up to the next ## or ### heading."""
     m = re.search(rf"^###\s+{re.escape(name)}\s*$", md, re.M)
@@ -303,6 +339,10 @@ def write_title(md: str) -> None:
     if sm:
         sub = sm.group("sub").replace("\\#", "#").replace("\\&", "&").strip()
         lines.append(f"subtitle: {_yaml_quote(sub)}")
+    keywords = extract_keywords(md)
+    if keywords:
+        lines.append("keywords:")
+        lines.extend(f"  - {_yaml_quote(kw)}" for kw in keywords)
     TITLE_YML.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"wrote {TITLE_YML}: title={title!r}"
           + (f", subtitle={sub!r}" if sm else ""))
@@ -315,6 +355,7 @@ def main() -> None:
     write_frontmatter(raw)
     write_legends(extract_legends(raw))
     write_references(raw)
+    write_supplement(raw)
     md = normalize(raw)
     OUT.write_text(md, encoding="utf-8")
     print(f"wrote {OUT} ({len(md)} bytes)")

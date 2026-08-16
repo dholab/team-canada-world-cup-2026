@@ -48,3 +48,31 @@ def test_reference_count_mismatch_raises(doc_md):
     except SystemExit:
         return
     raise AssertionError("expected SystemExit on a reference count mismatch")
+
+
+def test_supplement_contains_the_wastewater_methods(doc_md):
+    supp = fetch_prose.extract_supplement(doc_md)
+    assert "### Community wastewater comparison" in supp
+    assert "PMMoV-normalized viral index" in supp
+    assert "JWPCP" in supp
+
+
+def test_supplement_drops_paperpile_urls(doc_md):
+    supp = fetch_prose.extract_supplement(doc_md)
+    assert "paperpile.com" not in supp
+
+
+def test_supplement_excludes_the_figure_legends(doc_md):
+    # The legends section precedes supplemental methods in the Doc and is
+    # written separately to _legends/; it must not be duplicated here.
+    supp = fetch_prose.extract_supplement(doc_md)
+    assert "## Figure legends" not in supp
+
+
+def test_keywords_come_from_the_doc(doc_md):
+    assert fetch_prose.extract_keywords(doc_md) == [
+        "Respiratory infection",
+        "team sport",
+        "athlete health",
+        "public health",
+    ]
