@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Fetch the manuscript prose from the (link-viewable) Google Doc and normalize
-it into manuscript/_prose.md for Quarto.
+"""Fetch the manuscript content from the (link-viewable) Google Doc and
+normalize it into six files at the repo root, for Quarto.
 
 Run with no arguments to fetch from the Doc export endpoint, or pass a local
 markdown file to normalize that instead (useful for offline testing):
@@ -8,11 +8,18 @@ markdown file to normalize that instead (useful for offline testing):
     python scripts/fetch_prose.py                 # fetch from Google Docs
     python scripts/fetch_prose.py raw_export.md   # normalize a local file
 
+This writes six outputs from the Doc: `_title.yml` (title, optional subtitle,
+keywords), `_frontmatter.md` (authors, affiliations, ORCID iDs, corresponding
+author), `_prose.md` (the manuscript body, Abstract through the required end
+statements), `_legends/*.md` (one file per figure legend), `_references.md`
+(the numbered bibliography), and `_supplement.md` (the online supplemental
+methods).
+
 Why this exists: the Doc is authored with front-matter, submission boilerplate,
 and empty divider headers that should not appear on the rendered page. This
-script keeps the manuscript body (Abstract through the required end statements)
-and strips the rest. The interactive/static figures and the References section
-are supplied by manuscript/index.qmd, not by the Doc.
+script keeps the manuscript body and strips the rest. The interactive/static
+figures are supplied by index.qmd, not by the Doc; the references and
+supplemental methods are pulled from the Doc by this script.
 """
 from __future__ import annotations
 
@@ -28,6 +35,13 @@ HERE = Path(__file__).resolve().parent
 OUT = HERE.parent / "_prose.md"
 LEGENDS_DIR = HERE.parent / "_legends"
 FRONTMATTER = HERE.parent / "_frontmatter.md"
+REFERENCES = HERE.parent / "_references.md"
+SUPPLEMENT = HERE.parent / "_supplement.md"
+
+BANNER = (
+    "<!-- AUTO-GENERATED from the manuscript Google Doc by "
+    "scripts/fetch_prose.py. Do not edit by hand; edit the Doc. -->\n\n"
+)
 # Quarto metadata file carrying the Doc's title + running head, fed to the
 # render via `metadata-files` in _quarto.yml so index.qmd hard-codes neither.
 TITLE_YML = HERE.parent / "_title.yml"
@@ -62,6 +76,16 @@ LEGEND_LEAD = re.compile(
 BODY_START = re.compile(r"^##\s+Abstract\b.*$", re.M)
 # Everything from "## References" onward is boilerplate/placeholder in the Doc.
 BODY_END = re.compile(r"^##\s+References\b.*$", re.M)
+
+# The Doc's References section lists each entry as its own heading:
+#   "## 1 \t[Serner A, … doi: 10.1080/…](http://paperpile.com/b/tA670F/58gc)"
+# We keep the link text (the formatted citation) and drop the Paperpile URL,
+# exactly as normalize() already does for inline citation markers.
+REFERENCE_ENTRY = re.compile(
+    r"^##\s+(?P<num>\d+)\s*\[(?P<text>.+?)\]\("
+    r"https?://(?:www\.)?paperpile\.com/[^)]*\)\s*$",
+    re.M,
+)
 
 
 def fetch(source: str | None) -> str:
@@ -103,11 +127,7 @@ def normalize(md: str) -> str:
     # Collapse >2 blank lines.
     body = re.sub(r"\n{3,}", "\n\n", body).strip() + "\n"
 
-    header = (
-        "<!-- AUTO-GENERATED from the manuscript Google Doc by "
-        "scripts/fetch_prose.py. Do not edit by hand; edit the Doc. -->\n\n"
-    )
-    return header + body
+    return BANNER + body
 
 
 def extract_legends(md: str) -> dict[str, str]:
@@ -158,15 +178,109 @@ def extract_legends(md: str) -> dict[str, str]:
     return legends
 
 
+def extract_references(md: str) -> list[tuple[int, str]]:
+    """Pull the numbered reference list from the Doc's '## References' section.
+
+    Returns [(number, citation_text), ...] in Doc order. The Paperpile URL is
+    dropped and the export's backslash escapes are undone, so each entry is
+    plain formatted Markdown. Raises SystemExit if the numbering is not a
+    complete 1..N run — a silently short bibliography would ship a manuscript
+    with dangling citation markers."""
+    sec = re.search(r"^##\s+References\b.*$", md, re.M)
+    if not sec:
+        raise SystemExit("Could not find '## References' — Doc structure changed?")
+    region = md[sec.end():]
+    # Stop at the first non-reference heading with actual text (e.g.
+    # '## Figure legends'). The Doc emits bare '## ' divider lines from its page
+    # breaks, so require a non-'#' character after the hashes. A heading that
+    # merely starts with digits (e.g. a corrupted "## 49x [...") also counts as
+    # a stop candidate here — it is filtered back out below if it turns out to
+    # be a malformed reference entry rather than a genuine section boundary, so
+    # a corrupted/dropped final entry is caught instead of silently truncating.
+    stop = re.search(r"^##\s+(?!\d+\s*\[)[^\s#].*$", region, re.M)
+    boundary = stop.start() if stop else len(region)
+    region_for_refs = region[:boundary]
+
+    refs: list[tuple[int, str]] = []
+    for m in REFERENCE_ENTRY.finditer(region_for_refs):
+        text = m.group("text")
+        # Undo the markdown export's escaping of literal punctuation. The Doc
+        # export also escapes a literal ")" in dashboard/URL references like
+        # "(accessed 16 July 2026\)", so ")" is included alongside the brief's
+        # original set.
+        text = re.sub(r"\\([.\-\[\]&#)])", r"\1", text).strip()
+        refs.append((int(m.group("num")), text))
+
+    if not refs:
+        raise SystemExit("Parsed zero references from the Doc's References section.")
+    expected = list(range(1, len(refs) + 1))
+    # A heading that stopped the scan but still looks like a numbered reference
+    # entry (leading digits, e.g. a corrupted "## 49x [...") means an entry was
+    # dropped rather than the section genuinely ending — treat that as a count
+    # mismatch too, rather than silently accepting the shorter, still-sequential
+    # list that precedes it.
+    stopped_on_numbered_heading = bool(stop and re.match(r"^##\s+\d", stop.group()))
+    if [n for n, _ in refs] != expected or stopped_on_numbered_heading:
+        raise SystemExit(
+            f"Reference numbering is not a complete 1..{len(refs)} run: "
+            f"got {[n for n, _ in refs]}"
+        )
+    return refs
+
+
 def write_legends(legends: dict[str, str]) -> None:
     LEGENDS_DIR.mkdir(exist_ok=True)
-    banner = ("<!-- AUTO-GENERATED from the manuscript Google Doc by "
-              "scripts/fetch_prose.py. Do not edit by hand; edit the Doc. -->\n\n")
     for key, caption in legends.items():
-        (LEGENDS_DIR / f"{key}.md").write_text(banner + caption + "\n",
+        (LEGENDS_DIR / f"{key}.md").write_text(BANNER + caption + "\n",
                                                encoding="utf-8")
     print(f"wrote {len(legends)} legends to {LEGENDS_DIR}: "
           + ", ".join(sorted(legends)))
+
+
+def write_references(md: str) -> None:
+    """Write the Doc's bibliography to _references.md as a numbered list.
+
+    Numbers are written explicitly (not left to Markdown auto-numbering) so the
+    rendered list always matches the inline citation markers in the prose."""
+    refs = extract_references(md)
+    body = "\n\n".join(f"{num}. {text}" for num, text in refs)
+    REFERENCES.write_text(BANNER + body + "\n", encoding="utf-8")
+    print(f"wrote {REFERENCES} ({len(refs)} references)")
+
+
+def extract_supplement(md: str) -> str:
+    """Pull the Doc's '## Online supplemental methods' section through the end
+    of the document. This sits after '## References' in the Doc, so the main
+    body normalizer never sees it; index.qmd renders it above the online
+    supplemental figure whose methods it describes."""
+    sec = re.search(r"^##\s+Online supplemental methods\b.*$", md, re.M)
+    if not sec:
+        raise SystemExit(
+            "Could not find '## Online supplemental methods' — Doc structure changed?"
+        )
+    body = md[sec.start():]
+    # Same Paperpile unwrapping the main body gets: keep the citation marker
+    # text, drop the URL.
+    body = re.sub(
+        r"\[((?:[^\[\]]|\\\[|\\\])*)\]\(https?://(?:www\.)?paperpile\.com/[^)]*\)",
+        r"\1", body)
+    body = re.sub(r"^#{1,6}\s*$\n?", "", body, flags=re.M)
+    body = re.sub(r"\n{3,}", "\n\n", body).strip() + "\n"
+    return body
+
+
+def write_supplement(md: str) -> None:
+    body = extract_supplement(md)
+    SUPPLEMENT.write_text(BANNER + body, encoding="utf-8")
+    print(f"wrote {SUPPLEMENT} ({len(body)} bytes)")
+
+
+def extract_keywords(md: str) -> list[str]:
+    """The Doc's '### Keywords' section, one comma-separated line."""
+    body = _section_body(md, "Keywords")
+    if not body:
+        return []
+    return [kw.strip() for kw in body.replace("\n", " ").split(",") if kw.strip()]
 
 
 def _section_body(md: str, name: str) -> str | None:
@@ -205,9 +319,7 @@ def extract_frontmatter(md: str) -> str:
 
 def write_frontmatter(md: str) -> None:
     block = extract_frontmatter(md)
-    banner = ("<!-- AUTO-GENERATED from the manuscript Google Doc by "
-              "scripts/fetch_prose.py. Do not edit by hand; edit the Doc. -->\n\n")
-    FRONTMATTER.write_text(banner + block + "\n", encoding="utf-8")
+    FRONTMATTER.write_text(BANNER + block + "\n", encoding="utf-8")
     print(f"wrote {FRONTMATTER} ({len(block)} bytes)")
 
 
@@ -234,6 +346,10 @@ def write_title(md: str) -> None:
     if sm:
         sub = sm.group("sub").replace("\\#", "#").replace("\\&", "&").strip()
         lines.append(f"subtitle: {_yaml_quote(sub)}")
+    keywords = extract_keywords(md)
+    if keywords:
+        lines.append("keywords:")
+        lines.extend(f"  - {_yaml_quote(kw)}" for kw in keywords)
     TITLE_YML.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"wrote {TITLE_YML}: title={title!r}"
           + (f", subtitle={sub!r}" if sm else ""))
@@ -245,6 +361,8 @@ def main() -> None:
     write_title(raw)
     write_frontmatter(raw)
     write_legends(extract_legends(raw))
+    write_references(raw)
+    write_supplement(raw)
     md = normalize(raw)
     OUT.write_text(md, encoding="utf-8")
     print(f"wrote {OUT} ({len(md)} bytes)")

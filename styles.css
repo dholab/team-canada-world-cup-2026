@@ -2,11 +2,13 @@
    The theme owns palette, type, and the figure-card treatment; this file only
    holds a couple of small, non-conflicting nudges. */
 
-/* Plotly iframes always paint on white (the plots need a white ground), which
-   also reads as the white "chip" inside each cream figure card. */
+/* Plotly iframes paint the house cream (set as paper_bgcolor/plot_bgcolor in
+   the analysis scripts), so the plot ground matches the figure card and the
+   page behind it. This rule covers the moment before the iframe document
+   paints, so no white flash shows through. */
 figure iframe,
 .cell iframe {
-  background: #fff;
+  background: #F8F4E9;
 }
 
 /* A touch more separation under each embedded figure caption. Colour and font

@@ -1,12 +1,32 @@
-# Air-sampling detections — Figure 1 (interactive + static)
+# Analysis — data and figure pipelines
 
-Reproducible figures for the Team Canada air-sampling study (2026 FIFA World Cup).
-Both figures are built from a single tidy dataset by one script.
+Every figure in the manuscript is built by a Python script from a committed
+tidy CSV in `data/`, so each figure reflects exactly the deposited data. All
+generated outputs are written to `figures/`.
 
-| Output | Purpose |
-| --- | --- |
-| `figure1_interactive.html` | **Interactive.** Every room in every city is explorable. A host-city selector switches between the five cities; each square is one cartridge x virus, and hovering shows the room, date, session start, virus, Ct value, and the GeneXpert qualitative call. Self-contained (Plotly loaded from CDN). Embed this in the repo / project page. |
-| `figure1_static.pdf`, `figure1_static.png` | **Static.** Rooms are merged within each city for print readability (one cell per city-date-virus, filled by the lowest Ct among that day's rooms). Use in the manuscript PDF. |
+| Manuscript figure | Script | Input CSV | Outputs in `figures/` |
+| --- | --- | --- | --- |
+| Figures 1 and 2 | `make_figures_1_2_detections.py` | `data/cartridges_long.csv` | `figure1_detections_interactive.html`, `figure1_detections_static.{png,pdf}`, `figure2_houston_interactive.html`, `figure2_houston.{png,pdf}` |
+| Figure 3 | `make_figure_3_sequencing.py` | `data/sequencing_detections.csv` | `figure3_sequencing.html`, `figure3_sequencing.png`, `figure3_sequencing_transparent.png` |
+| Online supplemental figure 1 | `make_supplement_1_wastewater.py` | `data/ww_canada.csv`, `data/ww_losangeles.csv`, `data/ww_houston.csv` | `supplement1_wastewater_interactive.html`, `supplement1_wastewater.{png,pdf}` |
+| Central figure | `central_figure/` | assembled in Illustrator | `central_figure/central_figure.png` |
+
+Each figure ships an interactive Plotly HTML (embedded in the Quarto site) and
+a static PNG (used by the submission PDF). Figure 3 also ships a
+transparent-background PNG for slides. Interactive HTML and intermediate PDFs
+are git-ignored and rebuilt by CI; the static PNGs and every CSV are committed.
+
+## Build
+
+Requires [uv](https://docs.astral.sh/uv/). The virtual environment lives in
+`.venv/` and is git-ignored — do not commit or cloud-sync it.
+
+```bash
+uv sync
+uv run python make_figures_1_2_detections.py
+uv run python make_figure_3_sequencing.py
+uv run python make_supplement_1_wastewater.py
+```
 
 ## Data
 
@@ -28,19 +48,6 @@ Columns: `city, room, sampler, cartridge, start, end, dur_h, virus, ct, qual, de
 
 Some cartridges that produced no valid test data are excluded from the dataset
 entirely (see `REMOVE` in `extract_data.py`).
-
-## Build
-
-Requires [uv](https://docs.astral.sh/uv/). The virtual environment lives in
-`.venv/` and is git-ignored — do not commit or cloud-sync it.
-
-```bash
-uv sync                      # create the environment from pyproject.toml
-uv run python make_figures.py
-```
-
-This writes `figure1_interactive.html`, `figure1_static.pdf`, and
-`figure1_static.png` into the project root.
 
 ## Regenerating the dataset
 

@@ -74,7 +74,7 @@ All processing was performed on-site in a hotel room. For each cassette, the fil
 
 ### Molecular testing
 
-Eluates were tested on the Cepheid GeneXpert® platform using the Xpert® Xpress SARS-CoV-2/Flu/RSV plus assay, a cartridge-based multiplex real-time RT-PCR that detects SARS-CoV-2, influenza A, influenza B, and respiratory syncytial virus. Each cartridge was run according to the manufacturer's instructions.
+Eluates were tested on the Cepheid GeneXpert® platform using the Xpert® Xpress SARS-CoV-2/Flu/RSVplus assay, a cartridge-based multiplex real-time RT-PCR that detects SARS-CoV-2, influenza A, influenza B, and respiratory syncytial virus. Each cartridge was run according to the manufacturer's instructions.
 
 ### Definition of a positive detection
 
@@ -174,7 +174,7 @@ The University of Wisconsin–Madison Institutional Review Board determined that
 
 ### Data sharing statement
 
-The data and code for this study are available in the repository at [https://github.com/dholab/team-canada-world-cup-2026](https://github.com/dholab/team-canada-world-cup-2026). A compressed archive of the Lungfish Genome Explorer project (including imported sequencing reads) used to evaluate sequencing reads found in the July 4, 2026 samples can be accessed from [https://dholk.primate.wisc.edu/\_webdav/dho/public/manuscripts/team-canada-air-sampling/%40files/Team\_Canada\_VSP2.lungfish.zip](https://dholk.primate.wisc.edu/_webdav/dho/public/manuscripts/team-canada-air-sampling/%40files/Team_Canada_VSP2.lungfish.zip). The original reads before import processing for Lungfish Genome Explorer will be available from SRA upon publication. [Fastq.gz](http://Fastq.gz) files for this study were uploaded to NCBI SRA in Bioproject [PRJNA1513008](https://dataview.ncbi.nlm.nih.gov/object/PRJNA1513008).
+The data and code for this study are available in the repository at [https://github.com/dholab/team-canada-world-cup-2026](https://github.com/dholab/team-canada-world-cup-2026). A compressed archive of the Lungfish Genome Explorer project (including imported sequencing reads) used to evaluate sequencing reads found in the July 4, 2026 samples can be accessed from [https://dholk.primate.wisc.edu/\_webdav/dho/public/manuscripts/team-canada-air-sampling/%40files/Team\_Canada\_VSP2.lungfish.zip](https://dholk.primate.wisc.edu/_webdav/dho/public/manuscripts/team-canada-air-sampling/%40files/Team_Canada_VSP2.lungfish.zip). The original reads before import processing for Lungfish Genome Explorer will be available from SRA upon publication. Sequencing files for this study were uploaded to NCBI SRA in Bioproject [PRJNA1513008](https://dataview.ncbi.nlm.nih.gov/object/PRJNA1513008).
 
 ### Patient and public involvement
 
