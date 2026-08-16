@@ -551,14 +551,6 @@ Los Angeles,Meal room,Kerber,IB000010008469,2026-06-27T09:35:00,2026-06-27T16:58
 Los Angeles,Meal room,Kerber,IB000010008469,2026-06-27T09:35:00,2026-06-27T16:58:00,7.38,Influenza B,,Negative,0,Positive,29.6,valid
 Los Angeles,Meal room,Kerber,IB000010008469,2026-06-27T09:35:00,2026-06-27T16:58:00,7.38,SARS-CoV-2,34.0,Positive,1,Positive,29.6,valid
 Los Angeles,Meal room,Kerber,IB000010008469,2026-06-27T09:35:00,2026-06-27T16:58:00,7.38,Influenza A,,Negative,0,Positive,29.6,valid
-Los Angeles,Meal room,Sabalenka,IB000010008643,2026-06-27T09:38:00,2026-06-27T16:56:00,7.30,RSV,,Negative,0,Positive,29.1,valid
-Los Angeles,Meal room,Sabalenka,IB000010008643,2026-06-27T09:38:00,2026-06-27T16:56:00,7.30,Influenza B,,Negative,0,Positive,29.1,valid
-Los Angeles,Meal room,Sabalenka,IB000010008643,2026-06-27T09:38:00,2026-06-27T16:56:00,7.30,SARS-CoV-2,39.3,Positive,1,Positive,29.1,valid
-Los Angeles,Meal room,Sabalenka,IB000010008643,2026-06-27T09:38:00,2026-06-27T16:56:00,7.30,Influenza A,,Negative,0,Positive,29.1,valid
-Los Angeles,Meal room,Sabalenka,IB000010008462,2026-06-27T16:57:00,2026-06-28T07:23:00,14.43,RSV,,Negative,0,Negative,,invalid
-Los Angeles,Meal room,Sabalenka,IB000010008462,2026-06-27T16:57:00,2026-06-28T07:23:00,14.43,Influenza B,,Negative,0,Negative,,invalid
-Los Angeles,Meal room,Sabalenka,IB000010008462,2026-06-27T16:57:00,2026-06-28T07:23:00,14.43,SARS-CoV-2,,Negative,0,Negative,,invalid
-Los Angeles,Meal room,Sabalenka,IB000010008462,2026-06-27T16:57:00,2026-06-28T07:23:00,14.43,Influenza A,,Negative,0,Negative,,invalid
 Los Angeles,Meal room,Kerber,IB000010008554,2026-06-27T16:58:00,2026-06-28T07:24:00,14.43,RSV,,Negative,0,Positive,29.3,valid
 Los Angeles,Meal room,Kerber,IB000010008554,2026-06-27T16:58:00,2026-06-28T07:24:00,14.43,Influenza B,,Negative,0,Positive,29.3,valid
 Los Angeles,Meal room,Kerber,IB000010008554,2026-06-27T16:58:00,2026-06-28T07:24:00,14.43,SARS-CoV-2,38.0,Positive,1,Positive,29.3,valid
@@ -707,10 +699,6 @@ Houston,Equipment/Kit room,Sharpova,IB000010006687,2026-07-03T08:12:00,2026-07-0
 Houston,Equipment/Kit room,Sharpova,IB000010006687,2026-07-03T08:12:00,2026-07-03T16:10:00,7.97,Influenza B,,Negative,0,Positive,29.5,valid
 Houston,Equipment/Kit room,Sharpova,IB000010006687,2026-07-03T08:12:00,2026-07-03T16:10:00,7.97,SARS-CoV-2,,Negative,0,Positive,29.5,valid
 Houston,Equipment/Kit room,Sharpova,IB000010006687,2026-07-03T08:12:00,2026-07-03T16:10:00,7.97,Influenza A,,Negative,0,Positive,29.5,valid
-Houston,Meal room,Sabalenka,IB000010006963,2026-07-03T16:02:00,2026-07-04T09:31:00,17.48,RSV,,Negative,0,Positive,30.6,valid
-Houston,Meal room,Sabalenka,IB000010006963,2026-07-03T16:02:00,2026-07-04T09:31:00,17.48,Influenza B,,Negative,0,Positive,30.6,valid
-Houston,Meal room,Sabalenka,IB000010006963,2026-07-03T16:02:00,2026-07-04T09:31:00,17.48,SARS-CoV-2,34.5,Positive,1,Positive,30.6,valid
-Houston,Meal room,Sabalenka,IB000010006963,2026-07-03T16:02:00,2026-07-04T09:31:00,17.48,Influenza A,,Negative,0,Positive,30.6,valid
 Houston,Meal room,Jabeur,IB000010006680,2026-07-03T16:03:00,2026-07-03T17:03:00,1.00,RSV,,Negative,0,Positive,30.4,valid
 Houston,Meal room,Jabeur,IB000010006680,2026-07-03T16:03:00,2026-07-03T17:03:00,1.00,Influenza B,,Negative,0,Positive,30.4,valid
 Houston,Meal room,Jabeur,IB000010006680,2026-07-03T16:03:00,2026-07-03T17:03:00,1.00,SARS-CoV-2,,Negative,0,Positive,30.4,valid

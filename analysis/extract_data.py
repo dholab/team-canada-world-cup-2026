@@ -59,6 +59,23 @@ REMOVE = {
 # the authors have determined are invalid on external grounds.
 FORCE_INVALID = {"IB000010008416"}
 
+# EXCLUDE_SAMPLERS — samplers left out of the dataset entirely.
+#
+# "Sabalenka" was run predominantly for norovirus (from Vancouver onward), which
+# this manuscript does not report because norovirus was never detected. On a few
+# occasions its cartridge was additionally run on the respiratory panel to
+# confirm a primary detection in the same room. Those confirmatory runs are not
+# part of the consistently-sampled respiratory series the figures describe, so
+# including them made the meal room look like it had an extra, irregular
+# sampling interval. Per author decision the sampler is excluded study-wide.
+#
+# This drops 3 cartridges and 2 SARS-CoV-2 detections (LA 27 Jun Ct 39.3;
+# Houston 3-4 Jul Ct 34.5). Both were retests of a detection the primary sampler
+# in that room had already made the same day (Kerber Ct 34.0 and Jabeur Ct 35.5
+# respectively), so no detection *event* is lost - only the duplicate
+# confirmation of one.
+EXCLUDE_SAMPLERS = {"Sabalenka"}
+
 # LabKey assay-target names -> the short virus labels used in the figures/CSV.
 VIRUS = {
     "SARS-CoV-2": "SARS-CoV-2",
@@ -130,6 +147,8 @@ def main() -> None:
 
     out_rows = []
     for f in facilities:
+        if f["sampler"] in EXCLUDE_SAMPLERS:
+            continue
         for p in f.get("points", []):
             target = p.get("target")
             if target not in VIRUS:

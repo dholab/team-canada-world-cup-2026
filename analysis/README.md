@@ -30,8 +30,8 @@ uv run python make_supplement_1_wastewater.py
 
 ## Data
 
-`data/cartridges_long.csv` — one row per cartridge x target virus (728 rows =
-182 respiratory cartridges x 4 viruses), exported from the GeneXpert results.
+`data/cartridges_long.csv` — one row per cartridge x target virus (716 rows =
+179 respiratory cartridges x 4 viruses), exported from the GeneXpert results.
 
 Columns: `city, room, sampler, cartridge, start, end, dur_h, virus, ct, qual, detected, spc, spc_ct, status`
 
@@ -43,11 +43,18 @@ Columns: `city, room, sampler, cartridge, start, end, dur_h, virus, ct, qual, de
   non-amplifying SPC, a probe error (SPC Ct < 5), and author-designated invalid
   runs (see `FORCE_INVALID` in `extract_data.py`).
 - The figures show valid runs only; invalid runs are drawn grey / marked with an
-  asterisk but are kept in this table. Of the 182 cartridges, 6 are invalid;
-  none of the 15 detections came from those.
+  asterisk but are kept in this table. Of the 179 cartridges, 5 are invalid;
+  none of the 13 detections came from those.
 
 Some cartridges that produced no valid test data are excluded from the dataset
 entirely (see `REMOVE` in `extract_data.py`).
+
+One sampler is excluded study-wide (see `EXCLUDE_SAMPLERS` in
+`extract_data.py`). "Sabalenka" ran predominantly for norovirus, which this
+manuscript does not report because norovirus was never detected; on a few
+occasions its cartridge was additionally run on the respiratory panel to confirm
+a primary detection in the same room. Those confirmatory runs are not part of
+the consistently-sampled respiratory series the figures describe.
 
 ## Regenerating the dataset
 

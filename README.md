@@ -20,7 +20,7 @@ filters, 15 carried detectable respiratory-virus genetic material.
 
 | File | What it holds |
 | --- | --- |
-| [`analysis/data/cartridges_long.csv`](analysis/data/cartridges_long.csv) | The primary dataset. One row per cartridge × target virus (728 rows = 182 respiratory cartridges × 4 targets). |
+| [`analysis/data/cartridges_long.csv`](analysis/data/cartridges_long.csv) | The primary dataset. One row per cartridge × target virus (716 rows = 179 respiratory cartridges × 4 targets). |
 | [`analysis/data/sequencing_detections.csv`](analysis/data/sequencing_detections.csv) | Distinct read counts per virus per sequenced Houston air sample. |
 | [`analysis/data/ww_*.csv`](analysis/data/) | Per-city extracts of the public wastewater dashboards used for the contextual comparison. |
 

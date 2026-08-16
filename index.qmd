@@ -34,7 +34,7 @@
 All data and analysis code for this study are openly available in the GitHub
 repository <https://github.com/dholab/team-canada-world-cup-2026>.
 
-The underlying dataset — one row per cartridge × target virus (728 rows: 182
+The underlying dataset — one row per cartridge × target virus (716 rows: 179
 respiratory cartridges × 4 targets) — and the script that builds every figure
 are in the repository:
 
