@@ -94,12 +94,11 @@ jobs:
 
       - name: Commit Doc-synced content and rebuilt PDF
         # Each run pulls the latest Google Doc, so commit the synced prose,
-        # legends, front matter, regenerated figures, PREVIEW.md, and the rebuilt
+        # legends, front matter, regenerated figures, and the rebuilt
         # submission PDF back to the repo. This keeps the repo a faithful snapshot
         # of what CI built and submitted. [skip ci] avoids retriggering.
         run: |
           cp _site/index.pdf docs/team-canada-air-sampling.pdf
-          python scripts/build_preview.py
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           # Track only the source-of-record outputs (fonts/, _site/ stay ignored).

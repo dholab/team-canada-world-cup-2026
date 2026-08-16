@@ -8,16 +8,16 @@ description: Use when building or revising a figure for the Team Canada air-samp
 Every figure in this manuscript is built by a Python script from a committed
 tidy CSV, and ships three outputs: a self-contained interactive HTML (embedded
 in the Quarto site), a static PNG on cream (the manuscript PDF), and a
-transparent-background PNG (slides). Figure 3 (`analysis/make_figure3_sequencing.py`)
+transparent-background PNG (slides). Figure 3 (`analysis/make_figure_3_sequencing.py`)
 is the reference implementation for a heatmap; Figures 1 and 2
-(`analysis/make_figures.py`) are the reference for time-interval charts.
+(`analysis/make_figures_1_2_detections.py`) are the reference for time-interval charts.
 
 ## Non-negotiables
 
 1. **Data comes from a committed CSV** in `analysis/data/`, one tidy row per
    observation. The figure script reads only that CSV, so the figure always
    reflects deposited data. Never hardcode values in the plotting script.
-2. **Three outputs per figure**, written into `analysis/`:
+2. **Three outputs per figure**, written into `analysis/figures/`:
    `figureN_<name>.html` (interactive), `figureN_<name>.png` (static, cream),
    `figureN_<name>_transparent.png` (static, alpha). Build with `uv run python`.
 3. **House palette** (below), Georgia titles, Arial labels. No other colors for
@@ -81,8 +81,9 @@ tested-but-negative read `0`; cells not assessed are left the tan empty color
 
 ## Legends
 
-- The full legend paragraph goes in `analysis/figure_legends.md`, and a condensed
-  version is repeated as the caption under the figure in `index.qmd`.
+- Legend text is authored in the canonical Google Doc under `## Figure
+  legends`; `scripts/fetch_prose.py` writes it to `_legends/<key>.md`, which
+  `index.qmd` includes. Never hand-edit legend files.
 - **Author punctuation rule (binding): no em dashes, no colons, no semicolons.**
   Rewrite around them. Times are local wall-clock for each host city.
 - Legend prose is one paragraph, opens with the bold `**Figure N. Title.**`,
@@ -98,13 +99,13 @@ static image:
 ::: {#fig-<slug>}
 
 ​```{=html}
-<iframe src="analysis/figureN_<name>.html" width="100%" height="600"
+<iframe src="analysis/figures/figureN_<name>.html" width="100%" height="600"
         style="border:none;" loading="lazy"
         title="Figure N: ..."></iframe>
 ​```
 
 ::: {.content-visible when-format="pdf"}
-![](analysis/figureN_<name>.png)
+![](analysis/figures/figureN_<name>.png)
 :::
 
 **Figure N. Title.** <condensed caption> ...
@@ -122,13 +123,14 @@ cd analysis && uv run python make_figureN_<name>.py
 ```
 
 Commit the script, the CSV, and all three output files together with the
-`index.qmd` and `figure_legends.md` edits. The repo is **private** during
+`index.qmd` edits. The repo is **private** during
 co-author review; pushing to `main` triggers the render workflow that deploys the
 review site, so only push when the figure has been visually verified.
 
-## Numbering caution
+## Naming convention
 
-`make_figure3.py` already exists and builds the **wastewater** supplement
-("Online supplemental figure 1" in the legends). Do not reuse that filename.
-Give each new figure a distinct, descriptive module name
-(`make_figure3_sequencing.py`, not `make_figure3.py`).
+Script names state which manuscript figure they build:
+`make_figures_1_2_detections.py`, `make_figure_3_sequencing.py`,
+`make_supplement_1_wastewater.py`. A new figure gets
+`make_figure_N_<slug>.py` or `make_supplement_N_<slug>.py`. All outputs are
+written to `analysis/figures/`, never beside the scripts.
