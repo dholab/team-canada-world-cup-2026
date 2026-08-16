@@ -78,6 +78,6 @@ cd analysis && uv sync \
   && uv run python make_figures_1_2_detections.py \
   && uv run python make_figure_3_sequencing.py \
   && uv run python make_supplement_1_wastewater.py && cd ..
-python scripts/build_house_fonts.py                # Gelasio (→ fonts/)
+uv run --with fonttools python scripts/build_house_fonts.py  # Gelasio (→ fonts/)
 quarto render                                      # → _site/ (HTML + PDF)
 ```

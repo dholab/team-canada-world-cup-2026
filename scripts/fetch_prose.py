@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Fetch the manuscript prose from the (link-viewable) Google Doc and normalize
-it into manuscript/_prose.md for Quarto.
+"""Fetch the manuscript content from the (link-viewable) Google Doc and
+normalize it into six files at the repo root, for Quarto.
 
 Run with no arguments to fetch from the Doc export endpoint, or pass a local
 markdown file to normalize that instead (useful for offline testing):
@@ -8,11 +8,18 @@ markdown file to normalize that instead (useful for offline testing):
     python scripts/fetch_prose.py                 # fetch from Google Docs
     python scripts/fetch_prose.py raw_export.md   # normalize a local file
 
+This writes six outputs from the Doc: `_title.yml` (title, optional subtitle,
+keywords), `_frontmatter.md` (authors, affiliations, ORCID iDs, corresponding
+author), `_prose.md` (the manuscript body, Abstract through the required end
+statements), `_legends/*.md` (one file per figure legend), `_references.md`
+(the numbered bibliography), and `_supplement.md` (the online supplemental
+methods).
+
 Why this exists: the Doc is authored with front-matter, submission boilerplate,
 and empty divider headers that should not appear on the rendered page. This
-script keeps the manuscript body (Abstract through the required end statements)
-and strips the rest. The interactive/static figures and the References section
-are supplied by manuscript/index.qmd, not by the Doc.
+script keeps the manuscript body and strips the rest. The interactive/static
+figures are supplied by index.qmd, not by the Doc; the references and
+supplemental methods are pulled from the Doc by this script.
 """
 from __future__ import annotations
 
