@@ -78,8 +78,15 @@ jobs:
         run: quarto render --to html
 
       - name: Render submission PDF
+        # tectonic fetches LaTeX packages on demand, which occasionally hits a
+        # transient network failure (e.g. fontspec.sty). Retry a few times;
+        # successfully-fetched packages are cached, so a retry finishes the rest.
         run: |
-          quarto render index.qmd --to pdf
+          for attempt in 1 2 3; do
+            if quarto render index.qmd --to pdf; then break; fi
+            echo "PDF render attempt $attempt failed; retrying…"; sleep 10
+            [ "$attempt" = 3 ] && { echo "PDF render failed after 3 attempts"; exit 1; }
+          done
           # Quarto writes to the project output-dir (_site). Give the PDF the
           # public download name the in-page link expects.
           cp _site/index.pdf _site/team-canada-air-sampling.pdf
