@@ -145,6 +145,7 @@ h1 a, h2 a, h3 a, .toc a { border-bottom: none; }
 // scripts), so the plot ground and the card read as a single surface; the
 // border, radius, and shadow keep each figure a distinct tile.
 // -------------------------------------------------------------------------
+#central-figure,
 #fig-detections, #fig-houston, #fig-sequencing, #supp-wastewater {
   background: $cream;
   border: 1px solid $rule;
@@ -155,8 +156,8 @@ h1 a, h2 a, h3 a, .toc a { border-bottom: none; }
 }
 // Nested cells (iframe + static image live inside a fig card) shouldn't double
 // the card treatment.
-:is(#fig-detections, #fig-houston, #fig-sequencing, #supp-wastewater) .cell,
-:is(#fig-detections, #fig-houston, #fig-sequencing, #supp-wastewater) figure.quarto-figure {
+:is(#central-figure, #fig-detections, #fig-houston, #fig-sequencing, #supp-wastewater) .cell,
+:is(#central-figure, #fig-detections, #fig-houston, #fig-sequencing, #supp-wastewater) figure.quarto-figure {
   background: transparent;
   border: none;
   box-shadow: none;
@@ -169,7 +170,7 @@ img { max-width: 100%; height: auto; border-radius: 8px; }
 // Figure captions: bold lead in teal, running text a touch smaller. The
 // "Figure N." label carries a terracotta tint as the accent.
 figure figcaption, .figure-caption,
-:is(#fig-detections, #fig-houston, #fig-sequencing, #supp-wastewater) > p:last-of-type {
+:is(#central-figure, #fig-detections, #fig-houston, #fig-sequencing, #supp-wastewater) > p:last-of-type {
   font-family: $font-family-sans-serif;
   font-size: 0.86rem;
   line-height: 1.5;

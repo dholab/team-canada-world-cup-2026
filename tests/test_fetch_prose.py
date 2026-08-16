@@ -149,3 +149,19 @@ def test_figure_anchors_survive_a_recount(doc_md):
     placed = fetch_prose.place_figures(recounted)
     for _, partial in fetch_prose.FIGURE_ANCHORS:
         assert "{{< include " + partial + " >}}" in placed
+
+
+def test_verified_links_override_the_derived_doi(doc_md):
+    """A DOI that resolves to the publisher's 404 must be replaced.
+
+    Reference 36's DOI returns HTTP 200 and lands on an Emerging Infectious
+    Diseases error page, so scripts/resolve_citation_links.py records the PubMed
+    record instead. Confirm the cache actually wins over the derived DOI."""
+    urls = fetch_prose.citation_urls(fetch_prose.extract_references(doc_md))
+    assert urls[36].startswith("https://pubmed.ncbi.nlm.nih.gov/")
+
+
+def test_every_citation_still_has_a_link(doc_md):
+    urls = fetch_prose.citation_urls(fetch_prose.extract_references(doc_md))
+    assert len(urls) == 49
+    assert all(u.startswith("https://") for u in urls.values())

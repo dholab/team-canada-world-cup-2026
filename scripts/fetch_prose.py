@@ -207,14 +207,41 @@ REF_DOI = re.compile(r"doi:\s*(10\.\d{4,9}/\S+?)(?:[.,;)\]]*)$", re.I)
 REF_URL = re.compile(r"(https?://[^\s)\]]+?)(?:[.,;)\]]*)(?:\s|$)")
 
 
+# Verified links, produced by scripts/resolve_citation_links.py. A DOI can
+# resolve (HTTP 200) and still land on the publisher's 404 page — reference 36
+# does exactly that — so those are replaced with the stable PubMed record. The
+# cache is committed and consulted first, keeping this script offline-safe.
+CITATION_LINKS = HERE.parent / "_citation_links.json"
+
+
+def _verified_links() -> dict[int, str]:
+    if not CITATION_LINKS.exists():
+        return {}
+    import json
+    try:
+        raw = json.loads(CITATION_LINKS.read_text(encoding="utf-8"))
+    except ValueError:
+        return {}
+    return {int(k): v for k, v in raw.items() if v}
+
+
 def citation_urls(refs: list[tuple[int, str]]) -> dict[int, str]:
     """Map each reference number to the best link for its source.
 
-    Prefers the DOI (resolves to the publisher's full text, and is the stable
-    identifier); falls back to the first plain URL in the entry for the
-    dashboards and websites that have no DOI."""
+    A verified link from _citation_links.json wins, because that file records
+    which DOIs actually resolve to an article and substitutes the PubMed record
+    for the ones that do not. Otherwise this derives the link from the entry
+    itself: the DOI if there is one, else the first plain URL (the dashboards
+    and websites have no DOI).
+
+    Run scripts/resolve_citation_links.py to refresh the verified set after
+    references change."""
+    verified = _verified_links()
     urls: dict[int, str] = {}
     for num, text in refs:
+        if num in verified:
+            urls[num] = verified[num]
+            continue
         m = REF_DOI.search(text.rstrip())
         if m:
             urls[num] = "https://doi.org/" + m.group(1).rstrip(".,;)]")
