@@ -87,7 +87,8 @@ are in the repository:
 
 - Data: [`analysis/data/cartridges_long.csv`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/data/cartridges_long.csv)
 - Figures 1 and 2: [`analysis/make_figures_1_2_detections.py`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/make_figures_1_2_detections.py)
-- Figure 3 (sequencing): [`analysis/make_figure_3_sequencing.py`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/make_figure_3_sequencing.py) with data [`analysis/data/sequencing_detections.csv`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/data/sequencing_detections.csv)
+- Figure 3 (sequencing): [`analysis/make_figure_3_sequencing.py`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/make_figure_3_sequencing.py)
+- Sequencing data for figure 3: [`analysis/data/sequencing_detections.csv`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/data/sequencing_detections.csv)
 - Online supplemental figure 1 (wastewater): [`analysis/make_supplement_1_wastewater.py`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/make_supplement_1_wastewater.py)
 
 Columns: `city, room, sampler, cartridge, start, end, dur_h, virus, ct, qual,
