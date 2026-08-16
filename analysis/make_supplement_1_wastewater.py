@@ -1,8 +1,8 @@
 """Build online supplemental figure 1 (static + interactive): community
 wastewater context for each host city over the full 2025-2026 respiratory season.
 
-(Output filenames keep the `figure3_wastewater` stem for stability. The display
-label in the manuscript is "online supplemental figure 1", per BJSM style.)
+This builds **online supplemental figure 1**, not Figure 3. Output filenames
+use the `supplement1_wastewater` stem to match, per BJSM style.
 
 The point of this figure is NOT to compare absolute virus levels between cities
 -- the four public dashboards report incompatible quantities (see below) and
@@ -37,7 +37,7 @@ Because each panel is on its own metric and scale, the y-axes are deliberately
 independent and unlabelled with absolute numbers -- reading across panels
 compares *shape and relative height within a site*, never absolute level.
 
-Run:  uv run python make_figure3.py
+Run:  uv run python make_supplement_1_wastewater.py
 """
 
 from __future__ import annotations
@@ -55,6 +55,10 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 HERE = pathlib.Path(__file__).parent
+# All generated figure outputs land in one directory so a reader can find every
+# rendered figure without picking through the scripts that build them.
+FIGURES = HERE / "figures"
+FIGURES.mkdir(exist_ok=True)
 DATA = HERE / "data"
 
 # Panel order A-E. Canada cities first (matching Figure 1's city order), then US.
@@ -261,8 +265,9 @@ def build_interactive(out: pathlib.Path) -> None:
 
 
 def main() -> None:
-    build_static(HERE / "figure3_wastewater.pdf", HERE / "figure3_wastewater.png")
-    build_interactive(HERE / "figure3_wastewater_interactive.html")
+    build_static(FIGURES / "supplement1_wastewater.pdf",
+                 FIGURES / "supplement1_wastewater.png")
+    build_interactive(FIGURES / "supplement1_wastewater_interactive.html")
 
 
 if __name__ == "__main__":

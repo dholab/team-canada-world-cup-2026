@@ -2,17 +2,21 @@
 
 Both figures use *real time*: sampling gaps are shown, not collapsed.
 
-  * figure1_interactive.html  - every cartridge is drawn as a horizontal bar
-                                spanning its actual start->end sampling window,
-                                per room, per city (host-city selector). Hovering
-                                a bar shows the room, exact window, duration,
-                                virus results, Ct values, and GeneXpert calls.
-  * figure1_static.pdf / .png - rooms merged within each city on a continuous
-                                real-time axis, so travel gaps and within-city
-                                gaps appear as blank space. Detections are drawn
-                                at the interval midpoint, filled by the lowest Ct.
+  * figure1_detections_interactive.html - every cartridge is drawn as a
+                                horizontal bar spanning its actual start->end
+                                sampling window, per room, per city (host-city
+                                selector). Hovering a bar shows the room, exact
+                                window, duration, virus results, Ct values, and
+                                GeneXpert calls.
+  * figure1_detections_static.pdf / .png - rooms merged within each city on a
+                                continuous real-time axis, so travel gaps and
+                                within-city gaps appear as blank space.
+                                Detections are drawn at the interval midpoint,
+                                filled by the lowest Ct.
+  * figure2_houston.pdf / .png and figure2_houston_interactive.html - the
+                                Houston multi-room episode, per room.
 
-Run:  uv run python make_figures.py
+Run:  uv run python make_figures_1_2_detections.py
 """
 
 from __future__ import annotations
@@ -29,6 +33,10 @@ import pandas as pd
 import plotly.graph_objects as go
 
 HERE = pathlib.Path(__file__).parent
+# All generated figure outputs land in one directory so a reader can find every
+# rendered figure without picking through the scripts that build them.
+FIGURES = HERE / "figures"
+FIGURES.mkdir(exist_ok=True)
 DATA = HERE / "data" / "cartridges_long.csv"
 
 CITY_ORDER = ["Montreal", "Toronto", "Vancouver", "Los Angeles", "Houston"]
@@ -497,16 +505,13 @@ def build_figure2_interactive(df: pd.DataFrame, city: str, out: pathlib.Path) ->
 
 def main() -> None:
     df = load()
-    build_interactive(df, HERE / "figure1_interactive.html")
-    build_static(df, HERE / "figure1_static.pdf", HERE / "figure1_static.png")
+    build_interactive(df, FIGURES / "figure1_detections_interactive.html")
+    build_static(df, FIGURES / "figure1_detections_static.pdf",
+                 FIGURES / "figure1_detections_static.png")
     build_figure2(df, "Houston",
-                  HERE / "figure2_houston.pdf", HERE / "figure2_houston.png")
-    build_figure2_interactive(df, "Houston", HERE / "figure2_houston_interactive.html")
-
-    # Figure 3: community wastewater context per host city (own module; reads the
-    # committed per-city extracts in data/ww_*.csv).
-    import make_figure3
-    make_figure3.main()
+                  FIGURES / "figure2_houston.pdf", FIGURES / "figure2_houston.png")
+    build_figure2_interactive(df, "Houston",
+                              FIGURES / "figure2_houston_interactive.html")
 
 
 if __name__ == "__main__":

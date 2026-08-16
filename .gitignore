@@ -18,15 +18,11 @@ _site/
 # scripts/build_house_fonts.py on each build; not committed.
 fonts/
 
-# Generated figures (rebuilt in CI from analysis/data/).
-# The static PNGs and the timeline SVG are committed on purpose so they render
-# in PREVIEW.md on GitHub while the interactive Pages site is held back.
-analysis/figure1_interactive.html
-analysis/figure1_static.pdf
-analysis/figure2_houston.pdf
-analysis/figure2_houston_interactive.html
-analysis/figure3_wastewater.pdf
-analysis/figure3_wastewater_interactive.html
+# Generated figures. Static PNGs are committed (the PDF build needs them and
+# they render on GitHub); interactive HTML and intermediate PDFs are rebuilt in
+# CI from analysis/data/ and are not tracked.
+analysis/figures/*.html
+analysis/figures/*.pdf
 
 # macOS
 .DS_Store

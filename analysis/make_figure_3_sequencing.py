@@ -10,11 +10,13 @@ that were pulled for sequencing, shown as a virus x room heatmap of distinct
                               mapped reads, sampling window, and elapsed duration.
                               Self-contained (Plotly from CDN). Embed in the site.
   * figure3_sequencing.png  - static raster (matplotlib, 300 dpi) for the PDF.
+  * figure3_sequencing_transparent.png - same static raster with a transparent
+                              background (Keynote-ready).
 
 Both read the committed tidy CSV data/sequencing_detections.csv (one row per
 room x detected virus), so the figure always reflects the deposited data.
 
-Run:  uv run python make_figure3_sequencing.py
+Run:  uv run python make_figure_3_sequencing.py
 """
 
 from __future__ import annotations
@@ -31,6 +33,10 @@ import pandas as pd
 import plotly.graph_objects as go
 
 HERE = pathlib.Path(__file__).parent
+# All generated figure outputs land in one directory so a reader can find every
+# rendered figure without picking through the scripts that build them.
+FIGURES = HERE / "figures"
+FIGURES.mkdir(exist_ok=True)
 DATA = HERE / "data" / "sequencing_detections.csv"
 
 # House palette (shared with the manuscript template).
@@ -312,10 +318,11 @@ def build_static(df: pd.DataFrame, out_png: pathlib.Path, *,
 
 def main() -> None:
     df = load()
-    build_interactive(df, HERE / "figure3_sequencing.html")
+    build_interactive(df, FIGURES / "figure3_sequencing.html")
     # Manuscript / PDF version on a white background.
-    build_static(df, HERE / "figure3_sequencing.png", bg="#FFFFFF")
-    build_static(df, HERE / "figure3_sequencing_transparent.png", transparent=True)
+    build_static(df, FIGURES / "figure3_sequencing.png", bg="#FFFFFF")
+    build_static(df, FIGURES / "figure3_sequencing_transparent.png",
+                 transparent=True)
 
 
 if __name__ == "__main__":

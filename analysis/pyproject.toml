@@ -12,7 +12,7 @@ dependencies = [
 ]
 
 [project.scripts]
-make-figures = "make_figures:main"
+make-figures = "make_figures_1_2_detections:main"
 
 [tool.uv]
 package = false
