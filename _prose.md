@@ -82,7 +82,7 @@ We defined a sample as positive for a given virus if the GeneXpert reported any 
 
 ### Target-enriched Illumina VSP2 viral sequencing
 
-The final air-sample eluates from July 4, 2026 testing in Houston were reserved for viral whole-genome sequencing to characterise detected viruses and, where possible, resolve lineage. Nucleic acid from these eluates underwent target enrichment for over 200 respiratory viruses using the Illumina Viral Surveillance Panel v2 kit. Briefly, the samples underwent cDNA synthesis followed by a barcoding step with Illumina indices. The samples were plexed together into groups of three, and then underwent a target hybridization reaction using an incubation time of 90 minutes. The capture was performed according to the protocol and a final amplification was done. Samples were then pooled together and sequenced on an Illumina NovaSeq. This sequencing was done by the UW-Madison Biotechnology Center on a full lane of a 10B 2x150 flow cell.
+The final air-sample eluates from July 4, 2026 testing in Houston were used for targeted metagenomic sequencing. Nucleic acid from these eluates underwent target enrichment for over 200 respiratory viruses using the Illumina Viral Surveillance Panel v2 kit. Briefly, the samples underwent cDNA synthesis followed by a barcoding step with Illumina indices. The samples were batched together into groups of three, and then underwent a target hybridization reaction using an incubation time of 90 minutes. The capture was performed according to the protocol and a final amplification was done. Samples were then pooled together and sequenced on an Illumina NovaSeq. This sequencing was done by the UW-Madison Biotechnology Center.
 
 Illumina paired-end reads were imported into Lungfish Genome Explorer ([v0.5.0-beta25](https://github.com/dhoconno/lungfish-genome-explorer/releases/tag/v0.5.0-beta25)) using the VSP2 target-enrichment preprocessing recipe. On import, read pairs were adapter- and quality-trimmed and deduplicated with fastp (v1.3.2; sliding-window trimming, Q15, duplicate removal), depleted of human reads with deacon (v0.15.0) against the panhuman-1 index, and overlapping pairs were merged with fastp; merged and unmerged reads were then length-filtered to ≥50 bp with seqkit (v2.13.0) and deduplicated/reordered with BBTools clumpify (v39.80). The resulting single-end reads were analyzed with EsViritu (v3.14) against its curated viral reference database (v3.2.4), which applies its own quality filtering and read deduplication during competitive alignment to detect viral taxa and generate reference-guided consensus sequences. Because reads are deduplicated both at import (fastp/clumpify) and again during EsViritu mapping, reported read counts reflect unique reads per mapped taxa rather than raw sequenced reads.
 
@@ -172,7 +172,7 @@ D.H.O. and S.L.O. are managing partners of Pathogenuity LLC, a consultancy that 
 
 ### Funding
 
-D.H.O. and S.L.O. received support for this project from Inkfish and Heart of Racing.
+This project was supported by Inkfish and Heart of Racing.
 
 ### Ethics approval
 
