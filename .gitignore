@@ -4,6 +4,7 @@ __pycache__/
 *.pyc
 .uvcache/
 .uv/
+.pytest_cache/
 
 # Quarto / build outputs
 _site/
