@@ -190,7 +190,12 @@ figure figcaption, .figure-caption,
 // the figure number carries the single terracotta accent.
 :is(#fig-detections, #fig-houston, #fig-sequencing) figcaption { color: $teal-70; }
 :is(#fig-detections, #fig-houston, #fig-sequencing) figcaption strong { color: $teal; }
-.fig-number { color: $terracotta; font-weight: 700; }
+// The accent applies wherever site-enhance.html puts the wrapper: on the bare
+// "Figure N:" text node of the numbered figures, and on the "Central Figure:"
+// label, which sits *inside* the caption's bold run — so this has to beat the
+// `strong { color: $teal }` rule above it.
+.fig-number,
+strong > .fig-number { color: $terracotta; font-weight: 700; }
 
 // -------------------------------------------------------------------------
 // Table of contents — quiet teal, terracotta active marker.
