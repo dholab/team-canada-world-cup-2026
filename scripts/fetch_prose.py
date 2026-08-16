@@ -28,6 +28,12 @@ HERE = Path(__file__).resolve().parent
 OUT = HERE.parent / "_prose.md"
 LEGENDS_DIR = HERE.parent / "_legends"
 FRONTMATTER = HERE.parent / "_frontmatter.md"
+REFERENCES = HERE.parent / "_references.md"
+
+BANNER = (
+    "<!-- AUTO-GENERATED from the manuscript Google Doc by "
+    "scripts/fetch_prose.py. Do not edit by hand; edit the Doc. -->\n\n"
+)
 # Quarto metadata file carrying the Doc's title + running head, fed to the
 # render via `metadata-files` in _quarto.yml so index.qmd hard-codes neither.
 TITLE_YML = HERE.parent / "_title.yml"
@@ -62,6 +68,16 @@ LEGEND_LEAD = re.compile(
 BODY_START = re.compile(r"^##\s+Abstract\b.*$", re.M)
 # Everything from "## References" onward is boilerplate/placeholder in the Doc.
 BODY_END = re.compile(r"^##\s+References\b.*$", re.M)
+
+# The Doc's References section lists each entry as its own heading:
+#   "## 1 \t[Serner A, … doi: 10.1080/…](http://paperpile.com/b/tA670F/58gc)"
+# We keep the link text (the formatted citation) and drop the Paperpile URL,
+# exactly as normalize() already does for inline citation markers.
+REFERENCE_ENTRY = re.compile(
+    r"^##\s+(?P<num>\d+)\s*\[(?P<text>.+?)\]\("
+    r"https?://(?:www\.)?paperpile\.com/[^)]*\)\s*$",
+    re.M,
+)
 
 
 def fetch(source: str | None) -> str:
@@ -103,11 +119,7 @@ def normalize(md: str) -> str:
     # Collapse >2 blank lines.
     body = re.sub(r"\n{3,}", "\n\n", body).strip() + "\n"
 
-    header = (
-        "<!-- AUTO-GENERATED from the manuscript Google Doc by "
-        "scripts/fetch_prose.py. Do not edit by hand; edit the Doc. -->\n\n"
-    )
-    return header + body
+    return BANNER + body
 
 
 def extract_legends(md: str) -> dict[str, str]:
@@ -158,15 +170,74 @@ def extract_legends(md: str) -> dict[str, str]:
     return legends
 
 
+def extract_references(md: str) -> list[tuple[int, str]]:
+    """Pull the numbered reference list from the Doc's '## References' section.
+
+    Returns [(number, citation_text), ...] in Doc order. The Paperpile URL is
+    dropped and the export's backslash escapes are undone, so each entry is
+    plain formatted Markdown. Raises SystemExit if the numbering is not a
+    complete 1..N run — a silently short bibliography would ship a manuscript
+    with dangling citation markers."""
+    sec = re.search(r"^##\s+References\b.*$", md, re.M)
+    if not sec:
+        raise SystemExit("Could not find '## References' — Doc structure changed?")
+    region = md[sec.end():]
+    # Stop at the first non-reference heading with actual text (e.g.
+    # '## Figure legends'). The Doc emits bare '## ' divider lines from its page
+    # breaks, so require a non-'#' character after the hashes. A heading that
+    # merely starts with digits (e.g. a corrupted "## 49x [...") also counts as
+    # a stop candidate here — it is filtered back out below if it turns out to
+    # be a malformed reference entry rather than a genuine section boundary, so
+    # a corrupted/dropped final entry is caught instead of silently truncating.
+    stop = re.search(r"^##\s+(?!\d+\s*\[)[^\s#].*$", region, re.M)
+    boundary = stop.start() if stop else len(region)
+    region_for_refs = region[:boundary]
+
+    refs: list[tuple[int, str]] = []
+    for m in REFERENCE_ENTRY.finditer(region_for_refs):
+        text = m.group("text")
+        # Undo the markdown export's escaping of literal punctuation. The Doc
+        # export also escapes a literal ")" in dashboard/URL references like
+        # "(accessed 16 July 2026\)", so ")" is included alongside the brief's
+        # original set.
+        text = re.sub(r"\\([.\-\[\]&#)])", r"\1", text).strip()
+        refs.append((int(m.group("num")), text))
+
+    if not refs:
+        raise SystemExit("Parsed zero references from the Doc's References section.")
+    expected = list(range(1, len(refs) + 1))
+    # A heading that stopped the scan but still looks like a numbered reference
+    # entry (leading digits, e.g. a corrupted "## 49x [...") means an entry was
+    # dropped rather than the section genuinely ending — treat that as a count
+    # mismatch too, rather than silently accepting the shorter, still-sequential
+    # list that precedes it.
+    stopped_on_numbered_heading = bool(stop and re.match(r"^##\s+\d", stop.group()))
+    if [n for n, _ in refs] != expected or stopped_on_numbered_heading:
+        raise SystemExit(
+            f"Reference numbering is not a complete 1..{len(refs)} run: "
+            f"got {[n for n, _ in refs]}"
+        )
+    return refs
+
+
 def write_legends(legends: dict[str, str]) -> None:
     LEGENDS_DIR.mkdir(exist_ok=True)
-    banner = ("<!-- AUTO-GENERATED from the manuscript Google Doc by "
-              "scripts/fetch_prose.py. Do not edit by hand; edit the Doc. -->\n\n")
     for key, caption in legends.items():
-        (LEGENDS_DIR / f"{key}.md").write_text(banner + caption + "\n",
+        (LEGENDS_DIR / f"{key}.md").write_text(BANNER + caption + "\n",
                                                encoding="utf-8")
     print(f"wrote {len(legends)} legends to {LEGENDS_DIR}: "
           + ", ".join(sorted(legends)))
+
+
+def write_references(md: str) -> None:
+    """Write the Doc's bibliography to _references.md as a numbered list.
+
+    Numbers are written explicitly (not left to Markdown auto-numbering) so the
+    rendered list always matches the inline citation markers in the prose."""
+    refs = extract_references(md)
+    body = "\n\n".join(f"{num}. {text}" for num, text in refs)
+    REFERENCES.write_text(BANNER + body + "\n", encoding="utf-8")
+    print(f"wrote {REFERENCES} ({len(refs)} references)")
 
 
 def _section_body(md: str, name: str) -> str | None:
@@ -205,9 +276,7 @@ def extract_frontmatter(md: str) -> str:
 
 def write_frontmatter(md: str) -> None:
     block = extract_frontmatter(md)
-    banner = ("<!-- AUTO-GENERATED from the manuscript Google Doc by "
-              "scripts/fetch_prose.py. Do not edit by hand; edit the Doc. -->\n\n")
-    FRONTMATTER.write_text(banner + block + "\n", encoding="utf-8")
+    FRONTMATTER.write_text(BANNER + block + "\n", encoding="utf-8")
     print(f"wrote {FRONTMATTER} ({len(block)} bytes)")
 
 
@@ -245,6 +314,7 @@ def main() -> None:
     write_title(raw)
     write_frontmatter(raw)
     write_legends(extract_legends(raw))
+    write_references(raw)
     md = normalize(raw)
     OUT.write_text(md, encoding="utf-8")
     print(f"wrote {OUT} ({len(md)} bytes)")
