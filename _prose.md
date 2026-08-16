@@ -4,7 +4,7 @@
 
 **Objective**. Respiratory infections are the leading cause of illness at major sporting events, yet surveillance relies on athletes recognising and reporting symptoms. We evaluated whether continuous air sampling with point-of-care molecular testing could detect respiratory-virus nucleic acids in an elite team's congregate spaces during competition, and whether the resulting signals were operationally useful.
 
-**Methods**. We performed a prospective, descriptive environmental-surveillance study following the Canadian men's national soccer team across five host cities during the 2026 FIFA World Cup™ (3 June to 4 July 2026). InBio Apollo bioaerosol samplers ran continuously in up to four team-designated rooms per hotel (physiotherapy, meal, equipment, and coaches' room or hallway). Filters were changed approximately twice daily, eluted on-site, and tested with the Cepheid Xpert® Xpress SARS-CoV-2/Flu/RSVplus assay. A sample was considered positive if any cycle-threshold (Ct) value was reported, as less than 45, for a target.
+**Methods**. We performed a prospective, descriptive environmental-surveillance study following the Canadian men's national soccer team across five host cities during the 2026 FIFA World Cup™ (3 June to 4 July 2026). InBio Apollo bioaerosol samplers ran continuously in up to four team-designated rooms per hotel (physiotherapy, meal, equipment, and coaches' room or hallway). Filters were changed approximately twice daily, eluted on-site, and tested with the Cepheid Xpert® Xpress SARS-CoV-2/Flu/RSV plus assay. A sample was considered positive if any cycle-threshold (Ct) value was reported, as less than 45, for a target.
 
 **Results**. Of 174 air filters, there were 13 detections of virus genetic material (9 SARS-CoV-2, 3 influenza A virus, 1 influenza B virus, 0 RSV). Detections were sparse early and clustered late in the tournament. An influenza A signal appeared the morning a player was sent home febrile, and SARS-CoV-2 signals coincided with visibly ill hotel staff, with signals falling after ill staff were excluded.
 
@@ -22,7 +22,7 @@ Continuous air sampling with same-day point-of-care testing was feasible across 
 
 **How this study might affect research, practice or policy**
 
-Air sampling offers a candidate behavior-independent early-warning signal that could allow teams to escalate precautions selectively, minimizing virus exposures among athletes and team staff.
+Air sampling offers a candidate behavior-independent method to generate an early-warning signal that could allow teams to escalate precautions selectively, minimizing virus exposures among athletes and team staff.
 
 ## Introduction
 
