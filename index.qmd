@@ -59,28 +59,29 @@
 
 {{< include _prose.md >}}
 
+<!-- HTML only. This section points at the repository and is maintained with
+     the code, not the manuscript: the file paths track script renames, which a
+     co-author editing the Google Doc cannot know about. The journal PDF omits
+     it — the Doc's Data sharing statement is the submission's data-availability
+     statement — and the site can be updated more often than a submitted PDF.
+     Deliberately carries no counts: those live in the Doc and in the data
+     itself, and duplicating them here is how they go stale. Column definitions
+     live in analysis/README.md, next to the CSV a reader would download. -->
+::: {.content-visible when-format="html"}
+
 ## Data and code
 
 All data and analysis code for this study are openly available in the GitHub
-repository <https://github.com/dholab/team-canada-world-cup-2026>.
+repository <https://github.com/dholab/team-canada-world-cup-2026>, which holds
+the tidy dataset behind every figure and the script that builds each one:
 
-The underlying dataset — one row per cartridge × target virus (716 rows: 179
-respiratory cartridges × 4 targets) — and the script that builds every figure
-are in the repository:
-
-- Data: [`analysis/data/cartridges_long.csv`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/data/cartridges_long.csv)
+- Detection data: [`analysis/data/cartridges_long.csv`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/data/cartridges_long.csv) — one row per cartridge and target virus, with the column reference in [`analysis/README.md`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/README.md)
 - Figures 1 and 2: [`analysis/make_figures_1_2_detections.py`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/make_figures_1_2_detections.py)
-- Figure 3 (sequencing): [`analysis/make_figure_3_sequencing.py`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/make_figure_3_sequencing.py)
-- Sequencing data for figure 3: [`analysis/data/sequencing_detections.csv`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/data/sequencing_detections.csv)
+- Figure 3 (sequencing): [`analysis/make_figure_3_sequencing.py`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/make_figure_3_sequencing.py), with data [`analysis/data/sequencing_detections.csv`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/data/sequencing_detections.csv)
 - Online supplemental figure 1 (wastewater): [`analysis/make_supplement_1_wastewater.py`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/make_supplement_1_wastewater.py)
 
-Columns: `city, room, sampler, cartridge, start, end, dur_h, virus, ct, qual,
-detected, spc, spc_ct, status`. A blank `ct` means the target did not amplify;
-`detected = 1` marks a reported Ct regardless of the instrument's qualitative
-call; `spc`/`spc_ct` are the internal sample-processing control's call and Ct;
-`status` flags each cartridge as `valid` or `invalid`. The figures show valid
-runs only, so invalid runs are drawn grey or marked with an asterisk rather than
-plotted as results.
+The figures show valid runs only; invalid runs are drawn grey or marked with an
+asterisk rather than plotted as results, and are kept in the data table.
 
 The wastewater comparison in [online supplemental figure 1](#supp-wastewater)
 is built from per-city extracts of the public dashboards, committed alongside
@@ -91,10 +92,10 @@ source files:
 - Los Angeles (JWPCP): [`analysis/data/ww_losangeles.csv`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/data/ww_losangeles.csv), from the California CDPH/NWSS open dataset
 - Houston (69th Street): [`analysis/data/ww_houston.csv`](https://github.com/dholab/team-canada-world-cup-2026/blob/main/analysis/data/ww_houston.csv), from the Rice/HHD dashboard ArcGIS feature service
 
-Each extract has columns `city, target, week, value, source, metric`; `target`
-uses `covN2, fluA, fluB, rsv`; `metric` records which non-interchangeable
-quantity that source reports (`pmmov_index`, `fecal_normalized`,
-`houston_vl_index`).
+Each extract has columns `city, target, week, value, source, metric`; `metric`
+records which non-interchangeable quantity that source reports.
+
+:::
 
 ## Supplemental methods
 
