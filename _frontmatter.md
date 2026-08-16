@@ -2,7 +2,7 @@
 
 **Authors**
 
-David Simon,¹ Timothy J. Locksmith², Nicholas R. Minor², Isla E. Emmen², Nancy A. Wilson², Eli J. O’Connor², Shelby L. O'Connor, Ph.D&², David H. O'Connor, Ph.D.&²
+David Simon,¹ Timothy J. Locksmith², Nicholas R. Minor², Isla E. Emmen², Nancy A. Wilson², Eli J. O’Connor², Shelby L. O'Connor&², David H. O'Connor&²
 
 **Affiliations**
 
