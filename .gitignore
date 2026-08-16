@@ -9,6 +9,13 @@ __pycache__/
 _site/
 .quarto/
 *.tex
+# …but house-preamble.tex is a tracked SOURCE file (the PDF's house-style
+# header, referenced by _quarto.yml), not transient Quarto output.
+!house-preamble.tex
+
+# House display fonts (Gelasio statics), rebuilt from upstream by
+# scripts/build_house_fonts.py on each build; not committed.
+fonts/
 
 # Generated figures (rebuilt in CI from analysis/data/).
 # The static PNGs and the timeline SVG are committed on purpose so they render

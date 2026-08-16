@@ -1,78 +1,44 @@
-# Team Canada air-sampling study — interactive manuscript
+# Team Canada air-sampling manuscript
 
-Source for the interactive, single-page manuscript and the static submission
-PDF of *"Air sampling in team congregate spaces for early detection of
-respiratory virus threats"* (Team Canada, 2026 FIFA World Cup).
+Source for *"Air sampling in team congregate spaces for early detection of
+respiratory virus threats"* (Team Canada, 2026 FIFA World Cup) — an interactive
+single-page manuscript plus a static submission PDF, both built from one source.
 
-**📄 Read the manuscript privately:** [`PREVIEW.md`](PREVIEW.md) — a static
-rendering (text + figures) viewable right here in the private repo. Use this
-while the public site is held back.
+- **Read it:** [`PREVIEW.md`](PREVIEW.md) (text + figures, viewable in the repo).
+- **Submission PDF:** [`docs/team-canada-air-sampling.pdf`](docs/team-canada-air-sampling.pdf) — the bioRxiv/BJSM build, rebuilt and committed by CI.
 
-**Live site:** *not published yet.* The interactive GitHub Pages site is
-intentionally offline until the manuscript is ready (see
-[Publishing](#publishing-going-live) below).
+## How it fits together
 
-## How it works
+| Input | Output |
+| --- | --- |
+| Prose + legends — the [Google Doc](https://docs.google.com/document/d/15X-Ae_qRDW37zmpdA9_6WPI9GPfRsK0hiWC7FYlwy4c/edit), pulled by [`scripts/fetch_prose.py`](scripts/fetch_prose.py) into `_prose.md` / `_frontmatter.md` / `_legends/` | Interactive HTML site (`_site/`) and the submission PDF (`docs/…pdf`), rendered by Quarto from [`index.qmd`](index.qmd) |
+| Data — `analysis/data/*.csv` → figures by [`analysis/`](analysis/) scripts | Figures 1–3 + online supplemental figure 1 |
 
-One source, two outputs, all built in CI:
+House style (cream/teal/terracotta, Georgia + Arial) lives in
+[`theme-house.scss`](theme-house.scss) (HTML) and
+[`house-preamble.tex`](house-preamble.tex) (PDF, white background).
 
-| Piece | Where | What |
-| --- | --- | --- |
-| Prose | Google Docs → [`manuscript/_prose.md`](manuscript/_prose.md) | Authored in the Doc; pulled and normalized by [`scripts/fetch_prose.py`](scripts/fetch_prose.py). |
-| Figures | [`analysis/`](analysis/) | `uv run python make_figures.py` builds interactive (Plotly) and static (PNG/PDF) figures from [`analysis/data/cartridges_long.csv`](analysis/data/cartridges_long.csv). |
-| Manuscript | [`manuscript/index.qmd`](manuscript/index.qmd) | Includes the prose and embeds the figures inline. Rendered by Quarto to HTML (interactive) and PDF (submission). |
-| Automation | [`.github/workflows/render.yml`](.github/workflows/render.yml) | Fetch Doc → build figures → `quarto render` → deploy Pages + upload PDF. |
+## Building
 
-## Editing
+**In CI (preferred).** Run the **Render manuscript** workflow on demand
+(Actions tab → *Run workflow*), or push to `main`. It pulls the Doc, rebuilds
+figures and both outputs, and commits the synced content + PDF back. It is
+**not** scheduled — trigger it when you've made edits (e.g. before submitting a
+new preprint version). The submission PDF uses open, metric-compatible font
+clones (Gelasio ≈ Georgia, Arimo ≈ Arial) so it builds reproducibly.
 
-- **Text:** edit the [Google Doc](https://docs.google.com/document/d/15X-Ae_qRDW37zmpdA9_6WPI9GPfRsK0hiWC7FYlwy4c/edit).
-  When the site is live, the next build (push, manual, or the daily schedule)
-  picks it up. The Doc must be link-viewable for CI to fetch it.
-- **Figures / data:** edit files in [`analysis/`](analysis/); figures regenerate
-  on the next build.
-- **Refresh the private preview** (while the site is held back and CI is
-  disabled): regenerate [`PREVIEW.md`](PREVIEW.md) locally —
-
-  ```bash
-  python scripts/fetch_prose.py                          # pull latest text
-  cd analysis && uv sync && uv run python make_figures.py && cd ..   # figures
-  python scripts/build_preview.py                        # rebuild PREVIEW.md
-  ```
-
-## Build locally
+**Locally.** Requires [Quarto](https://quarto.org), [uv](https://docs.astral.sh/uv/),
+and [tectonic](https://tectonic-typesetting.github.io/).
 
 ```bash
-# Figures
-cd analysis && uv sync && uv run python make_figures.py && cd ..
-# Prose (optional: refresh from the Doc)
-python scripts/fetch_prose.py
-# Render
-quarto render          # -> _site/ (HTML) and the submission PDF
+python scripts/fetch_prose.py                                   # pull the Doc
+cd analysis && uv sync && uv run python make_figures.py \
+  && uv run python make_figure3_sequencing.py && cd ..          # figures
+python scripts/build_house_fonts.py                             # Gelasio (→ fonts/)
+quarto render                                                   # → _site/ (HTML + PDF)
+python scripts/build_preview.py                                 # → PREVIEW.md
 ```
 
-Requires [Quarto](https://quarto.org) and [uv](https://docs.astral.sh/uv/).
-
-## Publishing (going live)
-
-The interactive GitHub Pages site is currently **held back**: the Pages site is
-deleted and the render workflow is disabled, so nothing is served publicly. Read
-the manuscript in the meantime via [`PREVIEW.md`](PREVIEW.md).
-
-> ⚠️ **Important — a private repo's Pages site is still fully public.** On GitHub
-> Free/Team, GitHub Pages has no access control: once published, anyone with the
-> URL can read the site even though this repo is private. There is no
-> "share with only these people" option. For a truly access-controlled preview,
-> use [`PREVIEW.md`](PREVIEW.md) (visible only to people with repo access), or
-> host elsewhere with authentication (e.g. Netlify password protection). Only
-> publish Pages when you are comfortable with the manuscript being world-readable.
-
-When you are ready to publish the interactive site:
-
-```bash
-gh workflow enable  "Render manuscript" --repo dholab/team-canada-world-cup-2026
-gh api -X POST repos/dholab/team-canada-world-cup-2026/pages -f build_type=workflow
-gh workflow run     "Render manuscript" --repo dholab/team-canada-world-cup-2026
-```
-
-To make the **repository** itself public (separate from the site):
-`gh repo edit dholab/team-canada-world-cup-2026 --visibility public`.
+> **Note — a private repo's GitHub Pages site is still public.** Publishing Pages
+> makes the site world-readable via its URL. Keep it held back until the
+> manuscript is ready; use [`PREVIEW.md`](PREVIEW.md) for private review.

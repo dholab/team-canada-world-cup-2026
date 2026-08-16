@@ -1,0 +1,82 @@
+% =====================================================================
+% House-style preamble for the SUBMISSION PDF.
+% White background (journal requirement) but house typography and layout:
+% Georgia display headings + Arial body, deep-teal headings, terracotta accent
+% for links, generous margins. Rendered with tectonic/XeLaTeX so the fonts
+% resolve via fontspec.
+%
+% Fonts are chosen for REPRODUCIBILITY: the house faces are Georgia (display)
+% and Arial (body), but those are proprietary and absent on CI runners, so we
+% prefer the open, metric-compatible clones Gelasio (= Georgia) and Arimo
+% (= Arial), falling back to the real Microsoft fonts when present locally.
+% Both builds are visually 1:1 because the clones share the originals' metrics.
+% =====================================================================
+
+% --- Brand colours (white page, so background stays default white) ---
+\usepackage{xcolor}
+\definecolor{houseTeal}{HTML}{163139}
+\definecolor{houseTerracotta}{HTML}{C16A3C}
+\definecolor{houseRule}{HTML}{D9D2C4}
+
+% --- Fonts: Arimo/Arial for body, Gelasio/Georgia for display headings ---
+% Prefer the real house fonts when installed (local macOS); otherwise use the
+% metric-compatible open clones that CI installs. Times/Helvetica are a last
+% resort so a missing-font build still produces output rather than erroring.
+%
+% Georgia/Arial have proper OS-level style linking, so the bare family name is
+% enough. The Gelasio clone is built as four static files by
+% scripts/build_house_fonts.py; automatic bold-matching by family name is
+% unreliable across CoreText/fontconfig, so its four faces are named EXPLICITLY.
+\usepackage{fontspec}
+\IfFontExistsTF{Arial}{\setmainfont{Arial}}{%
+  \IfFontExistsTF{Arimo}{\setmainfont{Arimo}}{\setmainfont{Helvetica Neue}}}
+% If the Gelasio statics exist in ./fonts (built by build_house_fonts.py, as CI
+% does), reference them BY PATH — name-based bold matching is unreliable across
+% CoreText/fontconfig, but an explicit Path= resolves every face deterministically.
+\IfFileExists{./fonts/Gelasio-Bold.ttf}{%
+  \newfontfamily\houseDisplay{Gelasio}[%
+    Path=./fonts/, Extension=.ttf,%
+    UprightFont={Gelasio-Regular}, BoldFont={Gelasio-Bold},%
+    ItalicFont={Gelasio-Italic}, BoldItalicFont={Gelasio-BoldItalic}]%
+}{%
+  % No clone present (e.g. local build): use real Georgia, else Times.
+  \IfFontExistsTF{Georgia}{\newfontfamily\houseDisplay{Georgia}}%
+    {\newfontfamily\houseDisplay{Times New Roman}}%
+}
+
+% --- Headings in Georgia, deep teal, sentence case, left-aligned ---
+\usepackage{titlesec}
+\titleformat{\section}
+  {\houseDisplay\bfseries\LARGE\color{houseTeal}}{\thesection}{0.6em}{}
+\titleformat{\subsection}
+  {\houseDisplay\bfseries\Large\color{houseTeal}}{\thesubsection}{0.5em}{}
+\titleformat{\subsubsection}
+  {\houseDisplay\bfseries\large\color{houseTeal}}{\thesubsubsection}{0.5em}{}
+\titlespacing*{\section}{0pt}{2.2ex plus 1ex minus .2ex}{1.1ex plus .2ex}
+\titlespacing*{\subsection}{0pt}{1.8ex plus 1ex minus .2ex}{0.8ex plus .2ex}
+
+% Leave Quarto's own title / author / affiliation block untouched (it renders
+% multiple authors as an internal array, which a titling override would break).
+% The document title still reads in Georgia + teal because the main font and the
+% heading styles below carry the house look.
+
+% --- Links in terracotta (accent), no boxes ---
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, allcolors=houseTerracotta,
+            linkcolor=houseTerracotta, citecolor=houseTerracotta,
+            urlcolor=houseTerracotta}
+
+% --- Body colour stays deep teal (readable on white), captions tracked ---
+\AtBeginDocument{\color{houseTeal}}
+
+% --- Figure captions: bold "Figure N." reads slightly toward the accent ---
+\usepackage{caption}
+\captionsetup{font={small,color=houseTeal!85!black},
+              labelfont={bf,color=houseTerracotta}, labelsep=period,
+              justification=raggedright, singlelinecheck=false}
+
+% Keep paragraphs left-aligned (never justified-centered), generous leading.
+\usepackage{ragged2e}
+\setlength{\parskip}{0.6em}
+\setlength{\parindent}{0pt}
+\linespread{1.12}

@@ -1,16 +1,17 @@
 name: Render manuscript
 
 on:
+  # Run on demand (when we know we're making edits, e.g. preparing the next
+  # preprint version) and on pushes to main. No schedule — we don't need
+  # frequent rebuilds; trigger a run when the Doc or data has changed.
+  workflow_dispatch:
   push:
     branches: [main]
-  workflow_dispatch:
-  schedule:
-    # Daily at 11:00 UTC — picks up Google Doc edits without a manual push.
-    - cron: "0 11 * * *"
 
-# Allow the workflow to deploy to GitHub Pages.
+# Allow the workflow to deploy to GitHub Pages and to commit the rebuilt PDF
+# snapshot back to the repo (contents: write).
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -48,20 +49,68 @@ jobs:
           uv run python make_figures.py
           uv run python make_figure3_sequencing.py
 
+      - name: Install house fonts (open, metric-compatible clones)
+        # The house faces are Georgia + Arial (proprietary). We use the open,
+        # metric-compatible clones Gelasio (= Georgia) and Arimo (= Arial) so the
+        # PDF builds reproducibly. Arimo ships in fonts-croscore (body font);
+        # Gelasio's display statics are built from the upstream variable font by
+        # scripts/build_house_fonts.py into ./fonts, which house-preamble.tex
+        # references by path.
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fonts-croscore
+          uv run --with fonttools python scripts/build_house_fonts.py
+          fc-cache -f >/dev/null
+          echo "Body clone (Arimo):"; fc-list | grep -i arimo | sort -u
+          echo "Display clone (Gelasio, ./fonts):"; ls -1 fonts/*.ttf
+
+      - name: Install tectonic (PDF engine)
+        # _quarto.yml sets pdf-engine: tectonic; install it so the runner has it.
+        run: |
+          curl -fsSL https://drop-sh.fullyjustified.net | sh
+          sudo mv tectonic /usr/local/bin/
+          tectonic --version
+
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
-        with:
-          tinytex: true
+
+      # Stamp both outputs with a single build date (UTC) so the HTML and PDF
+      # agree, rather than each picking up its own "last modified" moment.
+      - name: Set build date
+        run: echo "BUILD_DATE=$(date -u +%Y-%m-%d)" >> "$GITHUB_ENV"
 
       - name: Render HTML site
-        run: quarto render --to html
+        run: quarto render --to html -M date="$BUILD_DATE"
 
       - name: Render submission PDF
         run: |
-          quarto render index.qmd --to pdf
+          quarto render index.qmd --to pdf -M date="$BUILD_DATE"
           # Quarto writes to the project output-dir (_site). Give the PDF the
           # public download name the in-page link expects.
           cp _site/index.pdf _site/team-canada-air-sampling.pdf
+
+      - name: Commit Doc-synced content and rebuilt PDF
+        # Each run pulls the latest Google Doc, so commit the synced prose,
+        # legends, front matter, regenerated figures, PREVIEW.md, and the rebuilt
+        # submission PDF back to the repo. This keeps the repo a faithful snapshot
+        # of what CI built and submitted. [skip ci] avoids retriggering.
+        run: |
+          cp _site/index.pdf docs/team-canada-air-sampling.pdf
+          python scripts/build_preview.py
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Track only the source-of-record outputs (fonts/, _site/ stay ignored).
+          git add -A -- _prose.md _frontmatter.md _legends PREVIEW.md \
+            analysis/figure1_static.png analysis/figure2_houston.png \
+            analysis/figure3_wastewater.png analysis/figure3_sequencing.png \
+            analysis/figure3_sequencing_transparent.png \
+            analysis/data docs/team-canada-air-sampling.pdf
+          if git diff --cached --quiet; then
+            echo "Nothing changed; skipping commit."
+          else
+            git commit -m "CI: sync Google Doc content and rebuild outputs [skip ci]"
+            git push
+          fi
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

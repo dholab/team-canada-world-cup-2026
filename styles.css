@@ -1,15 +1,16 @@
-/* Manuscript page tweaks for the interactive HTML build. */
-.quarto-title-block .quarto-title .title {
-  font-size: 1.9rem;
-  line-height: 1.2;
-}
+/* Manuscript page tweaks layered on top of the house theme (theme-house.scss).
+   The theme owns palette, type, and the figure-card treatment; this file only
+   holds a couple of small, non-conflicting nudges. */
+
+/* Plotly iframes always paint on white (the plots need a white ground), which
+   also reads as the white "chip" inside each cream figure card. */
 figure iframe,
 .cell iframe {
   background: #fff;
 }
-/* Give embedded figure captions a touch more separation. */
-:is(#fig-detections, #fig-houston) p:last-of-type {
-  font-size: 0.9rem;
-  color: #444;
+
+/* A touch more separation under each embedded figure caption. Colour and font
+   are left to the theme so this does not override the house caption style. */
+:is(#fig-detections, #fig-houston, #fig-sequencing, #supp-wastewater) p:last-of-type {
   margin-top: 0.5rem;
 }

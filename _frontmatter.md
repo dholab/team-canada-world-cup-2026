@@ -2,22 +2,24 @@
 
 **Authors**
 
-David Simon,¹ Timothy J. Locksmith,² Nick Minor,² Eli J. O’Connor², Shelby L. O'Connor, Ph.D.,&² David H. O'Connor, Ph.D.&²
+David Simon,¹ Timothy J. Locksmith,² Nick Minor,² Isla E. Emmen,² Nancy A Wilson,² Eli J. O’Connor², Shelby L. O'Connor, Ph.D.,&² David H. O'Connor, Ph.D.&²
 
 **Affiliations**
 
-1. Canada Soccer, Ottawa, Ontario, Canada
+1. Canada Soccer, Ottawa, Canada; University of Bath, Department for Health
 2. Department of Pathology and Laboratory Medicine, University of Wisconsin School of Medicine and Public Health, University of Wisconsin-Madison, 5510 Elements Way Suite \#500, Madison, WI 53719, USA
 
 & denotes equal contribution
 
 **ORCID iDs**
 
-- David Simon: *[confirm]*
-- Timothy Locksmith: *0009-0007-1112-6759*
-- Nick Minor: *[confirm]*
+- David Simon: 0000-0003-0911-7152
+- Timothy J. Locksmith: 0009-0007-1112-6759
+- Nick Minor: [confirm]
 - Eli J. O’Connor: 0009-0001-8795-8320
-- Shelby L. O'Connor: *0000-0003-0183-5010*
+- Isla E. Emmen: 0000-0002-4725-4935
+- Nancy A. Wilson: 0000-0002-9472-6026
+- Shelby L. O'Connor: 0000-0003-0183-5010
 - David H. O'Connor: 0000-0003-2139-470X
 
 **Corresponding author**
