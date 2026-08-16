@@ -1,0 +1,26 @@
+<script>
+// Quarto emits each figure caption as a bare "Figure 1: " text node followed by
+// the bold title. CSS cannot target a bare text node, so wrap the number in a
+// span that theme-house.scss can style — this is what gives the online figure
+// numbers the same terracotta accent they have in the submission PDF.
+document.addEventListener("DOMContentLoaded", function () {
+  var sel = "#fig-detections figcaption, #fig-houston figcaption, " +
+            "#fig-sequencing figcaption";
+  Array.prototype.forEach.call(document.querySelectorAll(sel), function (cap) {
+    var node = cap.firstChild;
+    // Skip any whitespace-only node Quarto emits before the label.
+    while (node && node.nodeType === 3 && !node.nodeValue.trim()) {
+      node = node.nextSibling;
+    }
+    if (!node || node.nodeType !== 3) return;
+    // Quarto separates the word and the number with a non-breaking space.
+    var m = node.nodeValue.match(/^(\s*Figure[\s ]+\d+[:.]?)([\s\S]*)$/);
+    if (!m) return;
+    var span = document.createElement("span");
+    span.className = "fig-number";
+    span.textContent = m[1];
+    node.nodeValue = m[2];
+    cap.insertBefore(span, node);
+  });
+});
+</script>

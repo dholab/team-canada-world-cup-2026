@@ -177,12 +177,19 @@ figure figcaption, .figure-caption,
   margin-top: 0.8rem;
   max-width: none;
 }
-// The "Figure N." lead of each caption carries the single terracotta accent.
-// Quarto numbers the three main figures itself, so their caption opens with a
-// short bold run that is exactly that label. The supplemental figure is not
-// Quarto-numbered: its whole title sits in the leading bold run, so tinting it
-// would turn the entire title orange. Keep the accent to the main figures.
-:is(#fig-detections, #fig-houston, #fig-sequencing) > p:last-of-type strong:first-child { color: $terracotta; }
+// The "Figure N." lead of each caption carries the single terracotta accent,
+// matching the PDF. Quarto renders the number as bare text at the start of the
+// <figcaption> ("Figure 1: " followed by the bold title), so tint the caption
+// itself and set the title back to the body ink. The bold run must be reset
+// explicitly or it would inherit the accent and turn the whole title orange —
+// which is exactly what happened to the un-numbered supplemental figure.
+// Quarto renders the caption as a bare "Figure N: " text node followed by the
+// bold title. A bare text node cannot be targeted in CSS, so styles.css wraps
+// it in .fig-number at load; this styles that wrapper to match the PDF, where
+// the figure number carries the single terracotta accent.
+:is(#fig-detections, #fig-houston, #fig-sequencing) figcaption { color: $teal-70; }
+:is(#fig-detections, #fig-houston, #fig-sequencing) figcaption strong { color: $teal; }
+.fig-number { color: $terracotta; font-weight: 700; }
 
 // -------------------------------------------------------------------------
 // Table of contents — quiet teal, terracotta active marker.

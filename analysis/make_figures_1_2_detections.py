@@ -53,6 +53,7 @@ GRID = "#f2f2f2"
 # white ground, which the submission PDF requires.
 CREAM = "#F8F4E9"
 TEAL = "#163139"          # house ink, for interactive labels
+TERRA = "#C16A3C"         # house accent, for the selector label
 
 # Ct colour scale: light blue (high Ct = little virus) -> deep blue (low Ct).
 # Reversed so LOW Ct maps to the DEEP end.
@@ -190,21 +191,24 @@ def build_interactive(df: pd.DataFrame, out: pathlib.Path) -> None:
     fig.update_layout(
         # No in-plot title: the figure legend beneath the figure already carries
         # "Figure 1. ..." and a second title inside the plot duplicates it.
-        template="simple_white", height=430, autosize=True,
+        template="simple_white", height=446, autosize=True,
         paper_bgcolor=CREAM, plot_bgcolor=CREAM,
         font=dict(family="Arial", color=TEAL),
         barmode="overlay", bargap=0.35,
-        margin=dict(l=130, r=30, t=62, b=50),
+        margin=dict(l=130, r=30, t=78, b=50),
         yaxis=dict(tickmode="array", tickvals=list(range(len(rooms0))),
                    ticktext=rooms0, autorange="reversed", showgrid=False),
         xaxis=dict(type="date", showgrid=True, gridcolor=GRID,
                    range=[s0["start"].min() - pd.Timedelta(hours=6),
                           s0["end"].max() + pd.Timedelta(hours=6)]),
+        # The label sits ABOVE the dropdown rather than beside it: the control
+        # grows with the selected city's name ("Los Angeles"), and a side label
+        # gets overrun by the wider ones.
         updatemenus=[dict(buttons=buttons, direction="down", showactive=True,
-                          x=0.0, xanchor="left", y=1.16, yanchor="top")],
-        annotations=[dict(text="Host city:", x=-0.155, y=1.13, xref="paper",
+                          x=0.0, xanchor="left", y=1.10, yanchor="top")],
+        annotations=[dict(text="HOST CITY", x=0.0, y=1.20, xref="paper",
                           yref="paper", showarrow=False, xanchor="left",
-                          font=dict(size=12))])
+                          font=dict(family="Arial", size=10, color=TERRA))])
     fig.write_html(out, include_plotlyjs="cdn", full_html=True,
                    config={"displayModeBar": False, "responsive": True})
     print(f"wrote {out}")

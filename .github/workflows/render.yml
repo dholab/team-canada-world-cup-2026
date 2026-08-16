@@ -49,6 +49,9 @@ jobs:
           uv run python make_figures_1_2_detections.py
           uv run python make_figure_3_sequencing.py
           uv run python make_supplement_1_wastewater.py
+          # Cream-background Central Figure for the HTML site. The white
+          # Illustrator export is what the submission PDF uses.
+          uv run --with pillow python central_figure/recolor_background.py
 
       - name: Install house fonts (open, metric-compatible clones)
         # The house faces are Georgia + Arial (proprietary). We use the open,
@@ -109,6 +112,7 @@ jobs:
             analysis/figures/supplement1_wastewater.png \
             analysis/figures/figure3_sequencing.png \
             analysis/figures/figure3_sequencing_transparent.png \
+            analysis/central_figure/central_figure_cream.png \
             analysis/data docs/team-canada-air-sampling.pdf
           if git diff --cached --quiet; then
             echo "Nothing changed; skipping commit."

@@ -5,7 +5,7 @@
 ::: {#fig-detections}
 
 ```{=html}
-<iframe src="analysis/figures/figure1_detections_interactive.html" width="100%" height="446"
+<iframe src="analysis/figures/figure1_detections_interactive.html" width="100%" height="462"
         style="border:none;" loading="lazy" scrolling="no"
         title="Figure 1: respiratory-virus detections across the World Cup"></iframe>
 ```

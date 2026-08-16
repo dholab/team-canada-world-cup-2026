@@ -10,7 +10,16 @@
 
 ## Central figure
 
+::: {.content-visible when-format="html"}
+![](analysis/central_figure/central_figure_cream.png){fig-alt="Central figure: study workflow, detection timeline across the five host cities, and possible response actions."}
+:::
+
+::: {.content-visible when-format="pdf"}
+<!-- The submission PDF keeps the white Illustrator export (journals want a
+     white ground); the site uses the cream variant so the figure sits flush
+     on the cream page. -->
 ![](analysis/central_figure/central_figure.png){fig-alt="Central figure: study workflow, detection timeline across the five host cities, and possible response actions."}
+:::
 
 {{< include _legends/central.md >}}
 

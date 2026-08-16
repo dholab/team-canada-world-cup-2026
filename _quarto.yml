@@ -21,6 +21,9 @@ format:
     page-layout: article
     embed-resources: false
     css: styles.css
+    # Wraps the bare "Figure N:" text node in each caption so the house accent
+    # can be applied to it (CSS cannot target a bare text node).
+    include-after-body: fig-number.html
     grid:
       body-width: 820px
       margin-width: 260px

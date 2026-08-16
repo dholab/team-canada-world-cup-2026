@@ -1,19 +1,22 @@
 #!/usr/bin/env python3
-"""Recolor the Central Figure's white page background to the house cream.
+"""Make the cream-background Central Figure used by the Quarto site.
 
 The Central Figure is exported from Illustrator on a white ground (the editable
-.ai master lives in the manuscript's Google Drive folder, not this repo). On the
-Quarto site every other figure paints the house cream, so a white Central Figure
-reads as a white rectangle pasted onto the cream page.
+.ai master lives in the manuscript's Google Drive folder, not this repo). The
+submission PDF wants that white ground, but on the Quarto site every other
+figure paints the house cream, so a white Central Figure reads as a white
+rectangle pasted onto the cream page.
 
-This rewrites only the *background*: it flood-fills inward from the image border
+So this keeps BOTH:
+
+  central_figure.png       white  — the Illustrator export, used by the PDF
+  central_figure_cream.png cream  — generated here, used by the HTML site
+
+It rewrites only the *background*: it flood-fills inward from the image border
 and recolors the connected near-white region, so white elements *inside* the
 artwork (the sampler photos, the elution tube, the white icon tiles) keep their
 white. A global white->cream replace would wreck those, which is why this walks
 the connected region instead.
-
-Idempotent: running it on an already-recolored PNG is a no-op, because the
-border is then cream rather than white.
 
     uv run python central_figure/recolor_background.py
 """
@@ -26,7 +29,10 @@ from collections import deque
 from PIL import Image
 
 HERE = pathlib.Path(__file__).resolve().parent
+# Source: the Illustrator export on white. Used as-is by the submission PDF.
 PNG = HERE / "central_figure.png"
+# Generated: the same artwork on cream, used by the Quarto HTML site.
+OUT = HERE / "central_figure_cream.png"
 
 CREAM = (248, 244, 233)
 # How far from pure white a pixel may be and still count as page background.
@@ -48,8 +54,11 @@ def main() -> None:
     px = im.load()
 
     if not is_background(px[0, 0]):
-        print(f"{PNG.name}: border is already {px[0, 0][:3]}, nothing to do.")
-        return
+        raise SystemExit(
+            f"{PNG.name} has a {px[0, 0][:3]} border, not white. This script "
+            "expects the white Illustrator export as its source; re-export it "
+            "from the .ai master before running."
+        )
 
     # Flood fill inward from every border pixel. Only background-connected
     # near-white is recolored; enclosed white stays white.
@@ -85,9 +94,9 @@ def main() -> None:
         if y < h - 1:
             push(x, y + 1)
 
-    im.save(PNG)
+    im.save(OUT)
     pct = 100.0 * filled / (w * h)
-    print(f"wrote {PNG}  ({filled:,} px recolored to cream, {pct:.1f}% of image)")
+    print(f"wrote {OUT}  ({filled:,} px recolored to cream, {pct:.1f}% of image)")
 
 
 if __name__ == "__main__":
