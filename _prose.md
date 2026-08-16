@@ -168,7 +168,7 @@ DHO and SLO conceived and designed the study. DS facilitated access to team spac
 
 ### Competing interests
 
-D.H.O. and S.L.O. are managing partners of Pathogenuity LLC, a consultancy that advises on topics including environmental monitoring for pathogens. 
+D.H.O. and S.L.O. are managing partners of Pathogenuity LLC, a consultancy that advises on topics including environmental monitoring for pathogens. D.H.O and S.L.O. are Honorary professorial fellows at the University of Melbourne, Australia.
 
 ### Funding
 
