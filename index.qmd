@@ -30,7 +30,7 @@
 
 ## Central figure
 
-::: {#central-figure}
+::: {#central-figure-card}
 
 ::: {.content-visible when-format="html"}
 ![](analysis/central_figure/central_figure_cream.png){fig-alt="Central figure: study workflow, detection timeline across the five host cities, and possible response actions."}
