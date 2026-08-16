@@ -56,6 +56,26 @@ occasions its cartridge was additionally run on the respiratory panel to confirm
 a primary detection in the same room. Those confirmatory runs are not part of
 the consistently-sampled respiratory series the figures describe.
 
+## Auditing the dataset against LabKey
+
+`data/cartridges_long.csv` is derived from the dashboard export in `raw/`, which
+is a rendering and can be wrong: one cartridge's window was recorded there with
+the removal time as its start (see `FIX_WINDOW` in `extract_data.py`). To
+re-check every value against the authoritative LabKey tables, export the
+cartridge-metadata and qualitative-results tables as TSV and run:
+
+```bash
+python scripts/audit_against_labkey.py \
+  --metadata cartridge_metadata_with_facilities.tsv \
+  --results  results_summary_qualitative.tsv
+```
+
+It compares sampling windows against the deploy and removal timestamps
+(converting LabKey's UTC to each host city's local time), every Ct value and
+detection call, the SPC call and validity, and the sampler, room, and duration.
+Cartridges from other studies in the same export are ignored. It exits non-zero
+on any discrepancy.
+
 ## Regenerating the dataset
 
 `data/cartridges_long.csv` is derived from the raw LabKey export in
