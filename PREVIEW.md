@@ -27,6 +27,7 @@ reinforced ventilation, and excluding visibly ill personnel (bottom).
 ---
 
 ## Abstract
+
 **Objective**. Respiratory infections are the leading cause of illness at major sporting events, yet surveillance relies on athletes recognising and reporting symptoms. We evaluated whether continuous air sampling with point-of-care molecular testing could detect respiratory-virus nucleic acids in an elite team's congregate spaces during competition, and whether the resulting signals were operationally useful.
 
 **Methods**. We performed a prospective, descriptive environmental-surveillance study following the Canadian men's national soccer team across five host cities during the 2026 FIFA World Cup™ (3 June to 4 July 2026). InBio Apollo bioaerosol samplers ran continuously in up to four team-designated rooms per hotel (physiotherapy, meal, equipment, and coaches' room or hallway). Filters were changed approximately twice daily, eluted on-site, and tested with the Cepheid Xpert® Xpress SARS-CoV-2/Flu/RSVplus assay. A sample was considered positive if any cycle-threshold (Ct) value was reported, as less than 45, for a target.

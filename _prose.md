@@ -1,6 +1,6 @@
 <!-- AUTO-GENERATED from the manuscript Google Doc by scripts/fetch_prose.py. Do not edit by hand; edit the Doc. -->
 
-## Abstract (233 words)
+## Abstract
 
 **Objective**. Respiratory infections are the leading cause of illness at major sporting events, yet surveillance relies on athletes recognising and reporting symptoms. We evaluated whether continuous air sampling with point-of-care molecular testing could detect respiratory-virus nucleic acids in an elite team's congregate spaces during competition, and whether the resulting signals were operationally useful.
 
