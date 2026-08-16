@@ -172,7 +172,7 @@ D.H.O. and S.L.O. are managing partners of Pathogenuity LLC, a consultancy that 
 
 ### Funding
 
-This project was supported by Inkfish and Heart of Racing.
+This project was supported by Inkfish LLC and Heart of Racing.
 
 ### Ethics approval
 
@@ -180,7 +180,7 @@ The University of Wisconsin–Madison Institutional Review Board determined that
 
 ### Data sharing statement
 
-The data and code for this study are available in the repository at [https://github.com/dholab/team-canada-world-cup-2026](https://github.com/dholab/team-canada-world-cup-2026). A compressed archive of the Lungfish Genome Explorer project (including imported sequencing reads) used to evaluate sequencing reads found in the July 4, 2026 samples can be accessed from [https://dholk.primate.wisc.edu/\_webdav/dho/public/manuscripts/team-canada-air-sampling/%40files/Team\_Canada\_VSP2.lungfish.zip](https://dholk.primate.wisc.edu/_webdav/dho/public/manuscripts/team-canada-air-sampling/%40files/Team_Canada_VSP2.lungfish.zip). The original reads before import processing for Lungfish Genome Explorer will be available from SRA upon publication. Sequencing files for this study were uploaded to NCBI SRA in Bioproject [PRJNA1513008](https://dataview.ncbi.nlm.nih.gov/object/PRJNA1513008).
+The data and code for this study are available in the repository at [https://github.com/dholab/team-canada-world-cup-2026](https://github.com/dholab/team-canada-world-cup-2026). A compressed archive of the Lungfish Genome Explorer project (including imported sequencing reads) used to evaluate sequencing reads found in the July 4, 2026 samples can be accessed from [https://dholk.primate.wisc.edu/\_webdav/dho/public/manuscripts/team-canada-air-sampling/%40files/Team\_Canada\_VSP2.lungfish.zip](https://dholk.primate.wisc.edu/_webdav/dho/public/manuscripts/team-canada-air-sampling/%40files/Team_Canada_VSP2.lungfish.zip). The original reads before import processing for Lungfish Genome Explorer are in NCBI SRA in Bioproject [PRJNA1513008](https://www.ncbi.nlm.nih.gov/bioproject/?term=PRJNA1513008). Note that both the LGE and SRA datasets include data from two additional samples not discussed in the manuscript. During part of the tournament we tested an additional two air samplers for norovirus using the Cepheid GeneXpert and two of these samples that were running at the time of Team Canada’s elimination are included in the sequencing datasets. None of the air samples tested positive for norovirus on the GeneXpert; however, since we did not have complete coverage of the tournament we did not include it in the manuscript’s primary dataset.
 
 ### Patient and public involvement
 
