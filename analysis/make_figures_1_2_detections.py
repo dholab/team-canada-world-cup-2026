@@ -48,6 +48,10 @@ NEG_COLOR = "#ffffff"     # sampled, valid, virus not detected -> white
 NEG_EDGE = "#c8c8c8"      # thin outline so white boxes read against white bg
 INVALID_COLOR = "#bdbdbd"  # invalid run (status = invalid) -> grey
 GRID = "#f2f2f2"
+# House canvas. The interactive figures paint cream so they sit flush inside the
+# cream page on the Quarto site; the static PNG/PDF exports keep matplotlib's
+# white ground, which the submission PDF requires.
+CREAM = "#F8F4E9"
 
 # Ct colour scale: light blue (high Ct = little virus) -> deep blue (low Ct).
 # Reversed so LOW Ct maps to the DEEP end.
@@ -185,6 +189,7 @@ def build_interactive(df: pd.DataFrame, out: pathlib.Path) -> None:
     fig.update_layout(
         title=f"Sampling intervals and detections — {first}",
         template="simple_white", height=440, width=940,
+        paper_bgcolor=CREAM, plot_bgcolor=CREAM,
         barmode="overlay", bargap=0.35,
         margin=dict(l=150, r=120, t=90, b=50),
         yaxis=dict(tickmode="array", tickvals=list(range(len(rooms0))),
@@ -494,6 +499,7 @@ def build_figure2_interactive(df: pd.DataFrame, city: str, out: pathlib.Path) ->
     fig.update_layout(
         title=f"{city} respiratory-virus detections by room",
         template="simple_white", height=26 * len(ycats) + 140, width=900,
+        paper_bgcolor=CREAM, plot_bgcolor=CREAM,
         barmode="overlay", bargap=0.3,
         margin=dict(l=200, r=120, t=70, b=50),
         yaxis=dict(tickmode="array", tickvals=list(range(len(ycats))),

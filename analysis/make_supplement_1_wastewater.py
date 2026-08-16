@@ -78,6 +78,11 @@ VIRUS_COLOR = {"covN2": "#08306b",   # deep navy, matches the Fig 1-2 Ct ramp
                "fluB": "#9e4a5c",    # dusty wine
                "rsv": "#4c9a86"}     # soft teal-green
 
+# House canvas. The interactive figure paints cream so it sits flush inside the
+# cream page on the Quarto site; the static PNG/PDF exports keep matplotlib's
+# white ground, which the submission PDF requires.
+CREAM = "#F8F4E9"
+
 # Team Canada sampling window per city (from cartridges_long.csv). The Houston
 # 69th St feed now spans the visit window (refreshed 2026-08-15), so no gap
 # caveat is needed.
@@ -255,6 +260,7 @@ def build_interactive(out: pathlib.Path) -> None:
 
     fig.update_layout(
         template="simple_white", height=1250, width=900,
+        paper_bgcolor=CREAM, plot_bgcolor=CREAM,
         title="Online supplemental figure 1. Community wastewater context by host city, 2025–2026 season",
         legend=dict(orientation="h", yanchor="bottom", y=1.03, x=0.5,
                     xanchor="center"),
