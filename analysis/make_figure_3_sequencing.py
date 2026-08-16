@@ -1,9 +1,13 @@
 """Build Figure 3 (interactive + static) for the Team Canada air-sampling study.
 
 Figure 3 is the metagenomic-sequencing confirmation of the Houston GeneXpert
-episode. EsViritu viral read classification of the six Houston air cartridges
-that were pulled for sequencing, shown as a virus x room heatmap of distinct
-(deduplicated) read counts.
+episode: EsViritu viral read classification shown as a virus x room heatmap of
+distinct (deduplicated) read counts.
+
+Six Houston cartridges were sequenced, but the figure shows only the four from
+the samplers that ran the four-plex respiratory panel (see FOURPLEX_SAMPLERS).
+Six columns against the four samplers described elsewhere in the manuscript
+would be confusing; all six samples remain in data/sequencing_detections.csv.
 
   * figure3_sequencing.html - interactive Plotly heatmap. Hovering a cell reports
                               the virus, room, sampler, distinct read count, total
@@ -45,9 +49,17 @@ TERRA = "#C16A3C"
 CREAM = "#F8F4E9"
 RULE = "#dcd3c2"
 
-# Column order: rooms left to right, grouped meal / physio / hallway / equipment.
-ROOM_ORDER = ["Meal room 1", "Meal room 2", "Physio room 1", "Physio room 2",
+# Column order. Both the suffixed and un-suffixed forms are listed because
+# load() strips a "1"/"2" index once only one cartridge from that room survives
+# the four-plex filter.
+ROOM_ORDER = ["Meal room", "Meal room 1", "Meal room 2",
+              "Physio room", "Physio room 1", "Physio room 2",
               "Hallway", "Equipment room"]
+
+# The four samplers that ran the four-plex respiratory panel throughout the
+# study. Figure 3 shows only these, so its columns match the four samplers
+# described everywhere else in the manuscript (see load()).
+FOURPLEX_SAMPLERS = {"Jabeur", "Kerber", "Rybakina", "Sharpova"}
 
 # Row order: Merkel and SARS-CoV-2 pinned on top, then by total distinct reads.
 ROW_PIN = ["Merkel cell polyomavirus", "SARS-CoV-2"]
@@ -62,7 +74,28 @@ def load() -> pd.DataFrame:
     df["total_reads"] = pd.to_numeric(df["total_reads"], errors="coerce").fillna(0).astype(int)
     df["sc2_status"] = df["sc2_status"].fillna("").astype(str).str.strip()
     df.loc[df["sc2_status"].str.lower() == "nan", "sc2_status"] = ""
-    return df
+
+    # Six cartridges were sequenced, but two came from samplers outside the
+    # four-plex respiratory series the rest of the manuscript describes:
+    # "Sabalenka" (run predominantly for norovirus, excluded study-wide) and
+    # "Barty" (not part of the respiratory series at all). Showing six columns
+    # here against four samplers everywhere else is confusing, so the figure is
+    # restricted to the four. The full six-sample table stays in
+    # data/sequencing_detections.csv.
+    kept = df[df["sampler"].isin(FOURPLEX_SAMPLERS)].copy()
+    dropped = sorted(set(df["sampler"]) - set(kept["sampler"]))
+    if dropped:
+        print(f"  excluding non-four-plex sampler(s): {', '.join(dropped)}")
+
+    # With the second meal and physio cartridges gone, the "1"/"2" suffixes that
+    # distinguished them are misleading — there is no room 2 left to contrast
+    # with. Drop the index wherever only one cartridge from that room remains.
+    base = kept["room"].str.replace(r"\s+\d+$", "", regex=True)
+    # How many distinct cartridges still share each un-suffixed room name.
+    remaining = kept.assign(_base=base).groupby("_base")["room"].nunique()
+    kept["room"] = [b if remaining[b] == 1 else r
+                    for b, r in zip(base, kept["room"])]
+    return kept
 
 
 def virus_order(df: pd.DataFrame) -> list[str]:

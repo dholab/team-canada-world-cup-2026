@@ -151,7 +151,7 @@ def normalize(md: str, cite_urls: dict[int, str] | None = None) -> str:
 FIGURE_ANCHORS = [
     (r"summarized in Figure 1", "_fig1.md"),
     (r"Houston accounted for .{0,20}detections", "_fig2.md"),
-    (r"Metagenomic sequencing of air samples", "_fig3.md"),
+    (r"metagenomic sequencing with Illumina VSP2", "_fig3.md"),
 ]
 
 

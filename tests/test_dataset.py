@@ -85,3 +85,32 @@ def test_corrected_houston_window(rows):
     assert r["start"] == "2026-07-03T07:37:00"
     assert r["end"] == "2026-07-03T16:03:00"
     assert r["dur_h"] == "8.43"
+
+
+def test_figure3_shows_only_the_fourplex_samplers():
+    """Figure 3 must show four columns, not six.
+
+    Six Houston cartridges were sequenced, but two came from samplers outside
+    the four-plex respiratory series ("Sabalenka", run mainly for norovirus, and
+    "Barty"). Six columns against the four samplers described everywhere else in
+    the manuscript reads as a contradiction, so the figure filters to the four.
+    The committed CSV keeps all six."""
+    import csv as _csv
+    import importlib.util
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parent.parent
+    spec = importlib.util.spec_from_file_location(
+        "fig3", root / "analysis" / "make_figure_3_sequencing.py")
+    fig3 = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(fig3)
+
+    with (root / "analysis" / "data" / "sequencing_detections.csv").open() as fh:
+        raw = list(_csv.DictReader(fh))
+    assert len({r["sampler"] for r in raw}) == 6, "CSV should retain all six"
+
+    shown = fig3.load()
+    assert set(shown["sampler"]) == fig3.FOURPLEX_SAMPLERS
+    assert shown["room"].nunique() == 4
+    # With one cartridge per room left, the "1"/"2" suffixes are dropped.
+    assert not any(r[-1].isdigit() for r in shown["room"].unique())
