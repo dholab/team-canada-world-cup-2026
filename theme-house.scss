@@ -1,0 +1,203 @@
+/*-- scss:defaults --*/
+// =========================================================================
+// House style for the interactive preprint.
+// Warm-neutral, calm, editorial. Cream canvas, deep-teal ink, one terracotta
+// accent per element. Georgia display + Arial text. See docs/house-style notes.
+// =========================================================================
+
+// Brand palette — the only hues allowed.
+$cream:            #F8F4E9;  // background canvas
+$teal:             #163139;  // primary ink (titles, body, graphic lines)
+$terracotta:       #C16A3C;  // accent (eyebrows, captions, links)
+$terracotta-soft:  #D98E60;  // lighter accent fill
+$white:            #FFFFFF;  // surface: cards / chips behind figures
+
+// Derived, kept within the family (no new hues — only tints/shades of teal).
+$teal-70:  #45585f;
+$teal-40:  #8a969b;
+$rule:     #e4dccb;          // hairline on cream (a warm neutral, not a new hue)
+
+// Bootstrap / Quarto variable overrides
+$body-bg:            $cream;
+$body-color:         $teal;
+$link-color:         $terracotta;
+$link-hover-color:   darken($terracotta, 10%);
+
+// Type. Georgia (display) and Arial (text), each followed by its open,
+// metric-compatible clone (Gelasio / Arimo) so the look is consistent whether
+// or not the reader has the proprietary Microsoft faces installed.
+$font-family-serif:      Georgia, Gelasio, "Times New Roman", serif;
+$font-family-sans-serif: Arial, Arimo, "Helvetica Neue", Helvetica, sans-serif;
+$font-family-base:       $font-family-sans-serif;
+$headings-font-family:   $font-family-serif;
+$headings-font-weight:   700;
+$headings-color:         $teal;
+$font-size-root:         17px;
+$line-height-base:       1.62;
+
+$toc-color:              $teal;
+$toc-active-border:      $terracotta;
+
+// Code (used rarely here) kept quiet and on-brand.
+$code-color:             $teal;
+$code-bg:                rgba($teal, 0.05);
+
+/*-- scss:rules --*/
+// -------------------------------------------------------------------------
+// Reading canvas
+// -------------------------------------------------------------------------
+body {
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: 0.005em;
+}
+
+// Title block: Georgia title in teal, left-aligned; a terracotta ALL-CAPS
+// eyebrow rendered from the subtitle. No accent underline (house rule).
+.quarto-title-block {
+  .quarto-title .title {
+    font-family: $font-family-serif;
+    font-weight: 700;
+    color: $teal;
+    font-size: clamp(2rem, 4.4vw, 2.75rem);
+    line-height: 1.14;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.35rem;
+  }
+  // The subtitle becomes the terracotta eyebrow — small caps, tracked.
+  .quarto-title .subtitle {
+    font-family: $font-family-sans-serif;
+    font-weight: 700;
+    color: $terracotta;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 0.78rem;
+    margin-top: 0.9rem;
+  }
+  .quarto-title-meta {
+    color: $teal-70;
+    font-size: 0.9rem;
+  }
+  .quarto-title-authors, .author {
+    color: $teal;
+  }
+}
+
+// A single hairline under the whole title block — a divider, not an accent bar.
+#title-block-header {
+  border-bottom: 1px solid $rule;
+  padding-bottom: 1.4rem;
+  margin-bottom: 2.2rem;
+}
+
+// -------------------------------------------------------------------------
+// Headings — Georgia, sentence case, generous air above.
+// -------------------------------------------------------------------------
+h1, h2, h3, h4 {
+  font-family: $font-family-serif;
+  color: $teal;
+  letter-spacing: -0.005em;
+}
+h2 {
+  font-size: 1.6rem;
+  margin-top: 2.6rem;
+  padding-top: 0.2rem;
+  border-top: 1px solid $rule;   // structural divider between sections
+  padding-top: 1.2rem;
+}
+h3 {
+  font-size: 1.2rem;
+  margin-top: 1.8rem;
+  color: $teal;
+}
+// Section-number eyebrows are not meaningful here, so keep numbering off and
+// lean on the Georgia headings + hairlines to structure the read.
+
+p { max-width: 68ch; }
+.lead, p { color: $teal; }
+
+// Bold run-in labels (Objective. Methods. …) in the abstract read as teal.
+strong { color: $teal; }
+
+// -------------------------------------------------------------------------
+// Links — terracotta, underline on hover only (no permanent underlines under
+// titles; inline links may underline for affordance).
+// -------------------------------------------------------------------------
+a { text-decoration: none; border-bottom: 1px solid rgba($terracotta, 0.35); }
+a:hover { border-bottom-color: $terracotta; }
+h1 a, h2 a, h3 a, .toc a { border-bottom: none; }
+
+// -------------------------------------------------------------------------
+// Callout (the "interactive version" note) → a white surface card, no stripe.
+// -------------------------------------------------------------------------
+.callout.callout-style-simple, .callout {
+  background: $white;
+  border: 1px solid $rule;
+  border-left: 3px solid $terracotta;   // exactly one accent detail
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba($teal, 0.06);
+  color: $teal;
+}
+.callout .callout-body, .callout p { color: $teal; }
+
+// -------------------------------------------------------------------------
+// Figures on WHITE cards floating on cream — the page's signature. Plotly
+// needs a white plot ground, so we make that a deliberate chip/tile motif.
+// -------------------------------------------------------------------------
+#fig-detections, #fig-houston, #fig-sequencing, #supp-wastewater {
+  background: $white;
+  border: 1px solid $rule;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba($teal, 0.07);
+  padding: 1.1rem 1.1rem 0.6rem;
+  margin: 2rem 0;
+}
+// Nested cells (iframe + static image live inside a fig card) shouldn't double
+// the card treatment.
+:is(#fig-detections, #fig-houston, #fig-sequencing, #supp-wastewater) .cell,
+:is(#fig-detections, #fig-houston, #fig-sequencing, #supp-wastewater) figure.quarto-figure {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  margin: 0.4rem 0 0;
+}
+iframe { background: $white; border-radius: 8px; }
+img { max-width: 100%; height: auto; border-radius: 8px; }
+
+// Figure captions: bold lead in teal, running text a touch smaller. The
+// "Figure N." label carries a terracotta tint as the accent.
+figure figcaption, .figure-caption,
+:is(#fig-detections, #fig-houston, #fig-sequencing, #supp-wastewater) > p:last-of-type {
+  font-family: $font-family-sans-serif;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: $teal-70;
+  margin-top: 0.8rem;
+  max-width: none;
+}
+// The "Figure N." lead of each caption carries the single terracotta accent.
+:is(#fig-detections, #fig-houston, #fig-sequencing, #supp-wastewater) > p:last-of-type strong:first-child { color: $terracotta; }
+
+// -------------------------------------------------------------------------
+// Table of contents — quiet teal, terracotta active marker.
+// -------------------------------------------------------------------------
+#TOC, .toc-active { color: $teal; }
+#toc-title { font-family: $font-family-serif; color: $teal; }
+.sidebar nav[role="doc-toc"] ul > li > a {
+  color: $teal-70;
+  border-bottom: none;
+}
+.sidebar nav[role="doc-toc"] ul > li > a.active,
+.sidebar nav[role="doc-toc"] ul > li > a:hover {
+  color: $terracotta;
+  border-left: 2px solid $terracotta;
+}
+
+// -------------------------------------------------------------------------
+// Small screens: let the cream breathe, keep cards edge-comfortable.
+// -------------------------------------------------------------------------
+@media (max-width: 700px) {
+  $font-size-root: 16px;
+  .cell, div[id^="fig-"] { padding: 0.7rem; border-radius: 10px; }
+  h2 { font-size: 1.4rem; }
+}

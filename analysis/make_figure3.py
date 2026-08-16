@@ -26,9 +26,12 @@ Sources and metrics (one per panel), all filtered to weeks on/after 2025-08-01:
   * Houston -- Rice University / Houston Health Department dashboard
     (spatialstudieslab ArcGIS), 69th Street plant, the sewershed serving the
     downtown / Main Street hotel. Quantity: the published viral-load index
-    (vl_est; 100 = the July-2020 baseline). SARS-CoV-2 only at plant level; the
-    public per-plant feed ends 2026-06-22, before the team's 30 Jun-4 Jul stay,
-    so the visit window is drawn as an open/hatched band.
+    (vl_est; 100 = the July-2020 baseline). SARS-CoV-2 only at plant level. The
+    public per-plant feed now covers the team's 30 Jun-4 Jul stay (weekly points
+    of 11 for the week of 2026-06-29 and 7 for 2026-07-06, near the seasonal
+    low), refreshed 2026-08-15 from the WWTP_gdb feature service
+    (services.arcgis.com/lqRTrQp2HrfnJt8U, layer WWTP, field vl_est), which then
+    extended through 2026-07-27.
 
 Because each panel is on its own metric and scale, the y-axes are deliberately
 independent and unlabelled with absolute numbers -- reading across panels
@@ -71,8 +74,9 @@ VIRUS_COLOR = {"covN2": "#08306b",   # deep navy, matches the Fig 1-2 Ct ramp
                "fluB": "#9e4a5c",    # dusty wine
                "rsv": "#4c9a86"}     # soft teal-green
 
-# Team Canada sampling window per city (from cartridges_long.csv), plus the
-# Houston caveat that the public feed ends 2026-06-22.
+# Team Canada sampling window per city (from cartridges_long.csv). The Houston
+# 69th St feed now spans the visit window (refreshed 2026-08-15), so no gap
+# caveat is needed.
 VISIT = {
     "Montreal": ("2026-06-03", "2026-06-06"),
     "Toronto": ("2026-06-07", "2026-06-11"),

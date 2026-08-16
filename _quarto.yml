@@ -6,34 +6,43 @@ project:
 
 format:
   html:
-    theme: cosmo
+    # House style: cream canvas, deep-teal ink, terracotta accent, Georgia +
+    # Arial. theme-house.scss carries the full brand system.
+    theme: theme-house.scss
     toc: true
     toc-location: left
     toc-depth: 2
-    page-layout: full
+    page-layout: article
     embed-resources: false
     css: styles.css
     grid:
-      body-width: 900px
+      body-width: 820px
+      margin-width: 260px
     link-external-newwindow: true
   pdf:
+    # Submission PDF: WHITE background (journal requirement) with house-style
+    # font + layout (house-preamble.tex), rendered with tectonic so the system
+    # Georgia/Arial fonts resolve through fontspec/XeLaTeX.
     documentclass: article
+    pdf-engine: tectonic
     geometry:
       - margin=1in
     fontsize: 11pt
+    linestretch: 1.12
     colorlinks: true
     keep-tex: false
     # Figures are placed exactly where written (each is wrapped in explicit page
-    # breaks below), so keep them in-flow rather than floating.
+    # breaks in index.qmd), so keep them in-flow rather than floating.
     fig-pos: 'H'
     include-in-header:
-      text: |
-        % Page break before every major section. Quarto maps ## headings to
-        % \subsection in this class, so hook \subsection (not \section).
-        \usepackage{etoolbox}
-        \pretocmd{\subsection}{\clearpage}{}{}
-        % Bold the figure label ("Figure 3") in captions; titles are already bold.
-        \usepackage{caption}
-        \captionsetup{labelfont=bf}
-        % Honour [H] "here, definitely" float placement.
-        \usepackage{float}
+      # First the house look (fonts, teal headings, terracotta links, white bg,
+      # and the caption styling, which sets labelfont=bf itself)…
+      - file: house-preamble.tex
+      # …then the layout hooks carried over from the tracked build.
+      - text: |
+          % Page break before every major section. Quarto maps ## headings to
+          % \subsection in this class, so hook \subsection (not \section).
+          \usepackage{etoolbox}
+          \pretocmd{\subsection}{\clearpage}{}{}
+          % Honour [H] "here, definitely" float placement.
+          \usepackage{float}

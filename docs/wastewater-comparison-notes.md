@@ -21,7 +21,10 @@ Key mismatches:
   in the same units on every row → can be self-normalized (target ÷ marker).
 - **Houston's** public per-plant feed is a rescaled index (`vl_est`) and, for
   per-plant granularity, **SARS-CoV-2 only**; flu/RSV are citywide/school-level.
-- **Houston coverage ends 2026-06-22**, before the team's 6/30–7/4 stay.
+- **Houston coverage now spans the team's 6/30–7/4 stay** (refreshed 2026-08-15
+  from the WWTP_gdb feature service; the earlier pull had ended 2026-06-22).
+  New weekly `vl_est` points: 6/29 = 11, 7/6 = 7, 7/13 = 8, 7/20 = 6, 7/27 = 5 —
+  the visit falls at the seasonal low, matching the other four cities.
 
 So absolute levels are NOT directly comparable across all five cities. The only
 defensible comparison is **within-source, relative** (z-score / rank / % of
@@ -54,8 +57,9 @@ Metro Vancouver (6/14–6/24):
 LA/JWPCP (Torrance, 6/27–6/28) — SARS÷marker ×1e6:
   wk of 6/21 = 3.16, wk of 6/28 = 2.40. Non-zero SARS, flu/RSV ~0.
 
-Houston/69th St (downtown, through 6/22 only):
-  vl_est 11–17 on a 100=baseline scale → very low SARS; window ends before stay.
+Houston/69th St (downtown):
+  vl_est 11–17 through late June, then 11 (wk 6/29) and 7 (wk 7/6) bracketing the
+  6/30–7/4 stay on a 100=baseline scale → very low SARS across the visit.
 
 ## Did Canadian sites have lower virus levels than US sites?
 
