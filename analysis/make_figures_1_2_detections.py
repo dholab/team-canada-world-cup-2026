@@ -178,9 +178,11 @@ def build_interactive(df: pd.DataFrame, out: pathlib.Path) -> None:
               sub["end"].max() + pd.Timedelta(hours=6)]
         buttons.append(dict(
             label=city, method="update",
+            # No "title" key: the figure carries no in-plot title (the legend
+            # beneath it does), and setting one here would put it back on every
+            # city switch.
             args=[{"visible": vis},
-                  {"title": f"Sampling intervals and detections — {city}",
-                   "yaxis": {"tickmode": "array",
+                  {"yaxis": {"tickmode": "array",
                              "tickvals": list(range(len(rooms))),
                              "ticktext": rooms, "autorange": "reversed"},
                    "xaxis": {"range": [xr[0], xr[1]], "type": "date"}}]))

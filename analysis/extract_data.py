@@ -59,6 +59,23 @@ REMOVE = {
 # the authors have determined are invalid on external grounds.
 FORCE_INVALID = {"IB000010008416"}
 
+# FIX_WINDOW — cartridges whose sampling window is wrong in the dashboard export
+# and is corrected here from the LabKey cartridge metadata (deploy and removal
+# timestamps, which are recorded in UTC). Times below are local to the host city,
+# matching every other window in the dataset.
+#
+# IB000010006680 (Houston meal room): the export gives 03 Jul 16:03 -> 17:03, a
+# 1-hour window that overlaps the next cartridge (16:04 -> 04 Jul 06:19). One
+# sampler cannot run two cartridges at once, and this was the only overlap in
+# the study. The LabKey metadata records deploy 2026-07-03 12:37 UTC and removal
+# 2026-07-03 21:03 UTC = 07:37 -> 16:03 Houston time: the export had used the
+# REMOVAL time as the start and fabricated a 1-hour end. The corrected window
+# closes the 8.45 h gap after the preceding cartridge (ends 07:36) and ends
+# cleanly one minute before the overnight run begins.
+FIX_WINDOW = {
+    "IB000010006680": ("2026-07-03T07:37:00", "2026-07-03T16:03:00"),
+}
+
 # EXCLUDE_SAMPLERS — samplers left out of the dataset entirely.
 #
 # "Sabalenka" was run predominantly for norovirus (from Vancouver onward), which
@@ -158,16 +175,23 @@ def main() -> None:
                 continue
             meta = csv_rows.get((cart, target), {})
             ct = ct_value(meta.get("Average Result", ""))
-            dur_h = round((p["end"] - p["start"]) / 3_600_000, 2)
             spc_ct, status = spc_status(cart, spc.get(cart, ""),
                                         spc_avg.get(cart, ""))
+            # Sampling window, with the author-verified correction applied where
+            # the dashboard export disagrees with the LabKey cartridge metadata.
+            start, end = iso_local(p["start"]), iso_local(p["end"])
+            if cart in FIX_WINDOW:
+                start, end = FIX_WINDOW[cart]
+            dur_h = round(
+                (datetime.fromisoformat(end) - datetime.fromisoformat(start))
+                .total_seconds() / 3600, 2)
             out_rows.append({
                 "city": p["city"],
                 "room": f["roomType"],
                 "sampler": f["sampler"],
                 "cartridge": cart,
-                "start": iso_local(p["start"]),
-                "end": iso_local(p["end"]),
+                "start": start,
+                "end": end,
                 "dur_h": f"{dur_h:.2f}",
                 "virus": VIRUS[target],
                 "ct": ct,
