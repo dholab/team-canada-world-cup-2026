@@ -1,6 +1,4 @@
-# Air sampling in team congregate spaces for early detection of respiratory virus threats
-
-*Viral air sampling in team settings*
+# Air sampling in team congregate spaces for early detection of respiratory virus threats at the 2026 FIFA World Cup™
 
 David Simon, Timothy Locksmith, Nick Minor, Eli J. O'Connor, Shelby L. O'Connor†, David H. O'Connor† (corresponding: dhoconno@wisc.edu)
 

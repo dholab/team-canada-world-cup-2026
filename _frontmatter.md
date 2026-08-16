@@ -2,7 +2,7 @@
 
 **Authors**
 
-David Simon,¹ Timothy J. Locksmith,² Nick Minor,² Isla E. Emmen,² Nancy A Wilson,² Eli J. O’Connor², Shelby L. O'Connor, Ph.D.,&² David H. O'Connor, Ph.D.&²
+David Simon,¹ Timothy J. Locksmith,² Nicholas R. Minor,² Isla E. Emmen,² Nancy A Wilson,² Eli J. O’Connor², Shelby L. O'Connor, Ph.D.,&² David H. O'Connor, Ph.D.&²
 
 **Affiliations**
 
@@ -15,7 +15,7 @@ David Simon,¹ Timothy J. Locksmith,² Nick Minor,² Isla E. Emmen,² Nancy A Wi
 
 - David Simon: 0000-0003-0911-7152
 - Timothy J. Locksmith: 0009-0007-1112-6759
-- Nick Minor: 0000-0003-2929-8229
+- Nicholas Minor: 0000-0003-2929-8229
 - Eli J. O’Connor: 0009-0001-8795-8320
 - Isla E. Emmen: 0000-0002-4725-4935
 - Nancy A. Wilson: 0000-0002-9472-6026

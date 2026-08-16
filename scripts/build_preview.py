@@ -20,9 +20,27 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 PROSE = ROOT / "_prose.md"
 OUT = ROOT / "PREVIEW.md"
+TITLE_YML = ROOT / "_title.yml"
 
-TITLE = "Air sampling in team congregate spaces for early detection of respiratory virus threats"
-SUBTITLE = "Viral air sampling in team settings"
+
+def _read_title() -> tuple[str, str | None]:
+    """Title + optional subtitle from the Doc-synced _title.yml, so PREVIEW.md
+    carries no hard-coded title. Falls back to a placeholder if the file is
+    missing (e.g. before the first fetch)."""
+    title, subtitle = "Manuscript", None
+    if TITLE_YML.exists():
+        for line in TITLE_YML.read_text(encoding="utf-8").splitlines():
+            m = re.match(r'\s*(title|subtitle):\s*"(.*)"\s*$', line)
+            if m:
+                val = m.group(2).replace('\\"', '"').replace("\\\\", "\\")
+                if m.group(1) == "title":
+                    title = val
+                else:
+                    subtitle = val
+    return title, subtitle
+
+
+TITLE, SUBTITLE = _read_title()
 AUTHORS = (
     "David Simon, Timothy Locksmith, Nick Minor, Eli J. O'Connor, "
     "Shelby L. O'Connor†, David H. O'Connor† (corresponding: dhoconno@wisc.edu)"
@@ -148,9 +166,10 @@ def main() -> None:
         FIG_S1, "wastewater supplemental figure",
     )
 
+    subtitle_line = f"*{SUBTITLE}*\n\n" if SUBTITLE else ""
     doc = (
         f"# {TITLE}\n\n"
-        f"*{SUBTITLE}*\n\n"
+        f"{subtitle_line}"
         f"{AUTHORS}\n\n"
         f"† equal contribution\n\n"
         f"{BANNER}\n\n"

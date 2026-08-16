@@ -28,6 +28,16 @@ HERE = Path(__file__).resolve().parent
 OUT = HERE.parent / "_prose.md"
 LEGENDS_DIR = HERE.parent / "_legends"
 FRONTMATTER = HERE.parent / "_frontmatter.md"
+# Quarto metadata file carrying the Doc's title + running head, fed to the
+# render via `metadata-files` in _quarto.yml so index.qmd hard-codes neither.
+TITLE_YML = HERE.parent / "_title.yml"
+
+# The Doc's title is its single top-level "# " heading; the running head follows
+# as "**Short title / running head:** ...". Both are pulled so the title page
+# tracks the Doc rather than a hand-edited copy in index.qmd.
+DOC_TITLE = re.compile(r"^#\s+(?P<title>\S.*?)\s*$", re.M)
+DOC_RUNNING = re.compile(
+    r"^\*\*\s*Short title\s*/\s*running head:\s*\*\*\s*(?P<sub>.+?)\s*$", re.M | re.I)
 
 # Author front matter lives in its own Doc sections before the Abstract. We pull
 # Authors, Affiliations, ORCID iDs, and Corresponding author so the title-page
@@ -201,9 +211,38 @@ def write_frontmatter(md: str) -> None:
     print(f"wrote {FRONTMATTER} ({len(block)} bytes)")
 
 
+def _yaml_quote(s: str) -> str:
+    """Double-quote a scalar for YAML, escaping backslashes and quotes."""
+    return '"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"'
+
+
+def write_title(md: str) -> None:
+    """Pull the Doc's title (its single '# ' heading) and running head into a
+    Quarto metadata file, so index.qmd carries no hard-coded title/subtitle.
+    The Doc's markdown export escapes some characters (e.g. a literal '#'); undo
+    the ones that appear in titles."""
+    tm = DOC_TITLE.search(md)
+    if not tm:
+        raise SystemExit("Could not find the Doc's '# ' title heading.")
+    title = tm.group("title").replace("\\#", "#").replace("\\&", "&").strip()
+    lines = [
+        "# AUTO-GENERATED from the manuscript Google Doc by "
+        "scripts/fetch_prose.py. Do not edit by hand; edit the Doc.",
+        f"title: {_yaml_quote(title)}",
+    ]
+    sm = DOC_RUNNING.search(md)
+    if sm:
+        sub = sm.group("sub").replace("\\#", "#").replace("\\&", "&").strip()
+        lines.append(f"subtitle: {_yaml_quote(sub)}")
+    TITLE_YML.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    print(f"wrote {TITLE_YML}: title={title!r}"
+          + (f", subtitle={sub!r}" if sm else ""))
+
+
 def main() -> None:
     source = sys.argv[1] if len(sys.argv) > 1 else None
     raw = fetch(source)
+    write_title(raw)
     write_frontmatter(raw)
     write_legends(extract_legends(raw))
     md = normalize(raw)

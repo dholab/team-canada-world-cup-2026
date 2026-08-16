@@ -74,17 +74,12 @@ jobs:
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
-      # Stamp both outputs with a single build date (UTC) so the HTML and PDF
-      # agree, rather than each picking up its own "last modified" moment.
-      - name: Set build date
-        run: echo "BUILD_DATE=$(date -u +%Y-%m-%d)" >> "$GITHUB_ENV"
-
       - name: Render HTML site
-        run: quarto render --to html -M date="$BUILD_DATE"
+        run: quarto render --to html
 
       - name: Render submission PDF
         run: |
-          quarto render index.qmd --to pdf -M date="$BUILD_DATE"
+          quarto render index.qmd --to pdf
           # Quarto writes to the project output-dir (_site). Give the PDF the
           # public download name the in-page link expects.
           cp _site/index.pdf _site/team-canada-air-sampling.pdf
@@ -100,7 +95,7 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           # Track only the source-of-record outputs (fonts/, _site/ stay ignored).
-          git add -A -- _prose.md _frontmatter.md _legends PREVIEW.md \
+          git add -A -- _title.yml _prose.md _frontmatter.md _legends PREVIEW.md \
             analysis/figure1_static.png analysis/figure2_houston.png \
             analysis/figure3_wastewater.png analysis/figure3_sequencing.png \
             analysis/figure3_sequencing_transparent.png \

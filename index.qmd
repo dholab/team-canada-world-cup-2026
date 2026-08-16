@@ -1,7 +1,7 @@
 ---
-title: "Air sampling in team congregate spaces for early detection of respiratory virus threats"
-subtitle: "Viral air sampling in team settings"
-date: last-modified
+# title + subtitle come from the Doc via _title.yml (metadata-files in
+# _quarto.yml) — do not hard-code them here; edit the Google Doc.
+# No date: the Doc carries none, so the title page shows none.
 keywords:
   - respiratory infection
   - team sport

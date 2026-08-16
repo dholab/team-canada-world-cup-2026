@@ -4,6 +4,12 @@ project:
   render:
     - index.qmd
 
+# Title + subtitle come from the Google Doc, written to _title.yml by
+# scripts/fetch_prose.py. Kept out of index.qmd so nothing about the title is
+# hard-coded — edit the Doc.
+metadata-files:
+  - _title.yml
+
 format:
   html:
     # House style: cream canvas, deep-teal ink, terracotta accent, Georgia +
