@@ -23,26 +23,6 @@ document.addEventListener("DOMContentLoaded", function () {
     cap.insertBefore(span, node);
   });
 
-  // The Central Figure is not Quarto-numbered: its caption is one bold run that
-  // opens "Central Figure:". Split that label out so it takes the same
-  // terracotta accent as "Figure 1:" on the numbered figures.
-  var cf = document.querySelector("#central-figure-card");
-  if (cf) {
-    var lead = cf.querySelector("p:last-of-type > strong:first-child");
-    if (lead) {
-      var t = lead.firstChild;
-      if (t && t.nodeType === 3) {
-        var lm = t.nodeValue.match(/^(\s*Central Figure[:.]?)([\s\S]*)$/i);
-        if (lm) {
-          var ls = document.createElement("span");
-          ls.className = "fig-number";
-          ls.textContent = lm[1];
-          t.nodeValue = lm[2];
-          lead.insertBefore(ls, t);
-        }
-      }
-    }
-  }
 });
 
 // Open every outbound link in a new tab, so following a DOI or a dashboard does

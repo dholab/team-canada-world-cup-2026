@@ -10,6 +10,11 @@ project:
 metadata-files:
   - _title.yml
 
+# Colours the unnumbered figure labels (Central Figure, online supplemental
+# figure) in the PDF; HTML handles them via the .fig-number class directly.
+filters:
+  - fig-number.lua
+
 format:
   html:
     # House style: cream canvas, deep-teal ink, terracotta accent, Georgia +

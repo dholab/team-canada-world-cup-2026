@@ -94,3 +94,20 @@
    \hrule height 0.4pt\vskip 0.5\baselineskip}
   {\vskip 0.5\baselineskip\hrule height 0.4pt\end{list}%
    \par\addvspace{0.6\baselineskip}}
+
+% ---------------------------------------------------------------------------
+% Unnumbered figure captions (the Central Figure and the online supplemental
+% figure). Quarto numbers Figures 1-3 and \captionsetup above gives their
+% "Figure N." label the terracotta accent. These two are not Quarto-numbered:
+% their label is part of the caption text, so without this they rendered as
+% plain body paragraphs, in body size and with no accent. This matches them to
+% the numbered captions: same small teal caption font, with the leading label
+% ("Central Figure:" / "Online supplemental figure 1.") bold in terracotta.
+% ---------------------------------------------------------------------------
+% Pandoc renders a [text]{.fig-number} span as \fignumber{text} when the class
+% is declared here, which is how the label gets its accent in the PDF.
+\newcommand{\fignumber}[1]{{\bfseries\color{houseTerracotta}#1}}
+\newenvironment{unnumberedcaption}
+  {\par\addvspace{0.35\baselineskip}%
+   \begingroup\small\color{houseTeal!85!black}\RaggedRight}
+  {\endgroup\par\addvspace{0.6\baselineskip}}

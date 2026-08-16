@@ -43,7 +43,13 @@
 ![](analysis/central_figure/central_figure.png){fig-alt="Central figure: study workflow, detection timeline across the five host cities, and possible response actions."}
 :::
 
+```{=latex}
+\begin{unnumberedcaption}
+```
 {{< include _legends/central.md >}}
+```{=latex}
+\end{unnumberedcaption}
+```
 
 :::
 
@@ -106,7 +112,13 @@ quantity that source reports (`pmmov_index`, `fecal_normalized`,
 ![](analysis/figures/supplement1_wastewater.png){fig-alt="Community wastewater surveillance context by host city." height="7.8in"}
 :::
 
+```{=latex}
+\begin{unnumberedcaption}
+```
 {{< include _legends/supp1.md >}}
+```{=latex}
+\end{unnumberedcaption}
+```
 
 :::
 

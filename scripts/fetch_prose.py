@@ -350,9 +350,28 @@ def extract_references(md: str) -> list[tuple[int, str]]:
     return refs
 
 
+# The two unnumbered legends open with their own label inside the caption's bold
+# run ("**Central Figure: ...**", "**Online supplemental figure 1. ...**").
+# Quarto numbers Figures 1-3 and styles their "Figure N." label itself; these
+# two have no such label to style, so the label is wrapped in a span that both
+# outputs can colour — .fig-number in the theme, \figlabel in the PDF preamble.
+UNNUMBERED_LABEL = re.compile(
+    r"^\*\*\s*(?P<label>Central Figure\s*[:.]|Online supplemental figure\s+\d+\s*[.:])")
+
+
+def mark_unnumbered_label(caption: str) -> str:
+    m = UNNUMBERED_LABEL.match(caption)
+    if not m:
+        return caption
+    label = m.group("label").strip()
+    return (f'**[{label}]{{.fig-number}}' + caption[m.end():])
+
+
 def write_legends(legends: dict[str, str]) -> None:
     LEGENDS_DIR.mkdir(exist_ok=True)
     for key, caption in legends.items():
+        if key in ("central",) or key.startswith("supp"):
+            caption = mark_unnumbered_label(caption)
         (LEGENDS_DIR / f"{key}.md").write_text(BANNER + caption + "\n",
                                                encoding="utf-8")
     print(f"wrote {len(legends)} legends to {LEGENDS_DIR}: "

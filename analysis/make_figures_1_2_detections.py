@@ -53,7 +53,8 @@ GRID = "#f2f2f2"
 # white ground, which the submission PDF requires.
 CREAM = "#F8F4E9"
 TEAL = "#163139"          # house ink, for interactive labels
-TERRA = "#C16A3C"         # house accent, for the selector label
+TERRA = "#C16A3C"         # house accent
+RULE = "#dcd3c2"          # hairline, used for hover-label borders
 
 # Ct colour scale: light blue (high Ct = little virus) -> deep blue (low Ct).
 # Reversed so LOW Ct maps to the DEEP end.
@@ -85,140 +86,124 @@ def load() -> pd.DataFrame:
 # Interactive: one bar per cartridge = its real start->end sampling interval    #
 # --------------------------------------------------------------------------- #
 def build_interactive(df: pd.DataFrame, out: pathlib.Path) -> None:
-    # collapse the four virus rows to one row per cartridge; carry the detection
-    # summary and the strongest Ct so each interval is one bar per room.
-    cart = (df.sort_values(["cartridge", "virus"])
-              .groupby(["city", "room", "sampler", "cartridge", "start", "end"],
-                       observed=True)
-              .apply(lambda g: pd.Series({
-                  "dur_h": g["dur_h"].iloc[0],
-                  "spc": g["spc"].iloc[0],
-                  "status": g["status"].iloc[0],
-                  "n_det": int(g["detected"].sum()),
-                  "min_ct": g.loc[g["detected"] == 1, "ct"].min()
-                            if g["detected"].sum() else np.nan,
-                  "results": "<br>".join(
-                      f"{r.virus}: " + (f"Ct {r.ct:.1f} ({r.qual})"
-                                        if r.detected else "not detected")
-                      for r in g.itertuples()),
-              }), include_groups=False)
-              .reset_index())
+    """Interactive Figure 1 — the same chart as the static/PDF version.
+
+    Rows are the four target viruses, all five cities on one continuous
+    local-time axis, rooms merged per session. This mirrors build_static
+    deliberately: the figure legend describes virus rows on a single axis, so an
+    interactive version showing rooms for one city at a time contradicted its
+    own caption. What the interactive adds is hover — the per-room detail the
+    print figure has to leave out.
+    """
+    src = _assign_sessions(df.copy())
+    src["invalid"] = (src["status"].astype(str).str.strip()
+                      .str.lower().eq("invalid"))
+
+    # One row per merged cell (city x session x virus), carrying both the print
+    # figure's encoding and the per-room breakdown for the hover.
+    records = []
+    for (city, session, virus), g in src.groupby(
+            ["city", "session", "virus"], observed=True):
+        n_det = int(g["detected"].sum())
+        n_validneg = int(((g["detected"] == 0) & (~g["invalid"])).sum())
+        if n_det:
+            status, ct = "det", float(g.loc[g["detected"] == 1, "ct"].min())
+        elif n_validneg:
+            status, ct = "neg", float("nan")
+        else:
+            status, ct = "inv", float("nan")
+        rooms = []
+        for r in g.sort_values("room").itertuples():
+            if r.detected:
+                rooms.append(f"{r.room}: Ct {r.ct:.1f} ({r.qual})")
+            elif r.invalid:
+                rooms.append(f"{r.room}: invalid run (SPC {r.spc})")
+            else:
+                rooms.append(f"{r.room}: not detected")
+        records.append(dict(city=city, virus=str(virus), status=status, ct=ct,
+                            start=g["start"].min(), end=g["end"].max(),
+                            hover="<br>".join(rooms)))
+    cells = pd.DataFrame(records)
+
+    yorder = list(reversed(VIRUS_ORDER))          # RSV at the bottom, as in print
+    ypos = {v: i for i, v in enumerate(yorder)}
+    ct_scale = [[0.0, "#08306b"], [0.33, "#4292c6"],
+                [0.66, "#c6dbef"], [1.0, "#f2f8fd"]]
 
     fig = go.Figure()
-    city_traces: dict[str, list[int]] = {}
 
-    for ci, city in enumerate(CITY_ORDER):
-        sub = cart[cart["city"] == city]
-        if sub.empty:
-            continue
-        rooms = [r for r in ROOM_ORDER if r in sub["room"].unique()]
-        ypos = {room: i for i, room in enumerate(rooms)}
+    def add(group, marker):
+        if group.empty:
+            return
+        custom = np.stack([
+            group["city"], group["virus"],
+            group["start"].dt.strftime("%d %b %H:%M"),
+            group["end"].dt.strftime("%d %b %H:%M"),
+            group["hover"]], axis=-1)
+        fig.add_trace(go.Bar(
+            base=group["start"],
+            x=(group["end"] - group["start"]).dt.total_seconds() * 1000,
+            y=group["virus"].map(ypos), orientation="h",
+            width=0.78, marker=marker, showlegend=False, customdata=custom,
+            hovertemplate=("<b>%{customdata[1]}</b> — %{customdata[0]}<br>"
+                           "%{customdata[2]} &#8594; %{customdata[3]}"
+                           "<br>%{customdata[4]}<extra></extra>"),
+            hoverlabel=dict(bgcolor="white", bordercolor=RULE,
+                            font=dict(family="Arial", size=12, color=TEAL))))
 
-        idxs = []
-        # split into: detections, valid negatives (white), invalid runs (grey)
-        is_invalid = sub["status"].astype(str).str.strip().str.lower().eq("invalid")
-        det = sub[sub["n_det"] > 0]
-        neg = sub[(sub["n_det"] == 0) & (~is_invalid)]
-        inv = sub[(sub["n_det"] == 0) & (is_invalid)]
+    # Draw order matches the static figure: negatives, then invalids, then
+    # detections on top.
+    add(cells[cells.status == "neg"],
+        dict(color=NEG_COLOR, line=dict(color=NEG_EDGE, width=0.6)))
+    add(cells[cells.status == "inv"],
+        dict(color=INVALID_COLOR, line=dict(color=NEG_EDGE, width=0.5)))
+    det = cells[cells.status == "det"]
+    add(det, dict(color=det["ct"], colorscale=ct_scale, cmin=CT_MIN, cmax=CT_MAX,
+                  line=dict(color=NEG_EDGE, width=0.5),
+                  colorbar=dict(title=dict(text="Ct value<br>(lower =<br>more virus)",
+                                           font=dict(family="Arial", size=11,
+                                                     color=TEAL)),
+                                tickfont=dict(family="Arial", size=10, color=TEAL),
+                                x=1.005, len=0.92, thickness=14)))
 
-        # blue Ct scale (low Ct = deep blue), matching the static figure
-        ct_scale = [[0.0, "#08306b"], [0.33, "#4292c6"],
-                    [0.66, "#c6dbef"], [1.0, "#f2f8fd"]]
+    # City labels above the plot, at each city's midpoint, as in the static figure.
+    per_cart = (df.groupby("cartridge", observed=True)
+                  .agg(city=("city", "first"), start=("start", "first"),
+                       end=("end", "first")).reset_index())
+    ann = []
+    for city in [c for c in CITY_ORDER if c in set(per_cart["city"])]:
+        sub = per_cart[per_cart.city == city]
+        mid = sub["start"].min() + (sub["end"].max() - sub["start"].min()) / 2
+        # Los Angeles and Houston sit close together at the end of the
+        # tournament and their labels collide at page width, so alternate the
+        # last two onto two baselines.
+        y = 1.02 if city not in ("Los Angeles",) else 1.13
+        ann.append(dict(x=mid, y=y, xref="x", yref="paper",
+                        text=f"<b>{city}</b>", showarrow=False,
+                        xanchor="center", yanchor="bottom",
+                        font=dict(family="Arial", size=11, color=TEAL)))
 
-        for grp, kind in ((det, "det"), (neg, "neg"), (inv, "inv")):
-            if grp.empty:
-                fig.add_trace(go.Bar(x=[], y=[], visible=(ci == 0),
-                                     showlegend=False))
-                idxs.append(len(fig.data) - 1)
-                continue
-            base = grp["start"]
-            width_ms = (grp["end"] - grp["start"]).dt.total_seconds() * 1000
-            yy = grp["room"].map(ypos)
-            if kind == "det":
-                marker = dict(color=grp["min_ct"], colorscale=ct_scale,
-                              cmin=CT_MIN, cmax=CT_MAX,
-                              line=dict(color="white", width=1),
-                              colorbar=dict(title="Ct<br>(lower=<br>more virus)",
-                                            x=1.02, len=0.55))
-            elif kind == "neg":
-                marker = dict(color="#ffffff",
-                              line=dict(color="#c8c8c8", width=0.6))
-            else:  # invalid
-                marker = dict(color=INVALID_COLOR,
-                              line=dict(color="white", width=0.5))
-            custom = np.stack([
-                grp["room"], grp["sampler"],
-                grp["start"].dt.strftime("%d %b %H:%M"),
-                grp["end"].dt.strftime("%d %b %H:%M"),
-                grp["dur_h"].astype(str), grp["results"], grp["spc"]], axis=-1)
-            fig.add_trace(go.Bar(
-                base=base, x=width_ms, y=yy, orientation="h",
-                width=0.7, marker=marker, visible=(ci == 0), showlegend=False,
-                customdata=custom,
-                hovertemplate=(
-                    "<b>%{customdata[0]}</b>  (sampler %{customdata[1]})<br>"
-                    "%{customdata[2]} &#8594; %{customdata[3]}"
-                    "  (%{customdata[4]} h)<br>%{customdata[5]}"
-                    "<br><i>SPC: %{customdata[6]}</i><extra></extra>"),
-            ))
-            idxs.append(len(fig.data) - 1)
-        city_traces[city] = idxs
-
-    # dropdown: pick host city, updating visibility + y ticks + x range + title
-    buttons = []
-    for city in CITY_ORDER:
-        if city not in city_traces:
-            continue
-        vis = [False] * len(fig.data)
-        for k in city_traces[city]:
-            vis[k] = True
-        sub = cart[cart["city"] == city]
-        rooms = [r for r in ROOM_ORDER if r in sub["room"].unique()]
-        xr = [sub["start"].min() - pd.Timedelta(hours=6),
-              sub["end"].max() + pd.Timedelta(hours=6)]
-        buttons.append(dict(
-            label=city, method="update",
-            # No "title" key: the figure carries no in-plot title (the legend
-            # beneath it does), and setting one here would put it back on every
-            # city switch.
-            args=[{"visible": vis},
-                  {"yaxis": {"tickmode": "array",
-                             "tickvals": list(range(len(rooms))),
-                             "ticktext": rooms, "autorange": "reversed"},
-                   "xaxis": {"range": [xr[0], xr[1]], "type": "date"}}]))
-
-    first = CITY_ORDER[0]
-    s0 = cart[cart["city"] == first]
-    rooms0 = [r for r in ROOM_ORDER if r in s0["room"].unique()]
     fig.update_layout(
-        # No in-plot title: the figure legend beneath the figure already carries
-        # "Figure 1. ..." and a second title inside the plot duplicates it.
-        template="simple_white", height=446, autosize=True,
+        # No in-plot title: the legend beneath the figure carries "Figure 1. ...".
+        template="simple_white", height=352, autosize=True,
         paper_bgcolor=CREAM, plot_bgcolor=CREAM,
         font=dict(family="Arial", color=TEAL),
-        barmode="overlay", bargap=0.35,
-        margin=dict(l=130, r=30, t=78, b=50),
-        yaxis=dict(tickmode="array", tickvals=list(range(len(rooms0))),
-                   ticktext=rooms0, autorange="reversed", showgrid=False),
+        barmode="overlay", bargap=0.18,
+        margin=dict(l=110, r=95, t=64, b=52),
+        yaxis=dict(tickmode="array", tickvals=list(range(len(yorder))),
+                   ticktext=yorder, showgrid=False, zeroline=False,
+                   tickfont=dict(family="Arial", size=12, color=TEAL)),
         xaxis=dict(type="date", showgrid=True, gridcolor=GRID,
-                   range=[s0["start"].min() - pd.Timedelta(hours=6),
-                          s0["end"].max() + pd.Timedelta(hours=6)]),
-        # The label sits ABOVE the dropdown rather than beside it: the control
-        # grows with the selected city's name ("Los Angeles"), and a side label
-        # gets overrun by the wider ones.
-        updatemenus=[dict(buttons=buttons, direction="down", showactive=True,
-                          x=0.0, xanchor="left", y=1.10, yanchor="top")],
-        annotations=[dict(text="HOST CITY", x=0.0, y=1.20, xref="paper",
-                          yref="paper", showarrow=False, xanchor="left",
-                          font=dict(family="Arial", size=10, color=TERRA))])
+                   range=[df["start"].min() - pd.Timedelta(hours=12),
+                          df["end"].max() + pd.Timedelta(hours=12)],
+                   tickformat="%d %b",
+                   tickfont=dict(family="Arial", size=11, color=TEAL)),
+        annotations=ann)
     fig.write_html(out, include_plotlyjs="cdn", full_html=True,
                    config={"displayModeBar": False, "responsive": True})
     print(f"wrote {out}")
 
 
-# --------------------------------------------------------------------------- #
-# Static: rooms merged, continuous real-time axis so gaps are visible          #
-# --------------------------------------------------------------------------- #
 def _draw_box(ax, r, y_center, row_h):
     """Draw one cartridge x virus rectangle. Identical geometry/stroke for every
     category so negatives, invalids, and detections are the same size and edge;
