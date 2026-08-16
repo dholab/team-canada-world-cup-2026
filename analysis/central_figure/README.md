@@ -6,9 +6,9 @@ Adobe Illustrator.
 ## `central_figure.png`
 
 `central_figure.png` is a trimmed raster export of the Central figure, embedded
-at the top of the manuscript in both `index.qmd` (interactive site) and
-`PREVIEW.md`. The Central figure combines the sampling workflow, the detection
-timeline, and the response-action icons.
+at the top of the manuscript by `index.qmd` (both the interactive site and the
+submission PDF). The Central figure combines the sampling workflow, the
+detection timeline, and the response-action icons.
 
 The editable Illustrator master (`central figure.ai`) is **not kept in this
 repo**. Non-programmatic assets live in the manuscript's Google Drive folder
