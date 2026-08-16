@@ -84,7 +84,7 @@ jobs:
       - name: Render submission PDFs (journal + preprint)
         # Two PDFs from one source, differing only in the preprint pointer:
         #   team-canada-air-sampling.pdf          -> BJSM journal submission
-        #   team-canada-air-sampling-preprint.pdf -> bioRxiv preprint
+        #   team-canada-air-sampling-preprint.pdf -> medRxiv preprint
         # tectonic fetches LaTeX packages on demand, which occasionally hits a
         # transient network failure (e.g. fontspec.sty). Retry a few times;
         # successfully-fetched packages are cached, so a retry finishes the rest.

@@ -6,7 +6,7 @@
 
 <!-- The Doc's "Preprint only" note points readers at the interactive site. It
      sits directly under the title, and appears on the site and in the
-     bioRxiv/preprint PDF but NOT in the journal submission PDF. The preprint
+     medRxiv/preprint PDF but NOT in the journal submission PDF. The preprint
      PDF is built with `-M preprint:true`; see _quarto.yml. -->
 ::: {.content-visible when-format="html"}
 ::: {.callout-note appearance="simple"}

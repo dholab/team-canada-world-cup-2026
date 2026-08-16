@@ -60,7 +60,7 @@ DOC_RUNNING = re.compile(
 FRONTMATTER_SECTIONS = ["Authors", "Affiliations", "ORCID iDs", "Corresponding author"]
 
 # The Doc's "Preprint only" section points readers at the interactive site. It
-# belongs in the bioRxiv/preprint PDF and on the site, but NOT in the journal
+# belongs in the medRxiv/preprint PDF and on the site, but NOT in the journal
 # submission PDF, so it is written to its own file and included conditionally
 # rather than folded into _frontmatter.md.
 PREPRINT_NOTE = HERE.parent / "_preprint_note.md"

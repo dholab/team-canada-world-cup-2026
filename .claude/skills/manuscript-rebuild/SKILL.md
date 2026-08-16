@@ -5,7 +5,7 @@ description: Use when the Google Doc, the data, or a figure script changed and t
 
 # Rebuilding the manuscript and its artifacts
 
-Every deliverable here — the bioRxiv PDF, the BJSM submission PDF, the GitHub
+Every deliverable here — the medRxiv PDF, the BJSM submission PDF, the GitHub
 Pages site — is generated. The Google Doc is canonical for all manuscript text;
 `analysis/data/*.csv` is canonical for all figures. You never edit prose, legends,
 references, keywords, or author names in this repo. You regenerate them.
