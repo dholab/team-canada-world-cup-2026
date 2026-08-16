@@ -13,8 +13,12 @@ filters, 15 carried detectable respiratory-virus genetic material.
 
 | | |
 | --- | --- |
-| **Interactive version** | GitHub Pages site, with every figure explorable |
-| **Submission PDF** | [`docs/team-canada-air-sampling.pdf`](docs/team-canada-air-sampling.pdf) — rebuilt and committed by CI |
+| **Interactive version** (recommended) | <https://dholab.github.io/team-canada-world-cup-2026/> — every figure explorable |
+| **Journal submission PDF** | [`docs/team-canada-air-sampling.pdf`](docs/team-canada-air-sampling.pdf) — the BJSM build |
+| **Preprint PDF** | [`docs/team-canada-air-sampling-preprint.pdf`](docs/team-canada-air-sampling-preprint.pdf) — the bioRxiv build, identical but for a pointer to the interactive version |
+
+Both PDFs are rebuilt and committed by CI from the same source; they differ only
+in that one-line preprint pointer.
 
 ## The data
 
@@ -78,6 +82,12 @@ cd analysis && uv sync \
   && uv run python make_figures_1_2_detections.py \
   && uv run python make_figure_3_sequencing.py \
   && uv run python make_supplement_1_wastewater.py && cd ..
+uv run --with pillow python analysis/central_figure/recolor_background.py
 uv run --with fonttools python scripts/build_house_fonts.py  # Gelasio (→ fonts/)
-quarto render                                      # → _site/ (HTML + PDF)
+quarto render                                      # → _site/ (HTML + journal PDF)
+quarto render index.qmd --to pdf -M preprint:true  # → the preprint PDF
 ```
+
+The two PDFs come from one source. `--to pdf` builds the journal submission;
+adding `-M preprint:true` builds the bioRxiv version, which is identical except
+for the Doc's "Preprint only" pointer under the title.

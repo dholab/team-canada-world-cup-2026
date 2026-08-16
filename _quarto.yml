@@ -22,12 +22,24 @@ format:
     embed-resources: false
     css: styles.css
     # Wraps the bare "Figure N:" text node in each caption so the house accent
-    # can be applied to it (CSS cannot target a bare text node).
-    include-after-body: fig-number.html
+    # can be applied to it (CSS cannot target a bare text node), and opens every
+    # outbound link in a new tab.
+    include-after-body: site-enhance.html
     grid:
       body-width: 820px
       margin-width: 260px
     link-external-newwindow: true
+  # Two PDFs are built from this one format:
+  #
+  #   quarto render index.qmd --to pdf
+  #       -> the JOURNAL (BJSM) submission. No preprint pointer.
+  #   quarto render index.qmd --to pdf -M preprint:true
+  #       -> the bioRxiv/preprint version, identical except that it carries the
+  #          Doc's "Preprint only" note under the title.
+  #
+  # index.qmd shows that note only when the `preprint` metadata flag is set, so
+  # the two builds share every layout setting and cannot drift apart. CI builds
+  # both; see .github/workflows/render.yml.
   pdf:
     # Submission PDF: WHITE background (journal requirement) with house-style
     # font + layout (house-preamble.tex), rendered with tectonic so the system

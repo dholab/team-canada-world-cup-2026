@@ -59,6 +59,12 @@ DOC_RUNNING = re.compile(
 # working notes and are intentionally skipped).
 FRONTMATTER_SECTIONS = ["Authors", "Affiliations", "ORCID iDs", "Corresponding author"]
 
+# The Doc's "Preprint only" section points readers at the interactive site. It
+# belongs in the bioRxiv/preprint PDF and on the site, but NOT in the journal
+# submission PDF, so it is written to its own file and included conditionally
+# rather than folded into _frontmatter.md.
+PREPRINT_NOTE = HERE.parent / "_preprint_note.md"
+
 # The figure legends live in their own Doc sections, after References. Each is a
 # bold-led paragraph "**Figure N. Title.** body...". We pull them so the
 # manuscript's captions come from the Doc, not from hand-edited copies. Quarto
@@ -139,10 +145,13 @@ def normalize(md: str, cite_urls: dict[int, str] | None = None) -> str:
 # a reader meets the figure where it is discussed instead of finding all of them
 # stacked at the end. The anchor is a distinctive phrase from that paragraph;
 # the figure markup itself lives in the hand-editable _figN.md partials.
+# Anchors are matched as regexes and deliberately avoid any count or Ct value:
+# those change whenever the data is re-extracted, and an anchor that embeds one
+# breaks the build on every such edit.
 FIGURE_ANCHORS = [
-    ("summarized in Figure 1", "_fig1.md"),
-    ("Houston accounted for 8 of the 15 detections", "_fig2.md"),
-    ("Metagenomic sequencing of air samples", "_fig3.md"),
+    (r"summarized in Figure 1", "_fig1.md"),
+    (r"Houston accounted for .{0,20}detections", "_fig2.md"),
+    (r"Metagenomic sequencing of air samples", "_fig3.md"),
 ]
 
 
@@ -153,8 +162,9 @@ def place_figures(body: str) -> str:
     from the manuscript entirely, which is far worse than a loud failure."""
     paras = body.split("\n\n")
     for anchor, partial in FIGURE_ANCHORS:
+        pat = re.compile(anchor)
         for i, para in enumerate(paras):
-            if anchor in para:
+            if pat.search(para):
                 paras.insert(i + 1, "{{< include " + partial + " >}}")
                 break
         else:
@@ -435,6 +445,19 @@ def extract_frontmatter(md: str) -> str:
     return "\n\n".join(parts)
 
 
+def write_preprint_note(md: str) -> None:
+    """Write the Doc's 'Preprint only' section to its own file.
+
+    Absent from the Doc, an empty file is written so the include in index.qmd
+    still resolves — a missing include is a hard Quarto error."""
+    body = _section_body(md, "Preprint only") or ""
+    if body:
+        body = body.replace("\\[", "[").replace("\\]", "]")
+    PREPRINT_NOTE.write_text(BANNER + body + "\n", encoding="utf-8")
+    print(f"wrote {PREPRINT_NOTE} ({len(body)} bytes)"
+          + ("" if body else " — no 'Preprint only' section in the Doc"))
+
+
 def write_frontmatter(md: str) -> None:
     block = extract_frontmatter(md)
     FRONTMATTER.write_text(BANNER + block + "\n", encoding="utf-8")
@@ -478,6 +501,7 @@ def main() -> None:
     raw = fetch(source)
     write_title(raw)
     write_frontmatter(raw)
+    write_preprint_note(raw)
     write_legends(extract_legends(raw))
     write_references(raw)
     # Inline citation markers link straight to each source, so the rendered

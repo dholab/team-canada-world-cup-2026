@@ -123,3 +123,29 @@ def test_supplement_drops_the_online_methods_heading(doc_md):
     supp = fetch_prose.extract_supplement(doc_md)
     assert "Online supplemental methods" not in supp
     assert "### Community wastewater comparison" in supp
+
+
+def test_preprint_note_is_extracted(doc_md):
+    note = fetch_prose._section_body(doc_md, "Preprint only")
+    assert note and "dholab.github.io" in note
+
+
+def test_preprint_note_is_not_in_the_shared_frontmatter(doc_md):
+    # The note belongs to the preprint PDF and the site only, so it must not be
+    # folded into _frontmatter.md, which both PDFs include.
+    fm = fetch_prose.extract_frontmatter(doc_md)
+    assert "recommended way to view" not in fm
+
+
+def test_figure_anchors_survive_a_recount(doc_md):
+    """Anchors must not embed a detection count.
+
+    "Houston accounted for 8 of the 15 detections" broke the build the moment
+    the dataset was re-extracted. Simulate a recount and confirm every figure
+    still places."""
+    body = fetch_prose.normalize(doc_md)
+    recounted = (body.replace("7 of the 13", "5 of the 11")
+                     .replace("13 filters", "11 filters"))
+    placed = fetch_prose.place_figures(recounted)
+    for _, partial in fetch_prose.FIGURE_ANCHORS:
+        assert "{{< include " + partial + " >}}" in placed

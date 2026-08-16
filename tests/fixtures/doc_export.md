@@ -2,7 +2,7 @@
 
 ### Authors
 
-David Simon,¹ Timothy J. Locksmith², Nicholas R. Minor², Isla E. Emmen², Nancy A. Wilson², Eli J. O’Connor², Shelby L. O'Connor, Ph.D&², David H. O'Connor, Ph.D.&²
+David Simon,¹ Timothy J. Locksmith², Nicholas R. Minor², Isla E. Emmen², Nancy A. Wilson², Eli J. O’Connor², Shelby L. O'Connor&², David H. O'Connor&²
 
 ### Affiliations
 
@@ -11,16 +11,20 @@ David Simon,¹ Timothy J. Locksmith², Nicholas R. Minor², Isla E. Emmen², Nan
 
 & denotes equal contribution
 
+### Preprint only
+
+The recommended way to view this preprint is at [https://dholab.github.io/team-canada-world-cup-2026/](https://dholab.github.io/team-canada-world-cup-2026/). The online version includes interactive figures and improves the reading experience.
+
 ### ORCID iDs
 
-- David Simon: 0000-0003-0911-7152  
-- Timothy J. Locksmith: 0009-0007-1112-6759  
-- Nicholas Minor: 0000-0003-2929-8229  
-- Eli J. O’Connor: 0009-0001-8795-8320  
-- Isla E. Emmen: 0000-0002-4725-4935  
-- Nancy A. Wilson: 0000-0002-9472-6026  
-- Shelby L. O'Connor: 0000-0003-0183-5010  
-- David H. O'Connor: 0000-0003-2139-470X
+- David Simon: [0000-0003-0911-7152](https://orcid.org/0000-0003-0911-7152)  
+- Timothy J. Locksmith: [0009-0007-1112-6759](https://orcid.org/0009-0007-1112-6759)  
+- Nicholas Minor: [0000-0003-2929-8229](https://orcid.org/0000-0003-2929-8229)  
+- Eli J. O’Connor: [0009-0001-8795-8320](https://orcid.org/0009-0001-8795-8320)  
+- Isla E. Emmen: [0000-0002-4725-4935](https://orcid.org/0000-0002-4725-4935)  
+- Nancy A. Wilson: [0000-0002-9472-6026](https://orcid.org/0000-0002-9472-6026)  
+- Shelby L. O'Connor: [0000-0003-0183-5010](https://orcid.org/0000-0003-0183-5010)  
+- David H. O'Connor: [0000-0003-2139-470X](https://orcid.org/0000-0003-2139-470X)
 
 ### Twitter/X handles
 
@@ -40,7 +44,7 @@ Respiratory infection, team sport, athlete health, public health
 
 **Methods**. We performed a prospective, descriptive environmental-surveillance study following the Canadian men's national soccer team across five host cities during the 2026 FIFA World Cup™ (3 June to 4 July 2026). InBio Apollo bioaerosol samplers ran continuously in up to four team-designated rooms per hotel (physiotherapy, meal, equipment, and coaches' room or hallway). Filters were changed approximately twice daily, eluted on-site, and tested with the Cepheid Xpert® Xpress SARS-CoV-2/Flu/RSVplus assay. A sample was considered positive if any cycle-threshold (Ct) value was reported, as less than 45, for a target.
 
-**Results**. Of 176 air filters, there were 15 detections of virus genetic material (11 SARS-CoV-2, 3 influenza A virus, 1 influenza B virus, 0 RSV). Detections were sparse early and clustered late in the tournament. An influenza A signal appeared the morning a player was sent home febrile, and SARS-CoV-2 signals coincided with visibly ill hotel staff, with signals falling after ill staff were excluded.
+**Results**. Of 174 air filters, there were 13 detections of virus genetic material (9 SARS-CoV-2, 3 influenza A virus, 1 influenza B virus, 0 RSV). Detections were sparse early and clustered late in the tournament. An influenza A signal appeared the morning a player was sent home febrile, and SARS-CoV-2 signals coincided with visibly ill hotel staff, with signals falling after ill staff were excluded.
 
 **Conclusion**. Air sampling with point-of-care testing is feasible in the mobile environment of an elite team and can surface behavior-independent viral signals during competition that may offer opportunities for earlier precautionary actions.
 
@@ -110,7 +114,7 @@ All processing was performed on-site in a hotel room. For each cassette, the fil
 
 ### Molecular testing
 
-Eluates were tested on the Cepheid GeneXpert® platform using the Xpert® Xpress SARS-CoV-2/Flu/RSV plus assay, a cartridge-based multiplex real-time RT-PCR that detects SARS-CoV-2, influenza A, influenza B, and respiratory syncytial virus. Each cartridge was run according to the manufacturer's instructions.
+Eluates were tested on the Cepheid GeneXpert® platform using the Xpert® Xpress SARS-CoV-2/Flu/RSVplus assay, a cartridge-based multiplex real-time RT-PCR that detects SARS-CoV-2, influenza A, influenza B, and respiratory syncytial virus. Each cartridge was run according to the manufacturer's instructions.
 
 ### Definition of a positive detection
 
@@ -134,15 +138,15 @@ Analyses were primarily descriptive, and reporting follows the CHAMP statement [
 
 ### Sampling overview
 
-Over 32 days (June 3 to July 4, 2026), we collected and tested 182 air-sample filters for SARS-CoV-2, influenza A (IAV), influenza B (IBV), and RSV across five host cities: Montreal (n \= 20), Toronto (n \= 36), Vancouver (n \= 79), Los Angeles (n \= 11), and Houston (n \= 36). Six filters (3 in Vancouver, 1 in Los Angeles, and 2 in Houston) were excluded from analysis because of invalid Cepheid GeneXpert tests. The remaining 176 filters were used for all analyses. Sampling covered four team spaces per hotel in Montreal, Toronto, and Vancouver (physiotherapy/treatment room, meal room, equipment/kit room, coaches' meeting room), three in Los Angeles (no coaches' room), and four in Houston (the coaches' room replaced by a team-occupied hallway). Sampling was briefly interrupted when teams and staffing equipment moved between each city.
+Over 32 days (June 3 to July 4, 2026), we collected and tested 179 air-sample filters for SARS-CoV-2, influenza A (IAV), influenza B (IBV), and RSV across five host cities: Montreal (n \= 20), Toronto (n \= 36), Vancouver (n \= 79), Los Angeles (n \= 9), and Houston (n \= 35). Five filters (3 in Vancouver and 2 in Houston) were excluded from analysis because of invalid Cepheid GeneXpert tests. The remaining 174 filters were used for all analyses. Sampling covered four team spaces per hotel in Montreal, Toronto, and Vancouver (physiotherapy/treatment room, meal room, equipment/kit room, coaches' meeting room), three in Los Angeles (no coaches' room), and four in Houston (the coaches' room replaced by a team-occupied hallway). Sampling was briefly interrupted when teams and staffing equipment moved between each city.
 
-Most samples were negative for all four targets. Across the study, 15 filters yielded a detection of at least one respiratory virus: SARS-CoV-2 in 11, IAV in 3, and IBV in 1\. No RSV was detected. Detections and their cycle-threshold (Ct) values are summarized in Figure 1\.
+Most samples were negative for all four targets. Across the study, 13 filters yielded a detection of at least one respiratory virus: SARS-CoV-2 in 9, IAV in 3, and IBV in 1\. No RSV was detected. Detections and their cycle-threshold (Ct) values are summarized in Figure 1\.
 
 ### Detections by city
 
 Detections were sparse and geographically dispersed through the first three cities. In Montreal, SARS-CoV-2 was detected in the meal room on June 5 (Ct 42.8), against an otherwise negative baseline. Toronto also yielded one detection, when influenza A was detected in the physiotherapy room from the overnight session beginning June 9 (Ct 44.9). This value fell beyond the assay's qualitative cut-off and was reported by the instrument as negative, but it met our detection definition of any reported amplification. In Vancouver, influenza B was detected in the physiotherapy room on June 17 (Ct 38.0) and influenza A was detected in the meal room on the morning of June 23 (Ct 40.6).
 
-Detections became more frequent in the two final host cities. In Los Angeles, SARS-CoV-2 was detected in the meal room beginning on the first sampling day. On June 27, two filters were positive from the meal room in the daytime sampling interval (Ct 34.0 and 39.3). An additional filter was collected overnight from the meal room and also tested positive for SARS-CoV-2 genetic material (Ct 38.0). There were no additional positives before the air sampling supplies were moved on June 29 to Houston, where Team Canada played their Round of 16 match. Houston accounted for 8 of the 15 detections (Figure 2). On July 1, viral genetic material was found in the air of all four sampled areas: the meal room (Ct 40.4), hallway (Ct 42.1), and the physiotherapy room (Ct 43.4) tested positive for SARS-CoV-2, with influenza A in the equipment room (Ct 42.5). On the morning of July 2, only the meal room tested positive from the previous overnight collection (Ct 42.7). No viruses were detected again until the morning of July 4 when SARS-CoV-2 returned on samples at lower Ct values. There were two positive meal-room samples (Ct 34.5 and 35.5) and a positive hallway collection (Ct 37.8). One speculative interpretation, which we advance cautiously and cannot confirm, is that the July 1 signal reflected an introduction from one or more people from outside the team, the removal of the source individual(s) transiently reduced airborne virus, and that the lower-Ct resurgence reflected onward transmission within the team.
+Detections became more frequent in the two final host cities. In Los Angeles, SARS-CoV-2 was detected in the meal room beginning on the first sampling day. On June 27, a filter was positive from the meal room in the daytime sampling interval (Ct 34.0). An additional filter was collected overnight from the meal room and also tested positive for SARS-CoV-2 genetic material (Ct 38.0). There were no additional positives before the air sampling supplies were moved on June 29 to Houston, where Team Canada played their Round of 16 match. Houston accounted for 7 of the 13 detections (Figure 2). On July 1, viral genetic material was found in the air of all four sampled areas: the meal room (Ct 40.4), hallway (Ct 42.1), and the physiotherapy room (Ct 43.4) tested positive for SARS-CoV-2, with influenza A in the equipment room (Ct 42.5). On the morning of July 2, only the meal room tested positive from the previous overnight collection (Ct 42.7). No viruses were detected again until the morning of July 4 when SARS-CoV-2 returned on samples at lower Ct values. There was a positive meal-room sample (Ct 35.5) and a positive hallway collection (Ct 37.8). One speculative interpretation, which we advance cautiously and cannot confirm, is that the July 1 signal reflected an introduction from one or more people from outside the team, the removal of the source individual(s) transiently reduced airborne virus, and that the lower-Ct resurgence reflected onward transmission within the team.
 
 Community wastewater surveillance in all five host cities showed that the team's visits fell in the seasonal trough for all four viruses, so the clustering of air detections in Los Angeles and Houston cannot be explained by unusually high background circulation (online supplemental methods and online supplementary figure 1\) in these cities.
 
@@ -210,7 +214,7 @@ The University of Wisconsin–Madison Institutional Review Board determined that
 
 ### Data sharing statement
 
-The data and code for this study are available in the repository at [https://github.com/dholab/team-canada-world-cup-2026](https://github.com/dholab/team-canada-world-cup-2026). A compressed archive of the Lungfish Genome Explorer project (including imported sequencing reads) used to evaluate sequencing reads found in the July 4, 2026 samples can be accessed from [https://dholk.primate.wisc.edu/\_webdav/dho/public/manuscripts/team-canada-air-sampling/%40files/Team\_Canada\_VSP2.lungfish.zip](https://dholk.primate.wisc.edu/_webdav/dho/public/manuscripts/team-canada-air-sampling/%40files/Team_Canada_VSP2.lungfish.zip). The original reads before import processing for Lungfish Genome Explorer will be available from SRA upon publication. [Fastq.gz](http://Fastq.gz) files for this study were uploaded to NCBI SRA in Bioproject [PRJNA1513008](https://dataview.ncbi.nlm.nih.gov/object/PRJNA1513008).
+The data and code for this study are available in the repository at [https://github.com/dholab/team-canada-world-cup-2026](https://github.com/dholab/team-canada-world-cup-2026). A compressed archive of the Lungfish Genome Explorer project (including imported sequencing reads) used to evaluate sequencing reads found in the July 4, 2026 samples can be accessed from [https://dholk.primate.wisc.edu/\_webdav/dho/public/manuscripts/team-canada-air-sampling/%40files/Team\_Canada\_VSP2.lungfish.zip](https://dholk.primate.wisc.edu/_webdav/dho/public/manuscripts/team-canada-air-sampling/%40files/Team_Canada_VSP2.lungfish.zip). The original reads before import processing for Lungfish Genome Explorer will be available from SRA upon publication. Sequencing files for this study were uploaded to NCBI SRA in Bioproject [PRJNA1513008](https://dataview.ncbi.nlm.nih.gov/object/PRJNA1513008).
 
 ### Patient and public involvement
 

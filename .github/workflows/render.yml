@@ -81,19 +81,34 @@ jobs:
       - name: Render HTML site
         run: quarto render --to html
 
-      - name: Render submission PDF
+      - name: Render submission PDFs (journal + preprint)
+        # Two PDFs from one source, differing only in the preprint pointer:
+        #   team-canada-air-sampling.pdf          -> BJSM journal submission
+        #   team-canada-air-sampling-preprint.pdf -> bioRxiv preprint
         # tectonic fetches LaTeX packages on demand, which occasionally hits a
         # transient network failure (e.g. fontspec.sty). Retry a few times;
         # successfully-fetched packages are cached, so a retry finishes the rest.
         run: |
-          for attempt in 1 2 3; do
-            if quarto render index.qmd --to pdf; then break; fi
-            echo "PDF render attempt $attempt failed; retrying…"; sleep 10
-            [ "$attempt" = 3 ] && { echo "PDF render failed after 3 attempts"; exit 1; }
-          done
-          # Quarto writes to the project output-dir (_site). Give the PDF the
-          # public download name the in-page link expects.
+          render_pdf () {   # $1 = human label, $2… = extra quarto args
+            local label="$1"; shift
+            for attempt in 1 2 3; do
+              if quarto render index.qmd --to pdf "$@"; then return 0; fi
+              echo "$label PDF attempt $attempt failed; retrying…"; sleep 10
+            done
+            echo "$label PDF failed after 3 attempts"; exit 1
+          }
+
+          # Journal submission: no preprint pointer.
+          render_pdf "Journal"
           cp _site/index.pdf _site/team-canada-air-sampling.pdf
+
+          # Preprint: same build with the "Preprint only" note under the title.
+          render_pdf "Preprint" -M preprint:true
+          cp _site/index.pdf _site/team-canada-air-sampling-preprint.pdf
+
+          # Leave _site/index.pdf as the journal build, so the in-page PDF link
+          # and the committed snapshot both point at the submission version.
+          cp _site/team-canada-air-sampling.pdf _site/index.pdf
 
       - name: Commit Doc-synced content and rebuilt PDF
         # Each run pulls the latest Google Doc, so commit the synced prose,
@@ -101,7 +116,9 @@ jobs:
         # submission PDF back to the repo. This keeps the repo a faithful snapshot
         # of what CI built and submitted. [skip ci] avoids retriggering.
         run: |
-          cp _site/index.pdf docs/team-canada-air-sampling.pdf
+          cp _site/team-canada-air-sampling.pdf docs/team-canada-air-sampling.pdf
+          cp _site/team-canada-air-sampling-preprint.pdf \
+             docs/team-canada-air-sampling-preprint.pdf
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           # Track only the source-of-record outputs (fonts/, _site/ stay ignored).
@@ -113,7 +130,8 @@ jobs:
             analysis/figures/figure3_sequencing.png \
             analysis/figures/figure3_sequencing_transparent.png \
             analysis/central_figure/central_figure_cream.png \
-            analysis/data docs/team-canada-air-sampling.pdf
+            analysis/data docs/team-canada-air-sampling.pdf \
+            docs/team-canada-air-sampling-preprint.pdf
           if git diff --cached --quiet; then
             echo "Nothing changed; skipping commit."
           else
@@ -126,11 +144,13 @@ jobs:
         with:
           path: _site
 
-      - name: Upload PDF as build artifact
+      - name: Upload PDFs as build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: manuscript-pdf
-          path: _site/team-canada-air-sampling.pdf
+          name: manuscript-pdfs
+          path: |
+            _site/team-canada-air-sampling.pdf
+            _site/team-canada-air-sampling-preprint.pdf
 
   deploy:
     needs: build

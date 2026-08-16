@@ -23,4 +23,22 @@ document.addEventListener("DOMContentLoaded", function () {
     cap.insertBefore(span, node);
   });
 });
+
+// Open every outbound link in a new tab, so following a DOI or a dashboard does
+// not navigate the reader away from the manuscript. Quarto's
+// link-external-newwindow does not reach links that arrive through
+// {{< include >}} partials (the citation links, the reference list, the
+// data-and-code links all do), so apply it here across the whole page.
+// rel="noopener" is required with target=_blank: without it the opened page can
+// reach back through window.opener.
+document.addEventListener("DOMContentLoaded", function () {
+  var here = window.location.hostname;
+  Array.prototype.forEach.call(document.querySelectorAll("a[href]"), function (a) {
+    var href = a.getAttribute("href") || "";
+    if (!/^https?:\/\//i.test(href)) return;            // in-page or relative
+    if (a.hostname === here) return;                     // same site
+    a.setAttribute("target", "_blank");
+    a.setAttribute("rel", "noopener noreferrer");
+  });
+});
 </script>

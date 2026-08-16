@@ -80,3 +80,17 @@
 \setlength{\parskip}{0.6em}
 \setlength{\parindent}{0pt}
 \linespread{1.12}
+
+% ---------------------------------------------------------------------------
+% Preprint-only pointer to the interactive version. Rendered as a light rule-
+% bounded note under the title so it reads as an editorial aside rather than
+% manuscript text. Present only in the preprint PDF (-M preprint:true); the
+% journal submission omits the div entirely.
+% ---------------------------------------------------------------------------
+\newenvironment{preprintnote}
+  {\par\addvspace{0.6\baselineskip}%
+   \begin{list}{}{\leftmargin=1em \rightmargin=1em \topsep=0pt \parsep=0pt}%
+   \item\relax\small\itshape\color{houseTeal}%
+   \hrule height 0.4pt\vskip 0.5\baselineskip}
+  {\vskip 0.5\baselineskip\hrule height 0.4pt\end{list}%
+   \par\addvspace{0.6\baselineskip}}

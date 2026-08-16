@@ -13,14 +13,14 @@ David Simon,¹ Timothy J. Locksmith², Nicholas R. Minor², Isla E. Emmen², Nan
 
 **ORCID iDs**
 
-- David Simon: 0000-0003-0911-7152
-- Timothy J. Locksmith: 0009-0007-1112-6759
-- Nicholas Minor: 0000-0003-2929-8229
-- Eli J. O’Connor: 0009-0001-8795-8320
-- Isla E. Emmen: 0000-0002-4725-4935
-- Nancy A. Wilson: 0000-0002-9472-6026
-- Shelby L. O'Connor: 0000-0003-0183-5010
-- David H. O'Connor: 0000-0003-2139-470X
+- David Simon: [0000-0003-0911-7152](https://orcid.org/0000-0003-0911-7152)
+- Timothy J. Locksmith: [0009-0007-1112-6759](https://orcid.org/0009-0007-1112-6759)
+- Nicholas Minor: [0000-0003-2929-8229](https://orcid.org/0000-0003-2929-8229)
+- Eli J. O’Connor: [0009-0001-8795-8320](https://orcid.org/0009-0001-8795-8320)
+- Isla E. Emmen: [0000-0002-4725-4935](https://orcid.org/0000-0002-4725-4935)
+- Nancy A. Wilson: [0000-0002-9472-6026](https://orcid.org/0000-0002-9472-6026)
+- Shelby L. O'Connor: [0000-0003-0183-5010](https://orcid.org/0000-0003-0183-5010)
+- David H. O'Connor: [0000-0003-2139-470X](https://orcid.org/0000-0003-2139-470X)
 
 **Corresponding author**
 
