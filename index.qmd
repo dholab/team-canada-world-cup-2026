@@ -1,12 +1,7 @@
 ---
-# title + subtitle come from the Doc via _title.yml (metadata-files in
-# _quarto.yml) — do not hard-code them here; edit the Google Doc.
-# No date: the Doc carries none, so the title page shows none.
-keywords:
-  - respiratory infection
-  - team sport
-  - athlete health
-  - public health
+# title, subtitle, and keywords come from the Doc via _title.yml
+# (metadata-files in _quarto.yml) — do not hard-code them here; edit the
+# Google Doc. No date: the Doc carries none, so the title page shows none.
 ---
 
 {{< include _frontmatter.md >}}
@@ -75,6 +70,12 @@ keywords:
 
 :::
 
+{{< pagebreak >}}
+
+## References
+
+{{< include _references.md >}}
+
 ## Data and code
 
 All data and analysis code for this study are openly available in the GitHub
@@ -112,6 +113,8 @@ quantity that source reports (`pmmov_index`, `fecal_normalized`,
 `houston_vl_index`).
 
 ## Supplemental material
+
+{{< include _supplement.md >}}
 
 ::: {#supp-wastewater}
 
