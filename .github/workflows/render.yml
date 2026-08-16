@@ -46,8 +46,9 @@ jobs:
         working-directory: analysis
         run: |
           uv sync
-          uv run python make_figures.py
-          uv run python make_figure3_sequencing.py
+          uv run python make_figures_1_2_detections.py
+          uv run python make_figure_3_sequencing.py
+          uv run python make_supplement_1_wastewater.py
 
       - name: Install house fonts (open, metric-compatible clones)
         # The house faces are Georgia + Arial (proprietary). We use the open,
@@ -102,10 +103,13 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           # Track only the source-of-record outputs (fonts/, _site/ stay ignored).
-          git add -A -- _title.yml _prose.md _frontmatter.md _legends PREVIEW.md \
-            analysis/figure1_static.png analysis/figure2_houston.png \
-            analysis/figure3_wastewater.png analysis/figure3_sequencing.png \
-            analysis/figure3_sequencing_transparent.png \
+          git add -A -- _title.yml _prose.md _frontmatter.md _references.md \
+            _supplement.md _legends \
+            analysis/figures/figure1_detections_static.png \
+            analysis/figures/figure2_houston.png \
+            analysis/figures/supplement1_wastewater.png \
+            analysis/figures/figure3_sequencing.png \
+            analysis/figures/figure3_sequencing_transparent.png \
             analysis/data docs/team-canada-air-sampling.pdf
           if git diff --cached --quiet; then
             echo "Nothing changed; skipping commit."
