@@ -1,5 +1,19 @@
 <!-- AUTO-GENERATED from the manuscript Google Doc by scripts/fetch_prose.py. Do not edit by hand; edit the Doc. -->
 
+## Key public health message
+
+**What did you want to address in this study and why?**
+
+Respiratory infections are the most common illness at major sporting events, but they are usually found only when someone notices symptoms and reports them. That misses infections in people who feel well or who choose not to say anything. We hypothesized that sampling and quickly testing the air of the shared rooms a national team occupies in a hotel would identify respiratory viruses, and that this could provide a behaviour-independent tool for improving elite athlete health.
+
+**What have we learnt from this study?**
+
+Air sampling with same-day testing worked in practice across five host cities and a month of competition. Most samples were negative, but viral genetic material was found in team rooms in every city. Some signals coincided with a febrile player and visibly unwell hotel staff.
+
+**What are the implications of your findings for public health?**
+
+Air sampling is a practical way to watch a shared indoor space for respiratory viruses without testing individuals or collecting personal data. When viruses are detected in a room, low-cost precautions such as ventilation, air cleaning or excluding unwell staff can be implemented. The same approach could be used for teams, delegations, and other groups housed together at mass gatherings in Europe and elsewhere.
+
 ## Abstract
 
 **Background.** Respiratory infections are the leading cause of illness at major sporting events, yet surveillance relies on athletes recognising and reporting symptoms, missing asymptomatic, pre-symptomatic and unreported infections. During competitions, teams are housed together and share spaces with members of the broader community.

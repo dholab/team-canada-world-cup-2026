@@ -87,7 +87,11 @@ SUPPLEMENT_HEADING = re.compile(
     r"^##\s+(?:Online supplemental methods|Supplementary material|"
     r"Supplementary methods)\b.*$", re.M)
 
-BODY_START = re.compile(r"^##\s+Abstract\b.*$", re.M)
+# The body starts at the "Key public health message" box when the Doc has one
+# and at the Abstract otherwise. Eurosurveillance requires that box on Research
+# articles and it sits ahead of the Abstract in the Doc, so anchoring the body
+# to "## Abstract" silently dropped a mandatory section from both PDFs.
+BODY_START = re.compile(r"^##\s+(?:Key public health message|Abstract)\b.*$", re.M)
 # Everything from "## References" onward is boilerplate/placeholder in the Doc.
 BODY_END = re.compile(r"^##\s+References\b.*$", re.M)
 
@@ -121,6 +125,8 @@ def normalize(md: str, cite_urls: dict[int, str] | None = None) -> str:
 
     # Drop empty divider headers ("## " on their own line, from Doc page breaks).
     body = re.sub(r"^#{1,6}\s*$\n?", "", body, flags=re.M)
+
+    body = strip_alt_text(body)
 
     # Unwrap Paperpile hyperlinks: the Doc exports each citation number as a link
     # to paperpile.com, e.g. "[\[1\]](https://paperpile.com/...)". Keep the link
@@ -165,6 +171,21 @@ FIGURE_ANCHORS = [
     # Figure 4 (the former Central Figure) is cited from the Discussion.
     (r"Figure 4 summari[sz]es the study design", "_fig4.md"),
 ]
+
+
+# Eurosurveillance wants an "Alt text:" paragraph under each figure legend in
+# the submitted manuscript. It is accessibility metadata for the typesetter, not
+# body copy, so it is dropped from the rendered site and PDFs: the figures there
+# carry their descriptions in the image alt attribute instead, and printing the
+# text under every caption would duplicate the legend for a sighted reader.
+# The Doc keeps it, which is what gets submitted.
+ALT_TEXT_PARA = re.compile(r"^Alt text:.*?(?=\n\s*\n|\Z)", re.M | re.S)
+
+
+def strip_alt_text(body: str) -> str:
+    """Remove "Alt text:" paragraphs from the rendered body."""
+    body = ALT_TEXT_PARA.sub("", body)
+    return re.sub(r"\n{3,}", "\n\n", body)
 
 
 def place_figures(body: str) -> str:
@@ -429,6 +450,7 @@ def extract_supplement(md: str, cite_urls: dict[int, str] | None = None) -> str:
     if cite_urls:
         body = link_citations(body, cite_urls)
     body = re.sub(r"^#{1,6}\s*$\n?", "", body, flags=re.M)
+    body = strip_alt_text(body)
     body = re.sub(r"\n{3,}", "\n\n", body).strip() + "\n"
     return body
 

@@ -265,3 +265,46 @@ def test_citation_link_cache_covers_exactly_the_current_references():
         "_citation_links.json is out of step with _references.md; "
         "re-run scripts/resolve_citation_links.py"
     )
+
+
+def test_key_public_health_message_is_kept_in_the_body():
+    """Eurosurveillance requires the "Key public health message" box, and it
+    sits AHEAD of the Abstract in the Doc. Anchoring the body to "## Abstract"
+    silently dropped a mandatory section from both PDFs."""
+    doc = ("## Key public health message\n\nWhat did we address?\n\n"
+           "## Abstract\n\n**Background.** Text.\n\n"
+           "Detections are summarized in Figure 1.\n\n"
+           "Houston accounted for 7 of the 13 detections.\n\n"
+           "We used metagenomic sequencing with Illumina VSP2.\n\n"
+           "Figure 4 summarises the study design.\n\n"
+           "## References\n")
+    body = fetch_prose.normalize(doc)
+    assert "Key public health message" in body
+    assert "## Abstract" in body
+
+
+def test_body_still_starts_at_abstract_without_a_key_message_box():
+    doc = ("## Abstract\n\n**Background.** Text.\n\n"
+           "Detections are summarized in Figure 1.\n\n"
+           "Houston accounted for 7 of the 13 detections.\n\n"
+           "We used metagenomic sequencing with Illumina VSP2.\n\n"
+           "Figure 4 summarises the study design.\n\n"
+           "## References\n")
+    body = fetch_prose.normalize(doc)
+    assert body.lstrip().startswith("<!-- AUTO-GENERATED")
+    assert "## Abstract" in body
+
+
+def test_alt_text_is_stripped_from_rendered_output():
+    """"Alt text:" paragraphs are submission metadata for the typesetter. They
+    belong in the Doc but not in the site or the PDFs, where repeating each
+    figure description under its caption just duplicates the legend."""
+    body = ("**Figure 1. A caption.** Some description.\n\n"
+            "Alt text: A grid of coloured rectangles spanning\n"
+            "two source lines.\n\n"
+            "The next real paragraph.\n")
+    out = fetch_prose.strip_alt_text(body)
+    assert "Alt text" not in out
+    assert "two source lines" not in out
+    assert "**Figure 1. A caption.**" in out
+    assert "The next real paragraph." in out
