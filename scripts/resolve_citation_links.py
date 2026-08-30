@@ -39,7 +39,14 @@ import fetch_prose as fp  # noqa: E402  (same directory, stdlib-only)
 
 OUT = HERE.parent / "_citation_links.json"
 UA = {"User-Agent": "Mozilla/5.0 (compatible; team-canada-manuscript/1.0)"}
-DOI_RE = re.compile(r"doi:\s*(10\.\d{4,9}/\S+)", re.I)
+# Two bibliography styles have to be understood. The original Doc wrote
+# "doi: 10.1136/bjsports-2019-101040"; after the bibliography was reformatted
+# for submission, Paperpile writes "Available from: http://dx.doi.org/10.1136/..."
+# instead. Match the bare "doi:" form and the dx.doi.org/doi.org URL form, or
+# every reference silently loses its DOI and the run aborts with "No link at
+# all".
+DOI_RE = re.compile(
+    r"(?:doi:\s*|https?://(?:dx\.)?doi\.org/)(10\.\d{4,9}/\S+)", re.I)
 
 # Phrases that mean the publisher served an error page under a 200 status.
 DEAD_MARKERS = ("page not found", "404 not found", "article not found",
@@ -119,12 +126,22 @@ def main() -> None:
         print(f"{how:18} {len(nums):3}  {nums if how != 'doi' else ''}")
 
     missing = [n for n, u, _ in results if not u]
-    if missing:
-        raise SystemExit(f"No link at all for references: {missing}")
 
     if check_only:
+        if missing:
+            print(f"\nNo link at all for references: {missing}")
         print("\n--check: nothing written.")
         return
+
+    # A reference with no resolvable link used to abort the run before the
+    # write, which meant one unlinkable entry silently left the whole cache
+    # stale — and a stale cache keyed by the OLD numbering mislabels every
+    # citation after the point where the bibliography changed. Write what did
+    # resolve, and report the rest loudly instead.
+    if missing:
+        print(f"\nWARNING - no link resolved for references: {missing}")
+        print("  Their citations will fall back to the DOI derived at build "
+              "time. Check these entries in the Doc.")
 
     OUT.write_text(json.dumps(links, indent=2, sort_keys=True) + "\n",
                    encoding="utf-8")

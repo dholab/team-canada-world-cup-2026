@@ -28,34 +28,12 @@
 
 {{< pagebreak >}}
 
-## Central figure
-
-::: {#central-figure-card}
-
-::: {.content-visible when-format="html"}
-![](analysis/central_figure/central_figure_cream.png){fig-alt="Central figure: study workflow, detection timeline across the five host cities, and possible response actions."}
-:::
-
-::: {.content-visible when-format="pdf"}
-<!-- The submission PDF keeps the white Illustrator export (journals want a
-     white ground); the site uses the cream variant so the figure sits flush
-     on the cream page. -->
-![](analysis/central_figure/central_figure.png){fig-alt="Central figure: study workflow, detection timeline across the five host cities, and possible response actions."}
-:::
-
-```{=latex}
-\begin{unnumberedcaption}
-```
-{{< include _legends/central.md >}}
-```{=latex}
-\end{unnumberedcaption}
-```
-
-:::
-
-<!-- Figures 1-3 are not listed here: scripts/fetch_prose.py injects each
+<!-- Figures 1-4 are not listed here: scripts/fetch_prose.py injects each
      _figN.md partial into _prose.md right after the paragraph that cites it,
-     so every figure appears with the text that discusses it. -->
+     so every figure appears with the text that discusses it. The former
+     "Central figure" was a BJSM convention; for Eurosurveillance it is an
+     ordinary numbered figure (Figure 4), cited from the Discussion, so it is
+     injected inline like the rest rather than sitting in its own front block. -->
 
 {{< include _prose.md >}}
 
@@ -97,31 +75,26 @@ records which non-interchangeable quantity that source reports.
 
 :::
 
-## Supplemental methods
-
-{{< include _supplement.md >}}
+<!-- The Doc's "Supplementary material" section now carries the Supplementary
+     Figure S1 legend inline (it moved there in the Eurosurveillance reformat),
+     so this block supplies only the figure itself; the caption arrives with
+     _supplement.md and must NOT be included again here. -->
 
 ::: {#supp-wastewater}
 
 ```{=html}
 <iframe src="analysis/figures/supplement1_wastewater_interactive.html" width="100%" height="1226"
         style="border:none;" loading="lazy" scrolling="no"
-        title="Online supplemental figure 1, community wastewater context by host city"></iframe>
+        title="Supplementary Figure S1, community wastewater context by host city"></iframe>
 ```
 
 ::: {.content-visible when-format="pdf"}
-![](analysis/figures/supplement1_wastewater.png){fig-alt="Community wastewater surveillance context by host city." height="7.8in"}
+![](analysis/figures/supplement1_wastewater.png){fig-alt="Community wastewater surveillance context by host city. Five stacked line charts, one per host city, each showing wastewater levels across the 2025-2026 season with a gold band marking Team Canada's sampling window in the seasonal trough." height="7.8in"}
 :::
 
-```{=latex}
-\begin{unnumberedcaption}
-```
-{{< include _legends/supp1.md >}}
-```{=latex}
-\end{unnumberedcaption}
-```
-
 :::
+
+{{< include _supplement.md >}}
 
 {{< pagebreak >}}
 

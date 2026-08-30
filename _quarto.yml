@@ -37,7 +37,7 @@ format:
   # Two PDFs are built from this one format:
   #
   #   quarto render index.qmd --to pdf
-  #       -> the JOURNAL (BJSM) submission. No preprint pointer.
+  #       -> the JOURNAL (Eurosurveillance) submission. No preprint pointer.
   #   quarto render index.qmd --to pdf -M preprint:true
   #       -> the medRxiv/preprint version, identical except that it carries the
   #          Doc's "Preprint only" note under the title.

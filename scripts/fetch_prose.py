@@ -79,16 +79,26 @@ LEGEND_LEAD = re.compile(
 # boilerplate sections that Quarto supplies itself.
 # The Abstract heading may carry a trailing note such as "(233 words)", so match
 # the heading prefix rather than requiring the line to end at "Abstract".
+# The supplement section heading. The Doc carried BJSM's "Online supplemental
+# methods"; the Eurosurveillance reformat renamed it to "Supplementary
+# material" with a "Supplementary methods: ..." subheading beneath. Match any of
+# these so the sync survives a change of target journal.
+SUPPLEMENT_HEADING = re.compile(
+    r"^##\s+(?:Online supplemental methods|Supplementary material|"
+    r"Supplementary methods)\b.*$", re.M)
+
 BODY_START = re.compile(r"^##\s+Abstract\b.*$", re.M)
 # Everything from "## References" onward is boilerplate/placeholder in the Doc.
 BODY_END = re.compile(r"^##\s+References\b.*$", re.M)
 
 # The Doc's References section lists each entry as its own heading:
 #   "## 1 \t[Serner A, … doi: 10.1080/…](http://paperpile.com/b/tA670F/58gc)"
+# Paperpile's numbered style emits the trailing period as an escaped literal
+# ("## 1\. \t[…]"), so the number may be followed by "\." before the link.
 # We keep the link text (the formatted citation) and drop the Paperpile URL,
 # exactly as normalize() already does for inline citation markers.
 REFERENCE_ENTRY = re.compile(
-    r"^##\s+(?P<num>\d+)\s*\[(?P<text>.+?)\]\("
+    r"^##\s+(?P<num>\d+)\\?\.?\s*\[(?P<text>.+?)\]\("
     r"https?://(?:www\.)?paperpile\.com/[^)]*\)\s*$",
     re.M,
 )
@@ -149,9 +159,11 @@ def normalize(md: str, cite_urls: dict[int, str] | None = None) -> str:
 # those change whenever the data is re-extracted, and an anchor that embeds one
 # breaks the build on every such edit.
 FIGURE_ANCHORS = [
-    (r"summarized in Figure 1", "_fig1.md"),
+    (r"summari[sz]ed in Figure 1", "_fig1.md"),
     (r"Houston accounted for .{0,20}detections", "_fig2.md"),
     (r"metagenomic sequencing with Illumina VSP2", "_fig3.md"),
+    # Figure 4 (the former Central Figure) is cited from the Discussion.
+    (r"Figure 4 summari[sz]es the study design", "_fig4.md"),
 ]
 
 
@@ -266,9 +278,11 @@ def extract_legends(md: str) -> dict[str, str]:
     if not sec:
         return {}
     region = md[sec.end():]
-    # Stop at 'Online supplemental methods' or end of doc; keep both legend
-    # subsections in between.
-    stop = re.search(r"^##\s+Online supplemental methods\b", region, re.M)
+    # Stop at the supplement section or end of doc; keep both legend
+    # subsections in between. The Doc used BJSM's "Online supplemental methods"
+    # heading and now uses Eurosurveillance's "Supplementary material", so match
+    # either rather than pinning to one journal's wording.
+    stop = SUPPLEMENT_HEADING.search(region)
     region = region[: stop.start()] if stop else region
 
     legends: dict[str, str] = {}
@@ -319,7 +333,7 @@ def extract_references(md: str) -> list[tuple[int, str]]:
     # a stop candidate here — it is filtered back out below if it turns out to
     # be a malformed reference entry rather than a genuine section boundary, so
     # a corrupted/dropped final entry is caught instead of silently truncating.
-    stop = re.search(r"^##\s+(?!\d+\s*\[)[^\s#].*$", region, re.M)
+    stop = re.search(r"^##\s+(?!\d+\\?\.?\s*\[)[^\s#].*$", region, re.M)
     boundary = stop.start() if stop else len(region)
     region_for_refs = region[:boundary]
 
@@ -394,14 +408,17 @@ def extract_supplement(md: str, cite_urls: dict[int, str] | None = None) -> str:
     of the document. This sits after '## References' in the Doc, so the main
     body normalizer never sees it.
 
-    The Doc's own '## Online supplemental methods' heading is dropped: index.qmd
-    supplies the section heading, and on a page that IS the online version the
-    word "online" is redundant. The subsections (e.g. '### Community wastewater
-    comparison') are kept."""
-    sec = re.search(r"^##\s+Online supplemental methods\b.*$", md, re.M)
+    The Doc's own supplement heading is dropped: index.qmd supplies the section
+    heading, and on a page that IS the online version the word "online" is
+    redundant. The subsections (e.g. '### Community wastewater comparison') are
+    kept. Both the old BJSM heading and the Eurosurveillance one are matched;
+    see SUPPLEMENT_HEADING."""
+    sec = SUPPLEMENT_HEADING.search(md)
     if not sec:
         raise SystemExit(
-            "Could not find '## Online supplemental methods' — Doc structure changed?"
+            "Could not find the supplement heading (tried 'Online supplemental "
+            "methods', 'Supplementary material', 'Supplementary methods') — "
+            "Doc structure changed?"
         )
     body = md[sec.end():]
     # Same Paperpile unwrapping the main body gets: keep the citation marker
@@ -491,17 +508,36 @@ def extract_frontmatter(md: str) -> str:
     return "\n\n".join(parts)
 
 
+# Fallback text for the preprint pointer. The Doc carried a "Preprint only"
+# section under BJSM; the Eurosurveillance reformat dropped it, but the medRxiv
+# build still needs the pointer. Keeping a default here means the preprint PDF
+# does not silently lose its "read the interactive version" note just because
+# the Doc no longer carries that section. Restore a "Preprint only" section to
+# the Doc to override this.
+DEFAULT_PREPRINT_NOTE = (
+    "The recommended way to view this preprint is at "
+    "[https://dholab.github.io/team-canada-world-cup-2026/]"
+    "(https://dholab.github.io/team-canada-world-cup-2026/). The online version "
+    "includes interactive figures and improves the reading experience."
+)
+
+
 def write_preprint_note(md: str) -> None:
     """Write the Doc's 'Preprint only' section to its own file.
 
-    Absent from the Doc, an empty file is written so the include in index.qmd
-    still resolves — a missing include is a hard Quarto error."""
+    Absent from the Doc, DEFAULT_PREPRINT_NOTE is used: the preprint PDF needs
+    this pointer, and writing an empty file would drop it from the build without
+    any signal. index.qmd includes this file unconditionally, so it must always
+    exist — a missing include is a hard Quarto error."""
     body = _section_body(md, "Preprint only") or ""
     if body:
         body = body.replace("\\[", "[").replace("\\]", "]")
+        source = "Doc"
+    else:
+        body = DEFAULT_PREPRINT_NOTE
+        source = "built-in default (no 'Preprint only' section in the Doc)"
     PREPRINT_NOTE.write_text(BANNER + body + "\n", encoding="utf-8")
-    print(f"wrote {PREPRINT_NOTE} ({len(body)} bytes)"
-          + ("" if body else " — no 'Preprint only' section in the Doc"))
+    print(f"wrote {PREPRINT_NOTE} ({len(body)} bytes) — from {source}")
 
 
 def write_frontmatter(md: str) -> None:

@@ -14,7 +14,7 @@ filters, 13 carried detectable respiratory-virus genetic material.
 | | |
 | --- | --- |
 | **Interactive version** (recommended) | <https://dholab.github.io/team-canada-world-cup-2026/> — every figure explorable |
-| **Journal submission PDF** | [`docs/team-canada-air-sampling.pdf`](docs/team-canada-air-sampling.pdf) — the BJSM build |
+| **Journal submission PDF** | [`docs/team-canada-air-sampling.pdf`](docs/team-canada-air-sampling.pdf) — the Eurosurveillance build |
 | **Preprint PDF** | [`docs/team-canada-air-sampling-preprint.pdf`](docs/team-canada-air-sampling-preprint.pdf) — the medRxiv build, identical but for a pointer to the interactive version |
 
 Both PDFs are rebuilt and committed by CI from the same source; they differ only

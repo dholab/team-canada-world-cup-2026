@@ -354,6 +354,14 @@ def build_static(df: pd.DataFrame, out_png: pathlib.Path, *,
     fig.savefig(out_png, dpi=300, bbox_inches="tight", transparent=transparent,
                 facecolor=(None if transparent else bg))
     print(f"wrote {out_png}" + (" (transparent)" if transparent else f" (bg {bg})"))
+    # Journals want vector art. The other figure scripts already emit a PDF
+    # alongside the raster; do the same here so every main figure has a vector
+    # master for submission. Skipped for the transparent variant, which exists
+    # only for the web page.
+    if not transparent:
+        out_pdf = out_png.with_suffix(".pdf")
+        fig.savefig(out_pdf, bbox_inches="tight", facecolor=bg)
+        print(f"wrote {out_pdf}")
 
 
 def main() -> None:

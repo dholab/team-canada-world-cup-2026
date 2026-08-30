@@ -49,9 +49,16 @@ jobs:
           uv run python make_figures_1_2_detections.py
           uv run python make_figure_3_sequencing.py
           uv run python make_supplement_1_wastewater.py
-          # Cream-background Central Figure for the HTML site. The white
-          # Illustrator export is what the submission PDF uses.
+          # Cream-background Figure 4 for the HTML site. The white Illustrator
+          # export is what the submission PDF uses.
           uv run --with pillow python central_figure/recolor_background.py
+
+      - name: Collect journal submission figures
+        # Gathers each figure as a separate, journal-named file in
+        # submission/figures/, preferring vector PDF. Warns (without failing)
+        # when a figure is raster-only, which currently applies to Figure 4
+        # because its Illustrator master lives in Google Drive, not this repo.
+        run: python scripts/build_submission_figures.py
 
       - name: Install house fonts (open, metric-compatible clones)
         # The house faces are Georgia + Arial (proprietary). We use the open,
@@ -83,7 +90,7 @@ jobs:
 
       - name: Render submission PDFs (journal + preprint)
         # Two PDFs from one source, differing only in the preprint pointer:
-        #   team-canada-air-sampling.pdf          -> BJSM journal submission
+        #   team-canada-air-sampling.pdf          -> Eurosurveillance submission
         #   team-canada-air-sampling-preprint.pdf -> medRxiv preprint
         # tectonic fetches LaTeX packages on demand, which occasionally hits a
         # transient network failure (e.g. fontspec.sty). Retry a few times;
@@ -130,6 +137,12 @@ jobs:
             analysis/figures/figure3_sequencing.png \
             analysis/figures/figure3_sequencing_transparent.png \
             analysis/central_figure/central_figure_cream.png \
+            analysis/central_figure/central_figure.pdf \
+            analysis/figures/figure1_detections_static.pdf \
+            analysis/figures/figure2_houston.pdf \
+            analysis/figures/figure3_sequencing.pdf \
+            analysis/figures/supplement1_wastewater.pdf \
+            submission/figures \
             analysis/data docs/team-canada-air-sampling.pdf \
             docs/team-canada-air-sampling-preprint.pdf
           if git diff --cached --quiet; then

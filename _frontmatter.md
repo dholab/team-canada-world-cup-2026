@@ -24,4 +24,4 @@ David Simon,¹ Timothy J. Locksmith², Nicholas R. Minor², Isla E. Emmen², Nan
 
 **Corresponding author**
 
-David H. O'Connor, Department of Pathology and Laboratory Medicine, University of Wisconsin School of Medicine and Public Health, 555 Science Drive, Madison, WI 53719, USA. Email: dhoconno@wisc.edu; Tel: \+1 (608) 890-0845.
+David H. O'Connor, Department of Pathology and Laboratory Medicine, University of Wisconsin School of Medicine and Public Health, 555 Science Drive, Madison, WI 53719, USA. Email: [dhoconno@wisc.edu](mailto:dhoconno@wisc.edu); Tel: \+1 (608) 890-0845.

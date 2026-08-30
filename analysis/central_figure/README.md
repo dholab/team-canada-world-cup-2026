@@ -1,14 +1,48 @@
-# Central Figure
+# Figure 4 (formerly the Central Figure)
 
-The study's **Central figure** and the source graphics assembled into it in
-Adobe Illustrator.
+The study's summary figure and the source graphics assembled into it in Adobe
+Illustrator. It combines the sampling workflow, the detection timeline, and the
+response-action icons.
+
+Under BJSM this was the unnumbered "Central Figure". *Eurosurveillance* has no
+such convention but allows up to six figures, so it is now **Figure 4**, cited
+from the Discussion. The directory name is kept to avoid churning paths.
+
+## `central_figure.pdf` — the submission master
+
+`central_figure.pdf` is the **vector** master used for journal submission;
+`scripts/build_submission_figures.py` copies it to
+`submission/figures/Figure_4.pdf`. Text is live and the fonts are embedded; the
+sampler photographs, the GeneXpert image, and the action icons are necessarily
+raster within it.
+
+It is produced from the Illustrator PDF export, which sits on a full A4 page
+with the artwork in the top half. Submitting that page as-is would give the
+journal a figure with a wide blank band, so it is cropped to the artwork's
+ArtBox (plus a ~2 mm margin) losslessly, keeping all vector content:
+
+```bash
+uv run --with pymupdf python - \
+  "$HOME/Library/CloudStorage/GoogleDrive-dhoconno@wisc.edu/My Drive/Manuscripts/DHO Manuscripts/Pending/2026-07 Team Canada air sampling/figures/central figure.pdf" \
+  analysis/central_figure/central_figure.pdf <<'EOF'
+import sys, pymupdf
+doc = pymupdf.open(sys.argv[1]); p = doc[0]
+pad = 6  # points, ~2 mm
+box = pymupdf.Rect(p.artbox)
+box = pymupdf.Rect(box.x0-pad, box.y0-pad, box.x1+pad, box.y1+pad) & p.mediabox
+p.set_cropbox(box)
+doc.save(sys.argv[2], garbage=4, deflate=True)
+EOF
+```
+
+Re-run that after any Illustrator edit, then re-run
+`scripts/build_submission_figures.py`.
 
 ## `central_figure.png`
 
-`central_figure.png` is a trimmed raster export of the Central figure, embedded
-at the top of the manuscript by `index.qmd` (both the interactive site and the
-submission PDF). The Central figure combines the sampling workflow, the
-detection timeline, and the response-action icons.
+`central_figure.png` is a trimmed raster export, used by `index.qmd` for the
+site and the Quarto PDF build (`central_figure_cream.png` is the cream-ground
+variant for the site).
 
 The editable Illustrator master (`central figure.ai`) is **not kept in this
 repo**. Non-programmatic assets live in the manuscript's Google Drive folder

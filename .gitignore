@@ -19,10 +19,14 @@ _site/
 fonts/
 
 # Generated figures. Static PNGs are committed (the PDF build needs them and
-# they render on GitHub); interactive HTML and intermediate PDFs are rebuilt in
-# CI from analysis/data/ and are not tracked.
+# they render on GitHub); interactive HTML is rebuilt in CI from analysis/data/
+# and is not tracked.
 analysis/figures/*.html
-analysis/figures/*.pdf
+# The vector figure PDFs used to be untracked intermediates. They are now the
+# journal submission masters (Eurosurveillance wants vector art as separate
+# files), so they are committed and collected into submission/figures/ by
+# scripts/build_submission_figures.py.
+!analysis/figures/*.pdf
 
 # macOS
 .DS_Store

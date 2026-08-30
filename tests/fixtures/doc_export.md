@@ -158,13 +158,11 @@ A prespecified aim was to determine whether air-sampling signals could give the 
 
 The four air samples that were collected on July 4 when Team Canada was eliminated from the tournament were used for metagenomic sequencing with Illumina VSP2 target-capture, allowing us to detect additional human respiratory and environmental viruses across the sampled hotel spaces (Figure 3). SARS-CoV-2 was recovered from the meal room air samples collected on July 4, as well as from an equipment-room sample from the preceding evening (1 unique read). Although these specific cartridges were pulled from the samplers the afternoon Team Canada was eliminated and were not themselves assayed on the GeneXpert, their sequences independently confirm the presence of SARS-CoV-2 in the hotel earlier that day. Sequencing additionally recovered respiratory viruses not targeted by the Cepheid assay, including influenza A, human coronavirus OC43, and rhinovirus, alongside ubiquitous commensal viruses such as Merkel cell polyomavirus that are detected in nearly all sequences from human-occupied congregate spaces. No viral detections were obtained from the extraction blank or the no-template controls.
 
-A summary of the study design, detections across all five host cities, and the response actions a positive signal can trigger is presented in the Central Figure.
-
 ## Discussion
 
-### Principal findings
-
 Over 32-days of participation in a tournament and five host cities, twice-daily air sampling with same-day point-of-care testing detected respiratory-virus nucleic acid in team congregate spaces even during the Northern-hemisphere summer, when these viruses circulate at seasonal lows. Detections were infrequent but not random. They clustered in the final two host cities, and on three occasions coincided with events recognised by the team's medical staff. In each case staff acted, and the air signal subsequently cleared or fell. Positive detection of virus genetic material in the air stood in stark contrast to the negative baseline that was routinely observed in air collected from the team spaces, particularly during early phases of the tournament. Continuous air sampling paired with point-of-care testing is therefore operationally feasible in the demanding, mobile environment of a competing national team, and the presence of distinct signals can be acted on in near-real time.
+
+Figure 4 summarises the study design, the detections across all five host cities, and the response actions that a positive air signal can trigger.
 
 ### Comparison with existing literature
 

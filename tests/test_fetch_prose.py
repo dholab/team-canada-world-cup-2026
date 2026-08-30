@@ -151,17 +151,117 @@ def test_figure_anchors_survive_a_recount(doc_md):
         assert "{{< include " + partial + " >}}" in placed
 
 
-def test_verified_links_override_the_derived_doi(doc_md):
+def test_verified_links_override_the_derived_doi():
     """A DOI that resolves to the publisher's 404 must be replaced.
 
-    Reference 36's DOI returns HTTP 200 and lands on an Emerging Infectious
-    Diseases error page, so scripts/resolve_citation_links.py records the PubMed
-    record instead. Confirm the cache actually wins over the derived DOI."""
-    urls = fetch_prose.citation_urls(fetch_prose.extract_references(doc_md))
-    assert urls[36].startswith("https://pubmed.ncbi.nlm.nih.gov/")
+    The Emerging Infectious Diseases entry ("Non-SARS-CoV-2 Respiratory Viruses
+    in Athletes at Major Winter Sport Events") has a DOI that returns HTTP 200
+    but lands on the publisher's error page, so
+    scripts/resolve_citation_links.py records the PubMed record instead.
+    Confirm the cache actually wins over the derived DOI.
+
+    The reference is found by title, and checked against the live bibliography
+    rather than the fixture: the override is keyed by reference number, and
+    those shift whenever references are added or removed, so pinning a number
+    here made this test fail for a reason unrelated to what it checks."""
+    import json
+    import re
+    from pathlib import Path
+    root = Path(__file__).resolve().parent.parent
+    # _references.md is rendered output ("12. Author A, ..."), not a Doc export,
+    # so read the numbering straight off it.
+    refs = re.findall(r"^(\d+)\. (.+)$",
+                      (root / "_references.md").read_text(), re.M)
+    links = json.loads((root / "_citation_links.json").read_text())
+
+    target = [n for n, text in refs
+              if "Non-SARS-CoV-2 Respiratory Viruses" in text]
+    assert target, "the dead-DOI EID reference is no longer in the bibliography"
+    assert links[target[0]].startswith("https://pubmed.ncbi.nlm.nih.gov/"), (
+        "expected the dead EID DOI to fall back to its PubMed record; "
+        "re-run scripts/resolve_citation_links.py"
+    )
 
 
 def test_every_citation_still_has_a_link(doc_md):
     urls = fetch_prose.citation_urls(fetch_prose.extract_references(doc_md))
     assert len(urls) == 49
     assert all(u.startswith("https://") for u in urls.values())
+
+
+def test_references_parse_with_paperpiles_escaped_period(doc_md):
+    """Paperpile's numbered style emits "## 1\\. \t[...]", not "## 1 \t[...]".
+
+    The Doc switched to that style when the bibliography was reformatted for
+    submission, and it silently broke reference parsing twice over: the entry
+    regex did not allow the escaped period, and the section-boundary regex read
+    each numbered entry as the start of a new section, truncating the list to
+    nothing. Both are easy to reintroduce, so pin the behaviour here."""
+    escaped = doc_md.replace("\n## 1 \t[", "\n## 1\\. \t[") \
+                    .replace("\n## 2 \t[", "\n## 2\\. \t[")
+    assert "## 1\\. \t[" in escaped, "fixture format changed; update this test"
+    refs = fetch_prose.extract_references(escaped)
+    plain = fetch_prose.extract_references(doc_md)
+    assert [n for n, _ in refs] == [n for n, _ in plain]
+    assert refs[0][1] == plain[0][1]
+
+
+def test_supplement_heading_matches_either_journals_wording(doc_md):
+    """The Doc carried BJSM's "Online supplemental methods" and now carries
+    Eurosurveillance's "Supplementary material". Both must resolve, or the
+    supplement silently vanishes from the build."""
+    renamed = doc_md.replace("## Online supplemental methods",
+                             "## Supplementary material")
+    body = fetch_prose.extract_supplement(renamed)
+    assert "wastewater" in body.lower()
+    assert "## Supplementary material" not in body
+
+
+def test_preprint_note_falls_back_when_the_doc_drops_the_section(doc_md):
+    """The Eurosurveillance reformat removed the Doc's "Preprint only" section.
+    The medRxiv build still needs the pointer, so a default stands in rather
+    than the note silently disappearing."""
+    without = doc_md.replace("### Preprint only", "### Removed section")
+    assert fetch_prose._section_body(without, "Preprint only") in (None, "")
+    assert "dholab.github.io" in fetch_prose.DEFAULT_PREPRINT_NOTE
+
+
+def test_doi_is_recognised_in_both_bibliography_styles():
+    """The Doc's original style wrote "doi: 10.xxxx/yyy"; the reformatted
+    bibliography writes "Available from: http://dx.doi.org/10.xxxx/yyy".
+
+    resolve_citation_links.py only understood the first, so after the reformat
+    every reference resolved to no DOI, the run aborted before writing, and the
+    committed link cache silently stayed on the OLD numbering — which
+    mislabelled every citation past the point the bibliography changed."""
+    import importlib.util
+    from pathlib import Path
+    root = Path(__file__).resolve().parent.parent
+    spec = importlib.util.spec_from_file_location(
+        "rcl", root / "scripts" / "resolve_citation_links.py")
+    rcl = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(rcl)
+
+    old = ("Serner A, et al. Time-loss injuries. Sci Med Footb. 2025;9:275-82. "
+           "doi: 10.1080/24733938.2024.2357568")
+    new = ("Serner A, et al. Time-loss injuries. Sci Med Footb [Internet]. "
+           "2025 Aug;9(3):275-82. Available from: "
+           "http://dx.doi.org/10.1080/24733938.2024.2357568")
+    assert rcl.doi_of(old) == "10.1080/24733938.2024.2357568"
+    assert rcl.doi_of(new) == "10.1080/24733938.2024.2357568"
+
+
+def test_citation_link_cache_covers_exactly_the_current_references():
+    """A cache keyed by stale numbering is worse than no cache: it silently
+    points citations at the wrong papers. Keep the committed map in step with
+    the committed bibliography."""
+    import json
+    import re
+    from pathlib import Path
+    root = Path(__file__).resolve().parent.parent
+    refs = re.findall(r"^(\d+)\. ", (root / "_references.md").read_text(), re.M)
+    links = json.loads((root / "_citation_links.json").read_text())
+    assert set(links) == set(refs), (
+        "_citation_links.json is out of step with _references.md; "
+        "re-run scripts/resolve_citation_links.py"
+    )
