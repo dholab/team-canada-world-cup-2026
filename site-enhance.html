@@ -4,8 +4,12 @@
 // span that theme-house.scss can style — this is what gives the online figure
 // numbers the same terracotta accent they have in the submission PDF.
 document.addEventListener("DOMContentLoaded", function () {
+  // One entry per numbered figure. #fig-summary is Figure 4, the former
+  // Central Figure: under BJSM it was unnumbered and styled by its own
+  // .fig-number markup in the legend, so it was never in this list. As an
+  // ordinary numbered figure it needs the same wrapping as the rest.
   var sel = "#fig-detections figcaption, #fig-houston figcaption, " +
-            "#fig-sequencing figcaption";
+            "#fig-sequencing figcaption, #fig-summary figcaption";
   Array.prototype.forEach.call(document.querySelectorAll(sel), function (cap) {
     var node = cap.firstChild;
     // Skip any whitespace-only node Quarto emits before the label.

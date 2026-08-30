@@ -1,9 +1,13 @@
 -- Give the unnumbered figure labels the house accent in the PDF.
 --
--- Quarto numbers Figures 1-3 and house-preamble.tex styles their "Figure N."
--- label terracotta via \captionsetup{labelfont=...}. The Central Figure and the
--- online supplemental figure are not Quarto-numbered: their label is part of
--- the caption text, so there is no label for LaTeX to style.
+-- Quarto numbers Figures 1-4 and house-preamble.tex styles their "Figure N."
+-- label terracotta via \captionsetup{labelfont=...}. The supplementary figure
+-- is not Quarto-numbered: its label is part of the caption text, so there is no
+-- label for LaTeX to style.
+--
+-- (Figure 4 was the unnumbered "Central Figure" under BJSM and relied on this
+-- filter. It is an ordinary numbered figure for Eurosurveillance, so LaTeX
+-- styles it directly and the site does it via site-enhance.html.)
 --
 -- scripts/fetch_prose.py wraps those labels in a [.fig-number] span. HTML keeps
 -- the class and the theme colours it; LaTeX silently drops span classes, so
