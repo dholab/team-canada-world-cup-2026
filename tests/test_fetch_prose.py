@@ -354,3 +354,17 @@ def test_anonymised_manuscript_carries_no_author_identifiers():
                  "Pathogenuity", "Melbourne", "Inkfish", "Heart of Racing",
                  "PRJNA", "github.com"]:
         assert leak not in body, f"{leak!r} leaks into the anonymised manuscript"
+
+
+def test_anonymised_manuscript_includes_every_figure_legend():
+    """Eurosurveillance takes figures as separate files, so the legends in the
+    manuscript are where a reviewer reads what each figure shows. They live in
+    _legends/figN.md (and, for the supplementary figure, inside _supplement.md)
+    rather than in _prose.md, so they are easy to omit from a .docx built only
+    from the prose -- which is exactly what happened."""
+    from pathlib import Path
+    root = Path(__file__).resolve().parent.parent
+    for n in (1, 2, 3, 4):
+        assert (root / "_legends" / f"fig{n}.md").exists(), f"fig{n} legend missing"
+    supp = (root / "_supplement.md").read_text()
+    assert "Supplementary Figure S1" in supp, "supplementary legend missing"

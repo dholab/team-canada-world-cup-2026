@@ -197,6 +197,43 @@ def build_manuscript(sections, title: str) -> Path:
             if head == "Data availability":
                 break
 
+    # Figure legends. Quarto supplies the "Figure N." label when it renders the
+    # PDF, so _legends/figN.md holds only the caption; the .docx has no such
+    # numbering and the legends must carry it themselves. Eurosurveillance takes
+    # figures as separate files, so this is where a reviewer reads them.
+    h = doc.add_paragraph()
+    h.add_run("Figure legends").bold = True
+    for n in (1, 2, 3, 4):
+        legend = (ROOT / "_legends" / f"fig{n}.md").read_text()
+        legend = re.sub(r"<!--.*?-->", "", legend, flags=re.S).strip()
+        write_para(doc, f"**Figure {n}.** " + clean(legend))
+
+    # The supplementary figure legend lives in the supplement section rather
+    # than _legends/, because it moved there in the Eurosurveillance reformat.
+    supp = re.sub(r"<!--.*?-->", "", (ROOT / "_supplement.md").read_text(), flags=re.S)
+    m = re.search(r"^### Supplementary Figure S1\s*\n+(.*?)(?=^###|\Z)",
+                  supp, re.S | re.M)
+    if m:
+        h = doc.add_paragraph()
+        h.add_run("Supplementary figure legend").bold = True
+        text = clean(m.group(1).strip())
+        # The caption still carries the old BJSM "Online supplemental figure 1."
+        # label; use this journal's wording instead.
+        text = re.sub(r"^\*\*\s*Online supplemental figure 1\.\s*",
+                      "**Supplementary Figure S1. ", text)
+        write_para(doc, text)
+
+    # Supplementary methods, so the wastewater comparison a reviewer sees in
+    # Supplementary Figure S1 is documented in the manuscript they are reading.
+    m = re.search(r"^### (Supplementary methods[^\n]*)\s*\n+(.*?)(?=^###|\Z)",
+                  supp, re.S | re.M)
+    if m:
+        h = doc.add_paragraph()
+        h.add_run(m.group(1)).bold = True
+        for para in re.split(r"\n\s*\n", m.group(2).strip()):
+            if para.strip():
+                write_para(doc, clean(para))
+
     # References. Eurosurveillance requires a minimum of 15 for regular
     # articles, and an anonymised manuscript with no bibliography would be
     # returned. The entries are the authors' own published work in places, but
