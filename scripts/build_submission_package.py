@@ -24,6 +24,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 FIGS = ROOT / "submission" / "figures"
+DOCX = ROOT / "submission" / "_docx"
 OUT = ROOT / "submission"
 
 # The Illustrator/InDesign sources live in the manuscript's Google Drive folder,
@@ -57,9 +58,17 @@ def main() -> int:
     figures = [(FIGS / f, f) for f in FIGURE_FILES]
 
     packages = {
+        # Eurosurveillance reviews anonymised manuscripts and cannot evaluate
+        # PDFs of the text, so the manuscript goes as .docx split across
+        # separate files (built by scripts/build_eurosurveillance_docx.py).
+        # The rendered PDF is deliberately NOT included: it carries the author
+        # list and every identifying statement.
         "eurosurveillance": [
             (COVER_LETTER, "00_Cover_letter.pdf"),
-            (ROOT / "docs" / "team-canada-air-sampling.pdf", "01_Manuscript.pdf"),
+            (DOCX / "Title_page.docx", "01_Title_page.docx"),
+            (DOCX / "Manuscript_anon.docx", "02_Manuscript_anonymised.docx"),
+            (DOCX / "Key_public_health_message.docx",
+             "03_Key_public_health_message.docx"),
             *figures,
         ],
         "medrxiv": [

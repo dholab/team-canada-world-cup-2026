@@ -117,6 +117,12 @@ jobs:
           # and the committed snapshot both point at the submission version.
           cp _site/team-canada-air-sampling.pdf _site/index.pdf
 
+      - name: Build the Eurosurveillance Word files
+        # Eurosurveillance reviews anonymised manuscripts and cannot evaluate a
+        # PDF of the text, so the submission goes as .docx: a title page, an
+        # anonymised manuscript with line numbers, and their PH-message file.
+        run: uv run --with python-docx python scripts/build_eurosurveillance_docx.py
+
       - name: Stage the submission packages
         # Assembles submission/eurosurveillance/ and submission/medrxiv/ from
         # the PDFs rendered above plus submission/figures/. The cover letter is

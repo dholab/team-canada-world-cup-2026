@@ -36,3 +36,7 @@ analysis/figures/*.html
 # Editable Illustrator masters live in Google Drive, not the repo (only the
 # rendered PNG/PDF exports are committed).
 *.ai
+
+# Intermediate staging for the Eurosurveillance .docx files; the finished
+# copies live in submission/eurosurveillance/.
+submission/_docx/

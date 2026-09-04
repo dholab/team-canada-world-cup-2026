@@ -308,3 +308,49 @@ def test_alt_text_is_stripped_from_rendered_output():
     assert "two source lines" not in out
     assert "**Figure 1. A caption.**" in out
     assert "The next real paragraph." in out
+
+
+def test_anonymised_manuscript_carries_no_author_identifiers():
+    """Eurosurveillance reviews anonymised manuscripts: "All author-identifiable
+    information - authors' names, affiliations and contributions, as well as any
+    acknowledgements - should NOT be included in the document."
+
+    The subtle leaks are not the author list (obvious) but the institutional
+    review board, the sequencing core, and the Data availability URLs, which
+    resolve to the authors' own GitHub organisation and institutional host.
+    Self-citations in the reference list are unavoidable and are not checked."""
+    import importlib.util
+    from pathlib import Path
+    root = Path(__file__).resolve().parent.parent
+    spec = importlib.util.spec_from_file_location(
+        "esdocx", root / "scripts" / "build_eurosurveillance_docx.py")
+    try:
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+    except ModuleNotFoundError:          # python-docx not installed in this env
+        import pytest
+        pytest.skip("python-docx not available")
+
+    sections = mod.parse_sections((root / "_prose.md").read_text())
+    dropped = {h for _, h, _ in sections} & mod.DROP_SECTIONS
+    assert dropped, "expected identifying sections to be present before removal"
+
+    kept = []
+    for _, head, paras in sections:
+        if head in mod.DROP_SECTIONS or head == "Key public health message":
+            continue
+        for para in paras:
+            text = mod.clean(para)
+            if head == "Data availability":
+                text = mod.DATA_AVAILABILITY_ANON
+            else:
+                for pat, rep in mod.DEIDENTIFY:
+                    import re
+                    text = re.sub(pat, rep, text)
+            kept.append(text)
+    body = "\n".join(kept)
+
+    for leak in ["Wisconsin", "Madison", "dholab", "dholk", "wisc.edu",
+                 "Pathogenuity", "Melbourne", "Inkfish", "Heart of Racing",
+                 "PRJNA", "github.com"]:
+        assert leak not in body, f"{leak!r} leaks into the anonymised manuscript"
