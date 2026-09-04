@@ -108,10 +108,16 @@ def test_citation_without_a_url_stays_plain_text():
 
 
 def test_equal_contribution_marker_is_superscripted():
-    # Google Docs exports the superscript affiliation digit as "²" but has no
-    # superscript form for "&", so the marker arrives split. It must render as
-    # one raised marker.
-    assert fetch_prose._superscript_markers("O'Connor&²") == "O'Connor<sup>&amp;2</sup>"
+    """Google Docs exports the affiliation digit as "²" but has no superscript
+    form for "&", so the marker arrives split and must be raised explicitly.
+
+    It has to be a Quarto span, not raw "<sup>": raw HTML renders on the site
+    but LaTeX drops the tags, which printed a literal "&2" after the last two
+    author names in the preprint PDF. fig-number.lua turns the span into
+    \\textsuperscript{} for LaTeX and theme-house.scss raises it for HTML."""
+    assert fetch_prose._superscript_markers("O'Connor&²") == \
+        "O'Connor[&2]{.supmarker}"
+    assert "<sup>" not in fetch_prose._superscript_markers("O'Connor&²")
 
 
 def test_standalone_ampersand_is_left_alone():

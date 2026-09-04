@@ -502,7 +502,13 @@ def _superscript_markers(text: str) -> str:
     legend) is left alone."""
     def repl(m: re.Match[str]) -> str:
         digits = "".join(SUPERSCRIPT_DIGITS[c] for c in m.group(1))
-        return f"<sup>&amp;{digits}</sup>" if digits else m.group(0)
+        # A Quarto span, not raw "<sup>". Raw HTML survives the HTML render but
+        # LaTeX drops the tags and prints a literal "&2", which is how the last
+        # two authors' equal-contribution markers lost their superscript in the
+        # preprint PDF. The span is styled by fig-number.lua for LaTeX and by
+        # CSS for HTML, so both formats raise it. (There is no Unicode
+        # superscript ampersand to fall back on, unlike the affiliation digits.)
+        return f"[&{digits}]{{.supmarker}}" if digits else m.group(0)
 
     return MARKER_RUN.sub(repl, text)
 

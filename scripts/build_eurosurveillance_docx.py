@@ -81,7 +81,8 @@ DATA_AVAILABILITY_ANON = (
 
 INLINE_MD = re.compile(r"\[\[?(\d+)\]\([^)]*\)\]?")      # citation links
 LINK_MD = re.compile(r"\[([^\]]*)\]\([^)]*\)")             # other links
-BOLD_SPLIT = re.compile(r"(\*\*.+?\*\*)", re.S)
+BOLD_SPLIT = re.compile(r"(\*\*.+?\*\*|\[[^\]]*\]\{\.supmarker\})", re.S)
+SUPMARKER = re.compile(r"^\[([^\]]*)\]\{\.supmarker\}$")
 
 
 def clean(text: str) -> str:
@@ -126,7 +127,12 @@ def write_para(doc, text: str, bold_lead: bool = True) -> None:
     for chunk in BOLD_SPLIT.split(text):
         if not chunk:
             continue
-        if chunk.startswith("**") and chunk.endswith("**"):
+        m = SUPMARKER.match(chunk)
+        if m:
+            # Equal-contribution marker: a real superscript run, not the raw
+            # "[&2]{.supmarker}" span syntax fetch_prose.py emits for Quarto.
+            p.add_run(m.group(1)).font.superscript = True
+        elif chunk.startswith("**") and chunk.endswith("**"):
             p.add_run(chunk[2:-2]).bold = True
         else:
             p.add_run(chunk)
@@ -288,13 +294,13 @@ def build_title_page(title: str, frontmatter: str, counts: dict) -> Path:
             continue
         head(label)
         for line in m.group(1).strip().split("\n"):
-            # "<sup>&amp;2</sup>" is the equal-contribution marker; render it
-            # as a plain "&,2" rather than the raw "&2", which reads as a typo.
-            line = clean(re.sub(r"<sup>(.*?)</sup>", r"\1", line)
-                           .replace("&amp;", "&"))
+            line = clean(line.replace("&amp;", "&"))
             line = re.sub(r"^[-*]\s*", "", line)
             if line:
-                doc.add_paragraph(line)
+                # Through write_para, so the "[&2]{.supmarker}" equal-
+                # contribution marker becomes a real superscript run instead of
+                # printing its span syntax.
+                write_para(doc, line)
 
     head("Keywords")
     doc.add_paragraph("; ".join(counts["keywords"]))
