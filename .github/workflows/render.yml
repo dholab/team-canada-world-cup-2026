@@ -117,6 +117,14 @@ jobs:
           # and the committed snapshot both point at the submission version.
           cp _site/team-canada-air-sampling.pdf _site/index.pdf
 
+          # Publish into docs/ here, not in the commit step further down: the
+          # packaging step below copies the manuscript PDFs out of docs/, so if
+          # that copy happens after packaging it stages the PREVIOUS run's PDFs
+          # and the medRxiv package silently ships stale text.
+          cp _site/team-canada-air-sampling.pdf docs/team-canada-air-sampling.pdf
+          cp _site/team-canada-air-sampling-preprint.pdf \
+             docs/team-canada-air-sampling-preprint.pdf
+
       - name: Build the Eurosurveillance Word files
         # Eurosurveillance reviews anonymised manuscripts and cannot evaluate a
         # PDF of the text, so the submission goes as .docx: a title page, an
@@ -139,9 +147,6 @@ jobs:
         # submission PDF back to the repo. This keeps the repo a faithful snapshot
         # of what CI built and submitted. [skip ci] avoids retriggering.
         run: |
-          cp _site/team-canada-air-sampling.pdf docs/team-canada-air-sampling.pdf
-          cp _site/team-canada-air-sampling-preprint.pdf \
-             docs/team-canada-air-sampling-preprint.pdf
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           # Track only the source-of-record outputs (fonts/, _site/ stay ignored).
