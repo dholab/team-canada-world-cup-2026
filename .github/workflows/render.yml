@@ -117,6 +117,16 @@ jobs:
           # and the committed snapshot both point at the submission version.
           cp _site/team-canada-air-sampling.pdf _site/index.pdf
 
+      - name: Stage the submission packages
+        # Assembles submission/eurosurveillance/ and submission/medrxiv/ from
+        # the PDFs rendered above plus submission/figures/. The cover letter is
+        # authored in the manuscript's Google Drive folder and is not available
+        # on the runner, so its absence is expected here and the step is not
+        # allowed to fail the build; run the script locally to get the complete
+        # Eurosurveillance package.
+        continue-on-error: true
+        run: python scripts/build_submission_package.py
+
       - name: Commit Doc-synced content and rebuilt PDF
         # Each run pulls the latest Google Doc, so commit the synced prose,
         # legends, front matter, regenerated figures, and the rebuilt
@@ -142,7 +152,7 @@ jobs:
             analysis/figures/figure2_houston.pdf \
             analysis/figures/figure3_sequencing.pdf \
             analysis/figures/supplement1_wastewater.pdf \
-            submission/figures \
+            submission \
             analysis/data docs/team-canada-air-sampling.pdf \
             docs/team-canada-air-sampling-preprint.pdf
           if git diff --cached --quiet; then
